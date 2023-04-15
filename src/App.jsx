@@ -1,27 +1,18 @@
-import {
-    HydraAdmin,
-    ResourceGuesser,
-    hydraDataProvider,
-    fetchHydra,
-} from '@api-platform/admin';
-import React from 'react';
-import './App.scss';
-
-const entrypoint = process.env.REACT_APP_API_ENTRYPOINT;
-
-const dataProvider = hydraDataProvider({
-    entrypoint: entrypoint,
-    httpClient: fetchHydra,
-});
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Contest from "./pages/Contest";
 
 const App = () => {
     return (
-        <HydraAdmin dataProvider={dataProvider} entrypoint={entrypoint}>
-            <ResourceGuesser name="users" />
-            <ResourceGuesser name="members" />
-            <ResourceGuesser name="organizations" />
-            <ResourceGuesser name="contests" />
-        </HydraAdmin>
+        <div className="App">
+            <Navbar />
+            <Routes>
+                <Route path="/contest" element={<Contest />} />
+            </Routes>
+            <Footer />
+        </div>
     );
 };
 

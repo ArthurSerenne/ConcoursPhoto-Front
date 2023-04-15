@@ -1,0 +1,24 @@
+.tab-list {
+}
+
+.tab-list-item {
+    display: inline-block;
+    list-style: none;
+    margin-bottom: -1px;
+    padding: 0.5rem 0.75rem;
+    padding-left: 0;
+    border-bottom: 3px solid #d9d9d9;
+    margin-left: 5px;
+}
+
+.tab-list-active {
+    border-bottom: 3px solid #000000;
+}
+
+.wrapper {
+    padding: 20px;
+}
+
+.list-disc {
+    padding: revert;
+}
