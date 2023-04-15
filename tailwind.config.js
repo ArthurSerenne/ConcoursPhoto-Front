@@ -4,7 +4,20 @@ module.exports = {
         "./src/**/*.{js,jsx,ts,tsx}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                'regal-grey': '#A8A8A8',
+            },
+            gap: {
+                '30': '30px',
+                '35': '35px',
+            },
+            fontSize: {
+                xs: ['12px', '15px'],
+                sm: ['14px', '17px'],
+                'text-2xl': ['24px', '29px'],
+            },
+        },
     },
     plugins: [],
-}
+};
