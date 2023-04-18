@@ -1,24 +1,18 @@
-.tab-list {
+.react-tabs__tab {
+  display: inline-block;
+  border-bottom: 3px solid #d9d9d9;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 160%;
 }
 
-.tab-list-item {
-    display: inline-block;
-    list-style: none;
-    margin-bottom: -1px;
-    padding: 0.5rem 0.75rem;
-    padding-left: 0;
-    border-bottom: 3px solid #d9d9d9;
-    margin-left: 5px;
+.react-tabs__tab--selected {
+  border-bottom: 3px solid #000000;
 }
 
-.tab-list-active {
-    border-bottom: 3px solid #000000;
-}
-
-.wrapper {
-    padding: 20px;
-}
-
-.list-disc {
-    padding: revert;
-}
