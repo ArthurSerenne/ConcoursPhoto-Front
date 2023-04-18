@@ -1,9 +1,14 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper";
 import ContestCard from '../components/ContestCard';
-import Slider from '../components/Slider';
 import AdSpaceCard from '../components/AdSpaceCard';
 import ReactPaginate from 'react-paginate';
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import "../sass/pages/home.scss";
 
 const Home = () => {
   const [contests, setContests] = useState([]);
@@ -104,14 +109,39 @@ const Home = () => {
           <p>{members.length} membres</p>
         </div>
       </div>
-      <div className="max-w-screen-2xl mx-auto mt-12 mb-12 flex justify-center items-center gap-6">
-        <div className='w-2/3'>
-          <Slider contests={contests
-            .filter(
-              (contest) =>
-                contest.status === true && contest.deletionDate === undefined && contest.trend === true
-            )}/>
+      <div className='grid grid-cols-2 gap-4 ml-[15%]'>
+        <div className='col-span-1'>
+        <Swiper
+        spaceBetween={30}
+        centeredSlides={true}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Autoplay, Pagination, Navigation]}
+        className="mySwiper"
+      >
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        </Swiper>
         </div>
+        <div className='col-span-1'>
+        <img className='w-[421px] h-[262px]' src="https://picsum.photos/id/1005/600/400/" alt=""/><br/>
+        <img className='w-[421px] h-[262px]' src="https://picsum.photos/id/1018/600/400/" alt=""/>
+        </div>
+      </div>
+      <div className="max-w-screen-2xl mx-auto mt-12 mb-12 flex justify-center items-center gap-6">
         <div className='w-1/3 space-y-10'>
           {ads
             .slice(0, 2)
