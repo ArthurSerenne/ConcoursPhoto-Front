@@ -40,15 +40,14 @@ const Home = () => {
       );
       setContests(response.data);
   
-      const photographers = response.data.reduce((acc, contest) => {
+      const uniquePhotographers = response.data.reduce((acc, contest) => {
         contest.photos?.forEach((photo) => {
-          if (!acc.includes(photo.member.id)) {
-            acc.push(photo.member.id);
-          }
+          acc.add(photo.member);
         });
         return acc;
-      }, []);
-      setTotalPhotographers(photographers.length);
+      }, new Set());
+      
+      setTotalPhotographers(uniquePhotographers.size);      
     };
     fetchData();
   }, []);  
