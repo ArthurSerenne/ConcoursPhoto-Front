@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
     return (
         <footer>
-            <ul className='flex flex-row justify-center items-center gap-30'>
+            <ul className='flex flex-row justify-center items-center gap-30 mb-10'>
                 <li className="font-bold not-italic text-sm">
                     <Link to="/">ConcoursPhotos.com &copy; Tous droits réservés</Link>
                 </li>
