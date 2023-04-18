@@ -7,6 +7,7 @@ module.exports = {
         extend: {
             colors: {
                 'regal-grey': '#A8A8A8',
+                'button-grey': '#F5F5F5',
             },
             gap: {
                 '30': '30px',
