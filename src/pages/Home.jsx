@@ -109,8 +109,9 @@ const Home = () => {
           <p>{members.length} membres</p>
         </div>
       </div>
-      <div className='grid grid-cols-2 gap-4 ml-[15%]'>
-        <div className='col-span-1'>
+      <div className="flex items-center justify-center h-screen">
+      <div className="w-full md:w-1/2 flex flex-col md:flex-row items-center justify-center">
+        <div className="w-[861px] h-[542px]">
         <Swiper
         spaceBetween={30}
         centeredSlides={true}
@@ -136,11 +137,12 @@ const Home = () => {
         <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
         </Swiper>
         </div>
-        <div className='col-span-1'>
-        <img className='w-[421px] h-[262px]' src="https://picsum.photos/id/1005/600/400/" alt=""/><br/>
-        <img className='w-[421px] h-[262px]' src="https://picsum.photos/id/1018/600/400/" alt=""/>
+        <div className="w-full md:w-1/2 flex flex-col items-center justify-center md:pl-8">
+        <img className='w-[421px] h-[262px] mb-4' src="https://picsum.photos/1920/1080" alt=""/>
+        <img className='w-[421px] h-[262px]' src="https://picsum.photos/1920/1080" alt=""/>
         </div>
       </div>
+    </div>
       <div className="max-w-screen-2xl mx-auto mt-12 mb-12 flex justify-center items-center gap-6">
         <div className='w-1/3 space-y-10'>
           {ads
