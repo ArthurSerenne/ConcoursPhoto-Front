@@ -1,10 +1,18 @@
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const ContestCard = (props) => {
+    const navigate = useNavigate();
     const formattedDate = format(new Date(props.contest.resultsDate), 'dd/MM/yyyy');
+
+    const handleClick = (contest) => {
+        return () => {
+            navigate(`/contest/${contest.id}`, { state: { contest } });
+        };
+    };
     
     return (
-        <div className='max-w-lg shadow-xl rounded-b-lg'>
+        <div className='max-w-lg shadow-xl rounded-b-lg hover:cursor-pointer' onClick={handleClick(props.contest)}>
             <img className='rounded-t-lg' src={props.contest.visual} alt={props.contest.name} />
             <div className='p-3'>
                 <p className='text-base font-bold not-italic leading-[160%] text-black'>{props.contest.name}</p>
