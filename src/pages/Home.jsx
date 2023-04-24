@@ -3,12 +3,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper";
 import ContestCard from '../components/ContestCard';
-import AdSpaceCard from '../components/AdSpaceCard';
 import ReactPaginate from 'react-paginate';
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "../sass/pages/home.scss";
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [contests, setContests] = useState([]);
@@ -19,6 +19,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [totalPhotographers, setTotalPhotographers] = useState(0);
+  const navigate = useNavigate();
 
   const handleItemsPerPageChange = (event) => {
     setItemsPerPage(parseInt(event.target.value));
@@ -40,15 +41,14 @@ const Home = () => {
       );
       setContests(response.data);
   
-      const photographers = response.data.reduce((acc, contest) => {
+      const uniquePhotographers = response.data.reduce((acc, contest) => {
         contest.photos?.forEach((photo) => {
-          if (!acc.includes(photo.member.id)) {
-            acc.push(photo.member.id);
-          }
+          acc.add(photo.member);
         });
         return acc;
-      }, []);
-      setTotalPhotographers(photographers.length);
+      }, new Set());
+      
+      setTotalPhotographers(uniquePhotographers.size);      
     };
     fetchData();
   }, []);  
@@ -91,6 +91,12 @@ const Home = () => {
     setTotalPhotos(totalPhotosCount);
   }, [contests]);
 
+  const handleClick = (contest) => {
+    return () => {
+        navigate(`/contest/${contest.id}`, { state: { contest } });
+    };
+};
+
   return (
     <div>
       <div className="max-w-screen-2xl mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center">
@@ -109,14 +115,14 @@ const Home = () => {
           <p>{members.length} membres</p>
         </div>
       </div>
-      <div className="flex items-center justify-center h-screen">
-      <div className="w-full md:w-1/2 flex flex-col md:flex-row items-center justify-center">
-        <div className="w-[861px] h-[542px]">
+      <div className="flex items-center justify-center">
+      <div className="w-full md:w-2/3 flex flex-col md:flex-row items-center justify-center">
+        <div className="w-[861px] h-[542px] md:w-2/3">
         <Swiper
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 2500,
+          delay: 3500,
           disableOnInteraction: false,
         }}
         pagination={{
@@ -126,38 +132,26 @@ const Home = () => {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
-        <SwiperSlide><img src="https://picsum.photos/1920/1080" alt=""/></SwiperSlide>
+        {contests
+            .filter(
+              (contest) =>
+                contest.deletionDate === undefined && contest.trend === true
+            )
+            .map((contest) => (
+              <SwiperSlide><img src={contest.visual} alt={contest.name} onClick={handleClick(contest)} className='hover:cursor-pointer' /></SwiperSlide>
+            ))}
         </Swiper>
         </div>
-        <div className="w-full md:w-1/2 flex flex-col items-center justify-center md:pl-8">
-        <img className='w-[421px] h-[262px] mb-4' src="https://picsum.photos/1920/1080" alt=""/>
-        <img className='w-[421px] h-[262px]' src="https://picsum.photos/1920/1080" alt=""/>
-        </div>
-      </div>
-    </div>
-      <div className="max-w-screen-2xl mx-auto mt-12 mb-12 flex justify-center items-center gap-6">
-        <div className='w-1/3 space-y-10'>
-          {ads
-            .slice(0, 2)
-            .filter(
-              (ad) =>
-                ad.status === true
-            )
+        <div className="w-full md:w-1/3 flex flex-col items-center justify-center md:pl-8">
+        {ads
             .map((ad) => (
-              <div className="w-full h-3/6">
-                <AdSpaceCard ad={ad} key={ad.id} />
+              <div className='w-[421px] h-[262px] mb-2 mt-2 bg-gray-200 flex flex-col items-center justify-center'>
+                <p>{ad.name}</p>
               </div>
             ))}
         </div>
       </div>
+    </div>
       <div className="max-w-screen-2xl mx-auto mt-12 mb-12">
         <p className="text-3xl mb-12">Derniers concours photo publiés</p>
         <div className="grid grid-cols-3 gap-5">
@@ -209,14 +203,6 @@ const Home = () => {
             forcePage={currentPage}
           />
         </div>
-      </div>
-      <div className="max-w-screen-2xl mx-auto mt-10 mb-12 flex justify-between items-center gap-4">
-        {ads
-          .slice(0, 2)
-          .filter((ad) => ad.status === true)
-          .map((ad, index) => (
-              <AdSpaceCard ad={ad} index={index}/>
-          ))}
       </div>
     </div>
   );

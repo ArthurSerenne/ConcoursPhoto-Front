@@ -150,14 +150,6 @@ const ListContest = () => {
           />
         </div>
       </div>
-      <div className="max-w-screen-2xl mx-auto mt-10 mb-12 flex justify-between items-center gap-4">
-        {ads
-          .slice(0, 2)
-          .filter((ad) => ad.status === true)
-          .map((ad, index) => (
-              <AdSpaceCard ad={ad} index={index}/>
-          ))}
-      </div>
     </div>
   );
 };
