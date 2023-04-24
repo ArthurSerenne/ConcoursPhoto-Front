@@ -142,21 +142,6 @@ const Home = () => {
         </div>
       </div>
     </div>
-      <div className="max-w-screen-2xl mx-auto mt-12 mb-12 flex justify-center items-center gap-6">
-        <div className='w-1/3 space-y-10'>
-          {ads
-            .slice(0, 2)
-            .filter(
-              (ad) =>
-                ad.status === true
-            )
-            .map((ad) => (
-              <div className="w-full h-3/6">
-                <AdSpaceCard ad={ad} key={ad.id} />
-              </div>
-            ))}
-        </div>
-      </div>
       <div className="max-w-screen-2xl mx-auto mt-12 mb-12">
         <p className="text-3xl mb-12">Derniers concours photo publiés</p>
         <div className="grid grid-cols-3 gap-5">
@@ -217,6 +202,7 @@ const Home = () => {
               <AdSpaceCard ad={ad} index={index}/>
           ))}
       </div>
+    </div>
     </div>
   );
 };
