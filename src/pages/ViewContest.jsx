@@ -34,12 +34,12 @@ const ViewContest = () => {
   
   useEffect(() => {
     if (contest.photos) {
-      console.log("Contest data:", contest); // Log contest data
-      console.log("Photos:", contest.photos); // Log photos
+      console.log("Contest data:", contest);
+      console.log("Photos:", contest.photos);
   
       const uniquePhotographers = contest.photos.reduce((acc, photo) => {
-        console.log("Photo:", photo); // Log individual photo
-        console.log("Member:", photo.member); // Log member
+        console.log("Photo:", photo);
+        console.log("Member:", photo.member);
         acc.add(photo.member);
         return acc;
       }, new Set());
