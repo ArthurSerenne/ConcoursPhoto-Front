@@ -2,13 +2,15 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import ContestCard from '../components/ContestCard';
 import ReactPaginate from 'react-paginate';
-import ThemeFilter from '../components/filter';
+import ThemeFilter from '../components/ListContestFilter';
+import ContestCardSkeleton from '../components/ContestCardSkeleton';
 import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 
 const ListContest = () => {
-    const [contests, setContests] = useState([]);
+  const [contests, setContests] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(9);
+  const [loading, setLoading] = useState(true);
 
   const handleItemsPerPageChange = (event) => {
     setItemsPerPage(parseInt(event.target.value));
@@ -29,6 +31,7 @@ const ListContest = () => {
         process.env.REACT_APP_API_URL + '/contests.json'
       );
       setContests(response.data);
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -44,9 +47,13 @@ const ListContest = () => {
         <ThemeFilter />
       </div>
       <div className="max-w-screen-2xl mx-auto mt-12 mb-12">
-        <p>{contests.length} Résultats</p>
+        <p className='text-3xl mb-8'>{contests.length} résultats</p>
         <div className="grid grid-cols-3 gap-5">
-          {sortedContests
+        {loading
+          ? Array.from({ length: itemsPerPage }, (_, i) => (
+              <ContestCardSkeleton key={i} />
+            ))
+          : sortedContests
             .filter(
               (contest) =>
                 contest.deletionDate === undefined
