@@ -231,7 +231,7 @@ const ViewContest = () => {
               </h2>
               {contest.juryMembers.map((juryMember) => (
                 <div key={juryMember.id} className='bg-[#F1F1F1] p-5 mt-5'>
-                  <p>{juryMember.member.username}, {juryMember.fonction}</p>
+                  <p><span className='font-700'>{juryMember.member.username}</span>, {juryMember.fonction}</p>
                 </div>
               ))}
               <div className="max-w-screen-2xl mx-auto mt-10">
