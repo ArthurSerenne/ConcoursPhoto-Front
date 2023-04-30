@@ -12,8 +12,8 @@ const App = () => {
             <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/contest" element={<ListContest />} />
-                <Route path="/contest/:id" element={<ViewContest />} />
+                <Route path="/concours-photo" element={<ListContest />} />
+                <Route path="/concours-photo/:id" element={<ViewContest />} />
             </Routes>
             <Footer />
         </div>
