@@ -1,23 +1,25 @@
 import React from 'react';
+import ContentLoader from 'react-content-loader';
 
 const SkeletonContestCard = () => {
   return (
-    <div className="animate-pulse bg-gray-200 p-3 max-w-lg max-h-[440px] rounded-b-lg shadow-xl">
-      <div className="max-h-[260px] w-full overflow-hidden bg-gray-300 rounded-t-lg"></div>
-      <div className="mt-3 h-6 bg-gray-300 rounded w-3/4"></div>
-      <div className="mt-2 h-4 bg-gray-300 rounded w-full"></div>
-      <div className="mt-2 flex gap-2">
-        <div className="bg-gray-300 rounded-full py-1 px-3 w-1/4"></div>
-        <div className="bg-gray-300 rounded-full py-1 px-3 w-1/4"></div>
-        <div className="bg-gray-300 rounded-full py-1 px-3 w-1/4"></div>
-      </div>
-      <div className="mt-6 flex gap-2">
-        <div className="bg-gray-300 rounded-full py-2 px-3 w-1/6"></div>
-        <div className="bg-gray-300 rounded-full py-2 px-3 w-1/6"></div>
-        <div className="bg-gray-300 rounded-full py-2 px-3 w-1/6"></div>
-        <div className="ml-auto bg-gray-300 rounded py-2 px-3 w-2/5"></div>
-      </div>
-    </div>
+    <ContentLoader
+    speed={2}
+    width={400}
+    height={440}
+    viewBox="0 0 400 440"
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+  >
+    <rect x="0" y="0" rx="5" ry="5" width="400" height="260" />
+    <rect x="15" y="280" rx="4" ry="4" width="370" height="20" />
+    <rect x="15" y="315" rx="4" ry="4" width="150" height="15" />
+    <rect x="250" y="315" rx="4" ry="4" width="135" height="15" />
+    <rect x="15" y="340" rx="4" ry="4" width="75" height="15" />
+    <rect x="100" y="340" rx="4" ry="4" width="75" height="15" />
+    <rect x="185" y="340" rx="4" ry="4" width="75" height="15" />
+    <rect x="270" y="340" rx="4" ry="4" width="120" height="15" />
+  </ContentLoader>
   );
 };
 

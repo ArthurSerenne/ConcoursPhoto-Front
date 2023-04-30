@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper";
 import ContestCard from '../components/ContestCard';
 import ContestCardSkeleton from '../components/ContestCardSkeleton';
+import SwiperSlideSkeleton from '../components/SwiperSlideSkeleton';
 import ReactPaginate from 'react-paginate';
 import "swiper/css";
 import "swiper/css/pagination";
@@ -90,31 +91,37 @@ const Home = () => {
       </div>
       <div className="max-w-screen-2xl mx-auto mt-10 mb-10 grid grid-cols-3 gap-12">
         <div className="col-span-2 h-full relative max-h-[36rem]">
-          <Swiper
-            spaceBetween={30}
-            centeredSlides={true}
-            autoplay={{
-              delay: 3500,
-              disableOnInteraction: false,
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            modules={[Autoplay, Pagination, Navigation]}
-            className="mySwiper w-full h-full"
-          >
-            {contests
-              .filter(
-                (contest) =>
-                  contest.deletionDate === undefined && contest.trend === true
-              )
-              .map((contest) => (
-                <SwiperSlide key={contest.id} onClick={handleClick(contest)} className='hover:cursor-pointer'>
-                  <ImageDisplay key={contest.id} imageName={contest.visual} />
-                </SwiperSlide>
-              ))}
-          </Swiper>
+        <Swiper
+  spaceBetween={30}
+  centeredSlides={true}
+  autoplay={{
+    delay: 3500,
+    disableOnInteraction: false,
+  }}
+  pagination={{
+    clickable: true,
+  }}
+  navigation={true}
+  modules={[Autoplay, Pagination, Navigation]}
+  className="mySwiper w-full h-full"
+>
+{loading
+    ? Array.from({ length: 5 }, (_, i) => (
+        <SwiperSlide key={i} className="h-[450px]">
+          <SwiperSlideSkeleton />
+        </SwiperSlide>
+      ))
+    : contests
+        .filter(
+          (contest) =>
+            contest.deletionDate === undefined && contest.trend === true
+        )
+        .map((contest) => (
+          <SwiperSlide key={contest.id} onClick={handleClick(contest)} className='h-[450px] hover:cursor-pointer'>
+            <ImageDisplay key={contest.id} imageName={contest.visual} />
+          </SwiperSlide>
+        ))}
+</Swiper>
         </div>
         <div className="flex flex-col space-y-7 h-full col-span-1">
           {ads.map((ad, index) => (
