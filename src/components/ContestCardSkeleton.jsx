@@ -2,8 +2,8 @@ import React from 'react';
 
 const SkeletonContestCard = () => {
   return (
-    <div className="animate-pulse bg-gray-200 p-3 max-w-lg max-h-[440px] rounded-b-lg shadow-xl">
-      <div className="max-h-[260px] w-full overflow-hidden bg-gray-300 rounded-t-lg"></div>
+    <div className="animate-pulse bg-gray-200 p-3 max-w-lg h-[440px] rounded-b-lg shadow-xl">
+      <div className="h-[260px] w-full overflow-hidden bg-gray-300 rounded-t-lg"></div>
       <div className="mt-3 h-6 bg-gray-300 rounded w-3/4"></div>
       <div className="mt-2 h-4 bg-gray-300 rounded w-full"></div>
       <div className="mt-2 flex gap-2">

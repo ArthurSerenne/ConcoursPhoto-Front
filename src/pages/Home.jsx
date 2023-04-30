@@ -130,10 +130,10 @@ const Home = () => {
         <p className="text-3xl mb-12">Derniers concours photo publiés</p>
         <div className="grid grid-cols-3 gap-5">
         {loading
-    ? Array.from({ length: itemsPerPage }, (_, i) => (
-        <ContestCardSkeleton key={i} />
-      ))
-    : sortedContests
+          ? Array.from({ length: itemsPerPage }, (_, i) => (
+              <ContestCardSkeleton key={i} />
+            ))
+          : sortedContests
             .filter(
               (contest) =>
                 contest.deletionDate === undefined
