@@ -42,14 +42,14 @@ const ViewContest = () => {
       setLoading(false);
     }
   }, [id, !passedContest]);
-  
+
   useEffect(() => {
     if (contest.photos) {
       const uniquePhotographers = contest.photos.reduce((acc, photo) => {
         acc.add(photo.member);
         return acc;
       }, new Set());
-  
+
       setTotalPhotographers(uniquePhotographers.size);
     }
   }, [contest]);
@@ -229,9 +229,11 @@ const ViewContest = () => {
               <h2 className="flex items-center text-text-2xl font-normal not-italic">
                 {contest.juryMembers.length} membres du Jury
               </h2>
-              {contest.juryMembers.map(
-                (juryMember) => <p key={juryMember.id}>{juryMember.member}</p>
-              )}
+              {contest.juryMembers.map((juryMember) => (
+                <div key={juryMember.id} className='bg-[#F1F1F1] p-5 mt-5'>
+                  <p>{juryMember.member.username}, {juryMember.fonction}</p>
+                </div>
+              ))}
               <div className="max-w-screen-2xl mx-auto mt-10">
                 <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
                   <AiOutlineArrowLeft className='mr-2' /> Retour
