@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper";
 import ContestCard from '../components/ContestCard';
+import ContestCardSkeleton from '../components/ContestCardSkeleton';
 import ReactPaginate from 'react-paginate';
 import "swiper/css";
 import "swiper/css/pagination";
@@ -15,6 +16,7 @@ import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 const Home = () => {
   const [contests, setContests] = useState([]);
   const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [ads, setAds] = useState([]);
   const [totalPhotos, setTotalPhotos] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -31,6 +33,7 @@ const Home = () => {
       ]);
 
       setContests(contestsData);
+      setLoading(false);
       setMembers(membersData);
       setAds(adsData);
 
@@ -40,7 +43,7 @@ const Home = () => {
         });
         return acc;
       }, new Set());
-      
+
       setTotalPhotos(contestsData.reduce((total, contest) => total + (contest.photos ? contest.photos.length : 0), 0));
       setTotalPhotographers(uniquePhotographers.size);
     };
@@ -51,7 +54,7 @@ const Home = () => {
     setItemsPerPage(parseInt(event.target.value));
     setCurrentPage(0);
   };
-  
+
   const totalPages = Math.ceil(contests.length / itemsPerPage);
 
   const handlePageClick = (selectedPage) => {
@@ -126,7 +129,11 @@ const Home = () => {
       <div className="max-w-screen-2xl mx-auto mt-12 mb-12">
         <p className="text-3xl mb-12">Derniers concours photo publiés</p>
         <div className="grid grid-cols-3 gap-5">
-          {sortedContests
+        {loading
+    ? Array.from({ length: itemsPerPage }, (_, i) => (
+        <ContestCardSkeleton key={i} />
+      ))
+    : sortedContests
             .filter(
               (contest) =>
                 contest.deletionDate === undefined
