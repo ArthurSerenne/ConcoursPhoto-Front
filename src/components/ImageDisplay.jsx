@@ -12,6 +12,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
   const [imageSrc, setImageSrc] = useState(imagePath);
   const [loaded, setLoaded] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [viewCount, setViewCount] = useState(0);
 
   const handleError = () => {
     setImageSrc(defaultImagePath);
@@ -24,6 +25,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
   const openModal = () => {
     if (modalEnabled) {
       setModalIsOpen(true);
+      setViewCount(viewCount + 1);
     }
   };
 
@@ -73,7 +75,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
                         <p className="bg-gray-100 rounded-full py-2 px-2 text-xs uppercase flex items-end mr-4"
                            onClick={(e) => e.stopPropagation()}
                         >
-                          <AiOutlineEye className='mr-2 text-base' /> 1257
+                          <AiOutlineEye className='mr-2 text-base' /> {viewCount}
                         </p>
                         <p className="z-10 bg-gray-400 text-white rounded-full py-2 px-2 text-xs uppercase flex items-end hover:bg-gray-300 ease-in-out duration-300 cursor-pointer"
                            onClick={(e) => e.stopPropagation()}
