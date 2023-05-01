@@ -22,6 +22,7 @@ const ViewContest = () => {
   const passedContest = location.state && location.state.contest;
   const [contest, setContest] = useState(passedContest || []);
   const [loading, setLoading] = useState(true);
+  const [viewCount, setViewCount] = useState(0);
   const [uniquePhotographers, setTotalPhotographers] = useState(0);
   const formattedDate = format(new Date(contest.resultsDate), 'dd/MM/yyyy');
   const daysDifference = differenceInDays(new Date(contest.resultsDate), new Date());
@@ -42,14 +43,14 @@ const ViewContest = () => {
       setLoading(false);
     }
   }, [id, !passedContest]);
-  
+
   useEffect(() => {
     if (contest.photos) {
       const uniquePhotographers = contest.photos.reduce((acc, photo) => {
         acc.add(photo.member);
         return acc;
       }, new Set());
-  
+
       setTotalPhotographers(uniquePhotographers.size);
     }
   }, [contest]);
@@ -66,6 +67,14 @@ const ViewContest = () => {
     setItemsPerPage(parseInt(event.target.value));
     setCurrentPage(0);
   };
+
+  const incrementViewCount = () => {
+    setViewCount(viewCount + 1);
+  };
+
+  useEffect(() => {
+    incrementViewCount();
+  }, []);
 
   const totalPages = Math.ceil(contest.photos.length / itemsPerPage);
 
@@ -135,7 +144,7 @@ const ViewContest = () => {
             <div className="max-w-screen-2xl mx-auto flex flex-wrap items-end space-x-4">
               <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><RiUserShared2Line /> {uniquePhotographers}</p>
               <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><MdOutlineCameraAlt /> {contest.photos.length}</p>
-              <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><AiOutlineEye /> 143</p>
+              <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><AiOutlineEye /> {viewCount}</p>
             </div>
           </div>
         </div>
