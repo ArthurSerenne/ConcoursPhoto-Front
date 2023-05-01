@@ -83,7 +83,7 @@ const Home = () => {
 
   return (
     <div>
-      <div className="max-w-screen-2xl mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center">
+      <div className="mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <div>
           <p className="text-4xl font-bold not-italic leading-[160%] text-black">Le portail des concours photo</p>
         </div>
@@ -99,39 +99,39 @@ const Home = () => {
           <p>{members.length} membres</p>
         </div>
       </div>
-      <div className="max-w-screen-2xl mx-auto mt-10 mb-10 grid grid-cols-3 gap-12">
+      <div className="mx-auto mt-10 mb-10 grid grid-cols-3 gap-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <div className="col-span-2 h-full relative max-h-[36rem]">
         <Swiper
-  spaceBetween={30}
-  centeredSlides={true}
-  autoplay={{
-    delay: 3500,
-    disableOnInteraction: false,
-  }}
-  pagination={{
-    clickable: true,
-  }}
-  navigation={true}
-  modules={[Autoplay, Pagination, Navigation]}
-  className="mySwiper w-full h-full"
->
-{loading
-    ? Array.from({ length: 5 }, (_, i) => (
-        <SwiperSlide key={i} className="h-[450px]">
-          <SwiperSlideSkeleton />
-        </SwiperSlide>
-      ))
-    : contests
-        .filter(
-          (contest) =>
-            contest.deletionDate === undefined && contest.trend === true
-        )
-        .map((contest) => (
-          <SwiperSlide key={contest.id} onClick={handleClick(contest)} className='h-[450px] hover:cursor-pointer'>
-            <ImageDisplay key={contest.id} imageName={contest.visual} />
-          </SwiperSlide>
-        ))}
-</Swiper>
+          spaceBetween={30}
+          centeredSlides={true}
+          autoplay={{
+            delay: 3500,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="mySwiper w-full h-full"
+        >
+        {loading
+            ? Array.from({ length: 5 }, (_, i) => (
+                <SwiperSlide key={i} className="h-[450px]">
+                  <SwiperSlideSkeleton />
+                </SwiperSlide>
+              ))
+            : contests
+                .filter(
+                  (contest) =>
+                    contest.deletionDate === undefined && contest.trend === true
+                )
+                .map((contest) => (
+                  <SwiperSlide key={contest.id} onClick={handleClick(contest)} className='h-[450px] hover:cursor-pointer'>
+                    <ImageDisplay key={contest.id} imageName={contest.visual} />
+                  </SwiperSlide>
+                ))}
+        </Swiper>
         </div>
         <div className="flex flex-col space-y-7 h-full col-span-1">
         {loadingAds
@@ -149,22 +149,22 @@ const Home = () => {
       ))}
         </div>
       </div>
-      <div className="max-w-screen-2xl mx-auto mt-12 mb-12">
+      <div className="mx-auto mt-12 mb-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <p className="text-3xl mb-12">Derniers concours photo publiés</p>
-        <div className="grid grid-cols-3 gap-5">
-        {loading
-          ? Array.from({ length: itemsPerPage }, (_, i) => (
-              <ContestCardSkeleton key={i} />
-            ))
-          : sortedContests
-            .filter(
-              (contest) =>
-                contest.deletionDate === undefined
-            )
-            .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
-            .map((contest) => (
-              <ContestCard contest={contest} key={contest.id} />
-            ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {loading
+                ? Array.from({ length: itemsPerPage }, (_, i) => (
+                      <ContestCardSkeleton key={i} />
+                  ))
+                : sortedContests
+                    .filter(
+                        (contest) =>
+                            contest.deletionDate === undefined
+                    )
+                    .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
+                    .map((contest) => (
+                        <ContestCard contest={contest} key={contest.id} />
+                    ))}
         </div>
         <div>
           <div className="mt-6 mb-6">

@@ -53,9 +53,9 @@ const ThemeFilter = ({ applyFilters }) => {
   };  
 
   return (
-    <div className="max-w-screen-2xl mx-auto mt-10 mb-12 space-y-4">
-      <div className='grid grid-cols-2 gap-6'>
-        <div className='flex h-[55px]'>
+    <div className="mx-auto mt-10 mb-12 space-y-4 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+        <div className='flex h-[55px] mb-4 md:mb-0'>
           <input
             type="search"
             className="bg-gray-100 w-full rounded-l-lg pl-3 placeholder-black"
@@ -81,7 +81,7 @@ const ThemeFilter = ({ applyFilters }) => {
           </button>
         </div>
       </div>
-      <div className={`flex gap-4 bg-gray-300 px-8 py-5 ${moreCriteria ? '' : 'hidden'}`}>
+      <div className={`grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 bg-gray-300 px-8 py-5 ${moreCriteria ? '' : 'hidden'}`}>
         <div className='w-full'>
           <p>Pays</p>
           <Select className="bg-gray-100 p-2 w-full mt-2 h-[55px]" options={[

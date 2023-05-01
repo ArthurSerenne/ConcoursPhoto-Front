@@ -85,33 +85,33 @@ const ViewContest = () => {
   return (
     <div>
       <div>
-        <div className="max-w-screen-2xl mx-auto mt-10 mb-10 flex flex-wrap justify-between items-center">
+        <div className="mx-auto mt-10 mb-10 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           <p><span>Accueil</span> {'>'} <span>Concours photos</span> {'>'} <span className='font-bold'>Concours photo "{contest.name}"</span></p>
         </div>
-        <div className="max-w-screen-2xl mx-auto mt-10 mb-10 flex justify-center gap-24">
-          <div className='w-2/3'>
+        <div className="mx-auto mt-10 mb-10 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-24 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+          <div className='w-full sm:w-2/3'>
             <p className="text-4xl font-bold not-italic leading-[160%] text-black leading-tight">Concours photo "{contest.name}"</p>
           </div>
-          <div className='gap-6 items-center w-1/3'>
+          <div className='w-full sm:w-1/3'>
             <p>Organisateur : <span className='underline font-bold'>{contest.organization.name}</span></p>
-            <div className="max-w-screen-2xl mx-auto flex flex-wrap items-end space-x-4">
+            <div className="mx-auto flex flex-wrap items-end space-x-4 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
               <p className="bg-black text-white rounded-full py-1 px-4 max-w-fit mt-4 text-xs">PHASE DE VOTE</p>
               <p>Fin le {formattedDate} ({daysDifference} jours) <TbClockHour3 /></p>
             </div>
           </div>
         </div>
-        <div className="max-w-screen-2xl mx-auto mt-4 mb-4 flex justify-center gap-24">
-          <div className='w-2/3 flex flex-wrap gap-2'>
-          <p className="bg-gray-100 rounded-full py-2 px-4 max-w-fit text-xs">
-            THEME(S) :{" "}
-            {contest.themes
-              .map((theme) => theme.name)
-              .join(", ")
-              .split(", ")
-              .map((themeName, index) => (
-                <span key={index} className="font-extrabold uppercase">{themeName} </span>
-              ))}
-          </p>
+        <div className="mx-auto mt-4 mb-4 flex flex-col items-center justify-center lg:flex-row lg:justify-between lg:gap-24 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+          <div className='w-full lg:w-2/3 flex flex-wrap gap-2 justify-center lg:justify-start'>
+            <p className="bg-gray-100 rounded-full py-2 px-4 max-w-fit text-xs">
+              THEME(S) :{" "}
+              {contest.themes
+                .map((theme) => theme.name)
+                .join(", ")
+                .split(", ")
+                .map((themeName, index) => (
+                  <span key={index} className="font-extrabold uppercase">{themeName} </span>
+                ))}
+            </p>
             <p className="bg-gray-100 rounded-full py-2 px-4 max-w-fit text-xs">
               PAYS : <span className="font-extrabold uppercase">France</span>
             </p>
@@ -140,21 +140,19 @@ const ViewContest = () => {
             </p>
             <p className="bg-gray-100 rounded-full py-2 px-4 max-w-fit text-xs">DOTATION : <span className='font-extrabold uppercase'>Cadeaux</span></p>
           </div>
-          <div className='gap-6 items-center w-1/3'>
-            <div className="max-w-screen-2xl mx-auto flex flex-wrap items-end space-x-4">
-              <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><RiUserShared2Line /> {uniquePhotographers}</p>
-              <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><MdOutlineCameraAlt /> {contest.photos.length}</p>
-              <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><AiOutlineEye /> {viewCount}</p>
-            </div>
+          <div className='w-full lg:w-1/3 flex flex-wrap justify-center lg:justify-end gap-6 items-center mt-4 lg:mt-0'>
+            <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><RiUserShared2Line /> {uniquePhotographers}</p>
+            <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><MdOutlineCameraAlt /> {contest.photos.length}</p>
+            <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><AiOutlineEye /> {viewCount}</p>
           </div>
         </div>
-        <div className="max-w-screen-2xl mx-auto mt-10 mb-10 grid grid-cols-3 gap-12 items-stretch">
+        <div className="mx-auto mt-10 mb-10 grid grid-cols-3 gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           <div className="col-span-2 max-h-[38rem]">
-            <ImageDisplay imageName={contest.visual} radius="rounded-xl object-cover h-[38rem] w-full" />
+            <ImageDisplay imageName={contest.visual} radius="rounded-xl object-cover h-[38rem] w-full cursor-default" />
           </div>
           <div className="flex flex-col space-y-7">
             <div className="flex flex-grow justify-center max-h-[18rem]">
-              <ImageDisplay imageName={contest.organization.logo} radius="rounded-xl" />
+              <ImageDisplay imageName={contest.organization.logo} radius="rounded-xl cursor-default" />
             </div>
             <div className="flex flex-grow justify-center max-h-[18rem] z-0">
               <Swiper
@@ -174,7 +172,7 @@ const ViewContest = () => {
                 {contest.photos
                   .map((photo) => (
                     <SwiperSlide key={photo.id}>
-                      <ImageDisplay key={photo.id} imageName={photo.file} radius="rounded-xl" />
+                      <ImageDisplay key={photo.id} imageName={photo.file} radius="rounded-xl cursor-default" />
                     </SwiperSlide>
                   ))}
               </Swiper>
@@ -183,7 +181,7 @@ const ViewContest = () => {
         </div>
         </div>
       <div>
-      <div className={`max-w-screen-2xl mx-auto mt-10 mb-10 grid grid-cols-3 ${activeTab === 4 ? 'grid-cols-1' : 'grid-cols-3'} gap-12 items-stretch`}>
+      <div className={`mx-auto mt-10 mb-10 grid grid-cols-3 ${activeTab === 4 ? 'grid-cols-1' : 'grid-cols-3'} gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm`}>
         <div className={`col-span-2 h-full relative ${activeTab === 4 ? 'col-span-3' : 'col-span-2'}`}>
         {loading ? (
           <Spinner color="#000" />
@@ -203,7 +201,7 @@ const ViewContest = () => {
                 Présentation du concours photo
               </h2>
               {contest.description}
-              <div className="max-w-screen-2xl mx-auto mt-10 flex">
+              <div className=" mx-auto mt-10 flex 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                 <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex">
                   <AiOutlineArrowLeft className='mr-2' /> Retour
                 </Link>
@@ -217,7 +215,7 @@ const ViewContest = () => {
                 Règlement du concours
               </h2>
               {contest.rules}
-              <div className="max-w-screen-2xl mx-auto mt-10">
+              <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                 <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
                   <AiOutlineArrowLeft className='mr-2' /> Retour
                 </Link>
@@ -228,7 +226,7 @@ const ViewContest = () => {
                 Prix à gagner
               </h2>
               {contest.prizes}
-              <div className="max-w-screen-2xl mx-auto mt-10">
+              <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                 <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
                   <AiOutlineArrowLeft className='mr-2' /> Retour
                 </Link>
@@ -243,7 +241,7 @@ const ViewContest = () => {
                   <p><span className='font-bold'>{juryMember.member.user.firstname} {juryMember.member.user.lastname}</span>, {juryMember.fonction}</p>
                 </div>
               ))}
-              <div className="max-w-screen-2xl mx-auto mt-10">
+              <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                 <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
                   <AiOutlineArrowLeft className='mr-2' /> Retour
                 </Link>
@@ -303,7 +301,7 @@ const ViewContest = () => {
                   forcePage={currentPage}
                 />
               </div>
-              <div className="max-w-screen-2xl mx-auto mt-10">
+              <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                 <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
                   <AiOutlineArrowLeft className='mr-2' /> Retour
                 </Link>
@@ -314,7 +312,7 @@ const ViewContest = () => {
                 Résultats du concours photo
               </h2>
               {contest.description}
-              <div className="max-w-screen-2xl mx-auto mt-10">
+              <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                 <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
                   <AiOutlineArrowLeft className='mr-2' /> Retour
                 </Link>
