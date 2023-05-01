@@ -5,6 +5,7 @@ import { Autoplay, Pagination, Navigation } from "swiper";
 import ContestCard from '../components/ContestCard';
 import ContestCardSkeleton from '../components/ContestCardSkeleton';
 import SwiperSlideSkeleton from '../components/SwiperSlideSkeleton';
+import AdSpaceSkeleton from '../components/AdSpaceSkeleton';
 import ReactPaginate from 'react-paginate';
 import "swiper/css";
 import "swiper/css/pagination";
@@ -18,6 +19,7 @@ const Home = () => {
   const [contests, setContests] = useState([]);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingAds, setLoadingAds] = useState(true);
   const [ads, setAds] = useState([]);
   const [totalPhotos, setTotalPhotos] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -37,6 +39,7 @@ const Home = () => {
       setLoading(false);
       setMembers(membersData);
       setAds(adsData);
+      setLoadingAds(false);
 
       const uniquePhotographers = contestsData.reduce((acc, contest) => {
         contest.photos?.forEach((photo) => {
@@ -124,13 +127,19 @@ const Home = () => {
 </Swiper>
         </div>
         <div className="flex flex-col space-y-7 h-full col-span-1">
-          {ads.map((ad, index) => (
-            <div key={index} className='flex flex-grow items-center justify-center max-h-[18rem]'>
-              <div className='w-full h-full bg-gray-200 flex flex-col items-center justify-center'>
-                <p>{ad.name}</p>
-              </div>
-            </div>
-          ))}
+        {loadingAds
+    ? Array.from({ length: 2 }, (_, i) => (
+        <div key={i} className='flex flex-grow items-center justify-center max-h-[18rem]'>
+          <AdSpaceSkeleton />
+        </div>
+      ))
+    : ads.map((ad, index) => (
+        <div key={index} className='flex flex-grow items-center justify-center max-h-[18rem]'>
+          <div className='w-full h-full bg-gray-200 flex flex-col items-center justify-center'>
+            <p>{ad.name}</p>
+          </div>
+        </div>
+      ))}
         </div>
       </div>
       <div className="max-w-screen-2xl mx-auto mt-12 mb-12">
