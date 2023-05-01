@@ -16,5 +16,4 @@ const SwiperSlideSkeleton = () => {
   );
 };
 
-
 export default SwiperSlideSkeleton;

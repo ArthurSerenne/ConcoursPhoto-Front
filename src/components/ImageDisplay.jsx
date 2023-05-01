@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { BiLike } from "react-icons/bi";
-import { RiUserShared2Line } from "react-icons/ri";
-import { AiOutlineEye } from "react-icons/ai";
+import { BiLike } from 'react-icons/bi';
+import { RiUserShared2Line } from 'react-icons/ri';
+import { AiOutlineEye } from 'react-icons/ai';
 
 const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
   const imagePath = `${baseUrl}${imageName}`;
-  const defaultImagePath = 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg';
+  const defaultImagePath =
+    'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg';
 
   const [imageSrc, setImageSrc] = useState(imagePath);
   const [loaded, setLoaded] = useState(false);
@@ -34,13 +35,20 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
   };
 
   return (
-    <div className={`relative w-full h-full ${loaded ? '' : 'bg-gray-200'} ${radius}`} onClick={modalIsOpen ? closeModal : null}>
+    <div
+      className={`relative h-full w-full ${
+        loaded ? '' : 'bg-gray-200'
+      } ${radius}`}
+      onClick={modalIsOpen ? closeModal : null}
+    >
       <img
         src={imageSrc}
         alt={`Image ${imageName}`}
         onError={handleError}
         onLoad={handleImageLoad}
-        className={`object-cover w-full h-full transition-opacity duration-500 cursor-pointer ${loaded ? 'opacity-100' : 'opacity-0'} ${radius}`}
+        className={`h-full w-full cursor-pointer object-cover transition-opacity duration-500 ${
+          loaded ? 'opacity-100' : 'opacity-0'
+        } ${radius}`}
         onClick={(e) => {
           openModal();
         }}
@@ -48,43 +56,49 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        className="fixed top-0 left-0 w-full h-full flex items-center justify-center p-4 bg-black bg-opacity-80"
+        className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-80 p-4"
         overlayClassName="fixed inset-0"
       >
-        <div className="relative max-w-[1024px] max-h-[728px]" onClick={closeModal}>
+        <div
+          className="relative max-h-[728px] max-w-[1024px]"
+          onClick={closeModal}
+        >
           <img
             src={imageSrc}
             alt={`Image ${imageName}`}
-            className="max-w-full max-h-full"
+            className="max-h-full max-w-full"
             onClick={(e) => e.stopPropagation()}
           />
           <button
             onClick={closeModal}
-            className="absolute top-0 right-0 text-3xl text-black bg-white text-black px-2"
+            className="absolute right-0 top-0 bg-white px-2 text-3xl text-black text-black"
           >
             &times;
           </button>
-          <div className='mt-4'>
-                <div className='flex justify-between'>
-                    <p className='text-xs not-italic bg-gray-100 rounded-full py-2 px-2 flex items-end'
-                       onClick={(e) => e.stopPropagation()}
-                    >
-                        <RiUserShared2Line className='mr-2 text-base' /> {name}
-                    </p>
-                    <div className='flex'>
-                        <p className="bg-gray-100 rounded-full py-2 px-2 text-xs uppercase flex items-end mr-4"
-                           onClick={(e) => e.stopPropagation()}
-                        >
-                          <AiOutlineEye className='mr-2 text-base' /> {viewCount}
-                        </p>
-                        <p className="z-10 bg-gray-400 text-white rounded-full py-2 px-2 text-xs uppercase flex items-end hover:bg-gray-300 ease-in-out duration-300 cursor-pointer"
-                           onClick={(e) => e.stopPropagation()}
-                        >
-                          <BiLike className='mr-2 text-base' /> Voter
-                        </p>
-                    </div>
-                </div>
+          <div className="mt-4">
+            <div className="flex justify-between">
+              <p
+                className="flex items-end rounded-full bg-gray-100 px-2 py-2 text-xs not-italic"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <RiUserShared2Line className="mr-2 text-base" /> {name}
+              </p>
+              <div className="flex">
+                <p
+                  className="mr-4 flex items-end rounded-full bg-gray-100 px-2 py-2 text-xs uppercase"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <AiOutlineEye className="mr-2 text-base" /> {viewCount}
+                </p>
+                <p
+                  className="z-10 flex cursor-pointer items-end rounded-full bg-gray-400 px-2 py-2 text-xs uppercase text-white duration-300 ease-in-out hover:bg-gray-300"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <BiLike className="mr-2 text-base" /> Voter
+                </p>
+              </div>
             </div>
+          </div>
         </div>
       </Modal>
     </div>

@@ -4,12 +4,16 @@ import ContestCard from '../components/ContestCard';
 import ReactPaginate from 'react-paginate';
 import ThemeFilter from '../components/ListContestFilter';
 import ContestCardSkeleton from '../components/ContestCardSkeleton';
-import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
+import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
 
 const ListContest = () => {
   const [contests, setContests] = useState([]);
   const [filteredContests, setFilteredContests] = useState([]);
-  const [filterValues, setFilterValues] = useState({ themes: [], status: {value: null}, search: "" });
+  const [filterValues, setFilterValues] = useState({
+    themes: [],
+    status: { value: null },
+    search: '',
+  });
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [loading, setLoading] = useState(true);
@@ -36,69 +40,81 @@ const ListContest = () => {
 
   useEffect(() => {
     if (contests.length === 0) return;
-    
+
     const filtered = contests.filter((contest) => {
       const themesMatch =
         filterValues.themes.length === 0 ||
         filterValues.themes.some((theme) =>
           contest.themes.some((t) => t.id === theme.value)
         );
-  
+
       const statusMatch =
         filterValues.status === null ||
         filterValues.status.value === null ||
         (filterValues.status.value !== undefined &&
           contest.status === JSON.parse(filterValues.status.value));
-  
+
       const searchMatch =
-        filterValues.search.trim() === "" ||
-        contest.name.toLowerCase().includes(filterValues.search.trim().toLowerCase()) ||
+        filterValues.search.trim() === '' ||
+        contest.name
+          .toLowerCase()
+          .includes(filterValues.search.trim().toLowerCase()) ||
         contest.themes.some((t) =>
-          t.name.toLowerCase().includes(filterValues.search.trim().toLowerCase())
+          t.name
+            .toLowerCase()
+            .includes(filterValues.search.trim().toLowerCase())
         );
-  
+
       return (
-        contest.deletionDate === undefined && themesMatch && statusMatch && searchMatch
+        contest.deletionDate === undefined &&
+        themesMatch &&
+        statusMatch &&
+        searchMatch
       );
     });
     setFilteredContests(filtered);
-  }, [contests, filterValues]);  
+  }, [contests, filterValues]);
 
   const applyFilters = (themes, status, search) => {
     setFilterValues({ themes, status, search });
-  };  
+  };
 
   const sortedContests = filteredContests.sort(
     (a, b) => new Date(b.creationDate) - new Date(a.creationDate)
-  );  
+  );
 
   const totalPages = Math.ceil(sortedContests.length / itemsPerPage);
 
   return (
     <div>
-      <div className="max-w-screen-2xl mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center">
+      <div className="mx-auto mb-12 mt-10 flex max-w-screen-2xl flex-wrap items-center justify-between">
         <div>
-          <p className="text-4xl font-bold not-italic leading-[160%] text-black">Rechercher un concours photo</p>
+          <p className="text-4xl font-bold not-italic leading-[160%] text-black">
+            Rechercher un concours photo
+          </p>
         </div>
       </div>
       <div>
         <ThemeFilter applyFilters={applyFilters} />
       </div>
-      <div className="max-w-screen-2xl mx-auto mt-12 mb-12">
-        <p className='text-3xl mb-8'>{sortedContests.length} résultats</p>
+      <div className="mx-auto mb-12 mt-12 max-w-screen-2xl">
+        <p className="mb-8 text-3xl">{sortedContests.length} résultats</p>
         <div className="grid grid-cols-3 gap-5">
-        {loading
-          ? Array.from({ length: itemsPerPage }, (_, i) => (
-              <ContestCardSkeleton key={i} />
-            ))
-          : sortedContests
-            .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
-            .map((contest) => (
-              <ContestCard contest={contest} key={contest.id} />
-            ))}
+          {loading
+            ? Array.from({ length: itemsPerPage }, (_, i) => (
+                <ContestCardSkeleton key={i} />
+              ))
+            : sortedContests
+                .slice(
+                  currentPage * itemsPerPage,
+                  currentPage * itemsPerPage + itemsPerPage
+                )
+                .map((contest) => (
+                  <ContestCard contest={contest} key={contest.id} />
+                ))}
         </div>
         <div>
-          <div className="mt-6 mb-6">
+          <div className="mb-6 mt-6">
             <label htmlFor="items-per-page" className="mr-2">
               Afficher par :
             </label>
@@ -118,20 +134,28 @@ const ListContest = () => {
           <ReactPaginate
             previousLabel={<RiArrowLeftSLine />}
             nextLabel={<RiArrowRightSLine />}
-            breakLabel={"..."}
+            breakLabel={'...'}
             pageCount={totalPages}
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
             onPageChange={handlePageClick}
-            containerClassName={"flex items-center place-content-center justify-center content-center justify-self-center"}
-            activeClassName={"text-black"}
-            breakClassName={"mx-2"}
-            pageClassName={"page-item mx-1"}
-            previousClassName={"page-item mx-1"}
-            nextClassName={"page-item mx-1 text-lg"}
-            pageLinkClassName={"page-link px-4 pt-2.5 pb-3 bg-gray-200 rounded-full text-xl hover:bg-gray-100"}
-            previousLinkClassName={"bg-gray-200 px-2.5 pt-2 pb-2.5 text-2xl rounded-full hover:bg-gray-100"}
-            nextLinkClassName={"bg-gray-200 px-2.5 pt-2 pb-2.5 text-2xl rounded-full hover:bg-gray-100"}
+            containerClassName={
+              'flex items-center place-content-center justify-center content-center justify-self-center'
+            }
+            activeClassName={'text-black'}
+            breakClassName={'mx-2'}
+            pageClassName={'page-item mx-1'}
+            previousClassName={'page-item mx-1'}
+            nextClassName={'page-item mx-1 text-lg'}
+            pageLinkClassName={
+              'page-link px-4 pt-2.5 pb-3 bg-gray-200 rounded-full text-xl hover:bg-gray-100'
+            }
+            previousLinkClassName={
+              'bg-gray-200 px-2.5 pt-2 pb-2.5 text-2xl rounded-full hover:bg-gray-100'
+            }
+            nextLinkClassName={
+              'bg-gray-200 px-2.5 pt-2 pb-2.5 text-2xl rounded-full hover:bg-gray-100'
+            }
             forcePage={currentPage}
           />
         </div>
