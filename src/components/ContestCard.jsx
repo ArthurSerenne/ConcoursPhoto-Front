@@ -28,10 +28,7 @@ const ContestCard = (props) => {
                 <div className='h-12'>
                     <p className='text-base font-bold not-italic leading-[160%] text-black overflow-hidden w-full' style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }}>{props.contest.name}</p>
                 </div>
-                <div className="flex gap-1 mt-2">
-                    <p className="bg-gray-100 rounded-full py-2 px-3 text-xs uppercase">
-                        <span style={{ maxWidth: '25ch', display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.contest.organization.name}</span>
-                    </p>
+                <div className="flex flex-wrap gap-1 mt-2">
                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs uppercase">
                         {props.contest.themes
                         .map((theme) => theme.name)
