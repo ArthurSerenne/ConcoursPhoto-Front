@@ -42,12 +42,13 @@ const Home = () => {
       setAds(adsData);
       setLoadingAds(false);
 
-      const uniquePhotographers = contestsData.reduce((acc, contest) => {
+      const uniquePhotographers = new Set();
+
+      contestsData.forEach((contest) => {
         contest.photos?.forEach((photo) => {
-          acc.add(photo.member);
+          uniquePhotographers.add(photo.member.id);
         });
-        return acc;
-      }, new Set());
+      });
 
       const uniqueOrganizations = contestsData.reduce((acc, contest) => {
         acc.add(contest.organization.id);
@@ -73,7 +74,6 @@ const Home = () => {
   };
 
   const sortedContests = contests.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
-  const organizations = new Set(contests.map(contest => contest.organization.id));
 
   const handleClick = (contest) => {
     return () => {
