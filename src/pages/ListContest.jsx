@@ -8,6 +8,8 @@ import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 
 const ListContest = () => {
   const [contests, setContests] = useState([]);
+  const [filteredContests, setFilteredContests] = useState([]);
+  const [filterValues, setFilterValues] = useState({ themes: [], status: {value: null}, search: "" });
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [loading, setLoading] = useState(true);
@@ -16,15 +18,11 @@ const ListContest = () => {
     setItemsPerPage(parseInt(event.target.value));
     setCurrentPage(0);
   };
-  
-  const totalPages = Math.ceil(contests.length / itemsPerPage);
 
   const handlePageClick = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
 
-  const sortedContests = contests.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
-  
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
@@ -36,6 +34,46 @@ const ListContest = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (contests.length === 0) return;
+    
+    const filtered = contests.filter((contest) => {
+      const themesMatch =
+        filterValues.themes.length === 0 ||
+        filterValues.themes.some((theme) =>
+          contest.themes.some((t) => t.id === theme.value)
+        );
+  
+      const statusMatch =
+        filterValues.status === null ||
+        filterValues.status.value === null ||
+        (filterValues.status.value !== undefined &&
+          contest.status === JSON.parse(filterValues.status.value));
+  
+      const searchMatch =
+        filterValues.search.trim() === "" ||
+        contest.name.toLowerCase().includes(filterValues.search.trim().toLowerCase()) ||
+        contest.themes.some((t) =>
+          t.name.toLowerCase().includes(filterValues.search.trim().toLowerCase())
+        );
+  
+      return (
+        contest.deletionDate === undefined && themesMatch && statusMatch && searchMatch
+      );
+    });
+    setFilteredContests(filtered);
+  }, [contests, filterValues]);  
+
+  const applyFilters = (themes, status, search) => {
+    setFilterValues({ themes, status, search });
+  };  
+
+  const sortedContests = filteredContests.sort(
+    (a, b) => new Date(b.creationDate) - new Date(a.creationDate)
+  );  
+
+  const totalPages = Math.ceil(sortedContests.length / itemsPerPage);
+
   return (
     <div>
       <div className="max-w-screen-2xl mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center">
@@ -44,20 +82,16 @@ const ListContest = () => {
         </div>
       </div>
       <div>
-        <ThemeFilter />
+        <ThemeFilter applyFilters={applyFilters} />
       </div>
       <div className="max-w-screen-2xl mx-auto mt-12 mb-12">
-        <p className='text-3xl mb-8'>{contests.length} résultats</p>
+        <p className='text-3xl mb-8'>{sortedContests.length} résultats</p>
         <div className="grid grid-cols-3 gap-5">
         {loading
           ? Array.from({ length: itemsPerPage }, (_, i) => (
               <ContestCardSkeleton key={i} />
             ))
           : sortedContests
-            .filter(
-              (contest) =>
-                contest.deletionDate === undefined
-            )
             .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
             .map((contest) => (
               <ContestCard contest={contest} key={contest.id} />

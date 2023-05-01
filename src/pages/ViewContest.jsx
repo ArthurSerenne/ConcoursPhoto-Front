@@ -140,8 +140,8 @@ const ViewContest = () => {
           </div>
         </div>
         <div className="max-w-screen-2xl mx-auto mt-10 mb-10 grid grid-cols-3 gap-12 items-stretch">
-          <div className="col-span-2 max-h-[70rem]">
-            <ImageDisplay imageName={contest.visual} radius="rounded-xl object-cover h-[37.5rem] w-full" />
+          <div className="col-span-2 max-h-[38rem]">
+            <ImageDisplay imageName={contest.visual} radius="rounded-xl object-cover h-[38rem] w-full" />
           </div>
           <div className="flex flex-col space-y-7">
             <div className="flex flex-grow justify-center max-h-[18rem]">
@@ -226,12 +226,12 @@ const ViewContest = () => {
               </div>
             </TabPanel>
             <TabPanel>
-              <h2 className="flex items-center text-text-2xl font-normal not-italic">
+              <h2 className="flex items-center text-text-2xl font-normal not-italic mb-6">
                 {contest.juryMembers.length} membres du Jury
               </h2>
               {contest.juryMembers.map((juryMember) => (
-                <div key={juryMember.id} className='bg-[#F1F1F1] p-5 mt-5'>
-                  <p><span className='font-700'>{juryMember.member.user.firstname} {juryMember.member.user.lastname}</span>, {juryMember.fonction}</p>
+                <div key={juryMember.id} className='bg-[#F1F1F1] p-5 mt-2'>
+                  <p><span className='font-bold'>{juryMember.member.user.firstname} {juryMember.member.user.lastname}</span>, {juryMember.fonction}</p>
                 </div>
               ))}
               <div className="max-w-screen-2xl mx-auto mt-10">
