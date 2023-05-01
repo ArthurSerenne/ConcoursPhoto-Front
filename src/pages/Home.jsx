@@ -22,6 +22,7 @@ const Home = () => {
   const [loadingAds, setLoadingAds] = useState(true);
   const [ads, setAds] = useState([]);
   const [totalPhotos, setTotalPhotos] = useState(0);
+  const [totalOrganizations, setTotalOrganizations] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [totalPhotographers, setTotalPhotographers] = useState(0);
@@ -48,8 +49,14 @@ const Home = () => {
         return acc;
       }, new Set());
 
+      const uniqueOrganizations = contestsData.reduce((acc, contest) => {
+        acc.add(contest.organization.id);
+        return acc;
+      }, new Set());
+
       setTotalPhotos(contestsData.reduce((total, contest) => total + (contest.photos ? contest.photos.length : 0), 0));
       setTotalPhotographers(uniquePhotographers.size);
+      setTotalOrganizations(uniqueOrganizations.size);
     };
     fetchData();
   }, []);
@@ -83,7 +90,7 @@ const Home = () => {
         <div className='gap-6 flex flex-wrap justify-between align-baseline items-center'>
           <p>{contests.length} concours publiés</p>
           <p className='text-gray-300 text-2xl'>|</p>
-          <p>{organizations.length} organisateurs</p>
+          <p>{totalOrganizations} organisateurs</p>
           <p className='text-gray-300 text-2xl'>|</p>
           <p>{totalPhotographers} photographes</p>
           <p className='text-gray-300 text-2xl'>|</p>
