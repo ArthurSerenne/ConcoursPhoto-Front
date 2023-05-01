@@ -92,7 +92,7 @@ const Home = () => {
 
   return (
     <div>
-      <div className="mx-auto mb-12 mt-10 flex max-w-screen-2xl flex-wrap items-center justify-between">
+      <div className="mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <div>
           <p className="text-4xl font-bold not-italic leading-[160%] text-black">
             Le portail des concours photo
@@ -110,47 +110,39 @@ const Home = () => {
           <p>{members.length} membres</p>
         </div>
       </div>
-      <div className="mx-auto mb-10 mt-10 grid max-w-screen-2xl grid-cols-3 gap-12">
-        <div className="relative col-span-2 h-full max-h-[36rem]">
-          <Swiper
-            spaceBetween={30}
-            centeredSlides={true}
-            autoplay={{
-              delay: 3500,
-              disableOnInteraction: false,
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            modules={[Autoplay, Pagination, Navigation]}
-            className="mySwiper h-full w-full"
-          >
-            {loading
-              ? Array.from({ length: 5 }, (_, i) => (
-                  <SwiperSlide key={i} className="h-[450px]">
-                    <SwiperSlideSkeleton />
+      <div className="mx-auto mt-10 mb-10 grid grid-cols-3 gap-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+        <div className="col-span-2 h-full relative max-h-[36rem]">
+        <Swiper
+          spaceBetween={30}
+          centeredSlides={true}
+          autoplay={{
+            delay: 3500,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="mySwiper w-full h-full"
+        >
+        {loading
+            ? Array.from({ length: 5 }, (_, i) => (
+                <SwiperSlide key={i} className="h-[450px]">
+                  <SwiperSlideSkeleton />
+                </SwiperSlide>
+              ))
+            : contests
+                .filter(
+                  (contest) =>
+                    contest.deletionDate === undefined && contest.trend === true
+                )
+                .map((contest) => (
+                  <SwiperSlide key={contest.id} onClick={handleClick(contest)} className='h-[450px] hover:cursor-pointer'>
+                    <ImageDisplay key={contest.id} imageName={contest.visual} />
                   </SwiperSlide>
-                ))
-              : contests
-                  .filter(
-                    (contest) =>
-                      contest.deletionDate === undefined &&
-                      contest.trend === true
-                  )
-                  .map((contest) => (
-                    <SwiperSlide
-                      key={contest.id}
-                      onClick={handleClick(contest)}
-                      className="h-[450px] hover:cursor-pointer"
-                    >
-                      <ImageDisplay
-                        key={contest.id}
-                        imageName={contest.visual}
-                      />
-                    </SwiperSlide>
-                  ))}
-          </Swiper>
+                ))}
+        </Swiper>
         </div>
         <div className="col-span-1 flex h-full flex-col space-y-7">
           {loadingAds
@@ -174,22 +166,22 @@ const Home = () => {
               ))}
         </div>
       </div>
-      <div className="mx-auto mb-12 mt-12 max-w-screen-2xl">
-        <p className="mb-12 text-3xl">Derniers concours photo publiés</p>
-        <div className="grid grid-cols-3 gap-5">
-          {loading
-            ? Array.from({ length: itemsPerPage }, (_, i) => (
-                <ContestCardSkeleton key={i} />
-              ))
-            : sortedContests
-                .filter((contest) => contest.deletionDate === undefined)
-                .slice(
-                  currentPage * itemsPerPage,
-                  currentPage * itemsPerPage + itemsPerPage
-                )
-                .map((contest) => (
-                  <ContestCard contest={contest} key={contest.id} />
-                ))}
+      <div className="mx-auto mt-12 mb-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+        <p className="text-3xl mb-12">Derniers concours photo publiés</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {loading
+                ? Array.from({ length: itemsPerPage }, (_, i) => (
+                      <ContestCardSkeleton key={i} />
+                  ))
+                : sortedContests
+                    .filter(
+                        (contest) =>
+                            contest.deletionDate === undefined
+                    )
+                    .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
+                    .map((contest) => (
+                        <ContestCard contest={contest} key={contest.id} />
+                    ))}
         </div>
         <div>
           <div className="mb-6 mt-6">

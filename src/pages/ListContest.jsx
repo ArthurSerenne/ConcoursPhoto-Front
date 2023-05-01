@@ -87,7 +87,7 @@ const ListContest = () => {
 
   return (
     <div>
-      <div className="mx-auto mb-12 mt-10 flex max-w-screen-2xl flex-wrap items-center justify-between">
+      <div className="mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <div>
           <p className="text-4xl font-bold not-italic leading-[160%] text-black">
             Rechercher un concours photo
@@ -97,21 +97,18 @@ const ListContest = () => {
       <div>
         <ThemeFilter applyFilters={applyFilters} />
       </div>
-      <div className="mx-auto mb-12 mt-12 max-w-screen-2xl">
-        <p className="mb-8 text-3xl">{sortedContests.length} résultats</p>
-        <div className="grid grid-cols-3 gap-5">
-          {loading
-            ? Array.from({ length: itemsPerPage }, (_, i) => (
-                <ContestCardSkeleton key={i} />
-              ))
-            : sortedContests
-                .slice(
-                  currentPage * itemsPerPage,
-                  currentPage * itemsPerPage + itemsPerPage
-                )
-                .map((contest) => (
-                  <ContestCard contest={contest} key={contest.id} />
-                ))}
+      <div className="mx-auto mt-12 mb-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+        <p className='text-3xl mb-8'>{sortedContests.length} résultats</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {loading
+          ? Array.from({ length: itemsPerPage }, (_, i) => (
+              <ContestCardSkeleton key={i} />
+            ))
+          : sortedContests
+            .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
+            .map((contest) => (
+              <ContestCard contest={contest} key={contest.id} />
+            ))}
         </div>
         <div>
           <div className="mb-6 mt-6">
