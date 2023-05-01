@@ -86,7 +86,7 @@ const ListContest = () => {
   const totalPages = Math.ceil(sortedContests.length / itemsPerPage);
 
   return (
-    <div>
+    <div className='mx-12 md: mx-24'>
       <div className="mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <div>
           <p className="text-4xl font-bold not-italic leading-[160%] text-black">
