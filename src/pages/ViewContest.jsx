@@ -53,7 +53,7 @@ const ViewContest = () => {
 
   useEffect(() => {
     if (contest.photos) {
-      const uniquePhotographers = contest.photos.reduce((acc, photo) => {
+      const uniquePhotographers = contest.photos.filter((photo) => photo.status === true).reduce((acc, photo) => {
         acc.add(photo.member);
         return acc;
       }, new Set());
@@ -83,7 +83,7 @@ const ViewContest = () => {
     incrementViewCount();
   }, []);
 
-  const totalPages = Math.ceil(contest.photos.length / itemsPerPage);
+  const totalPages = Math.ceil(contest.photos.filter((photo) => photo.status === true).length / itemsPerPage);
 
   const handlePageClick = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -107,7 +107,7 @@ const ViewContest = () => {
             </div>
           </div>
         </div>
-        <div className="mx-auto mt-4 mb-4 flex flex-col items-center justify-center lg:flex-row lg:justify-between lg:gap-24 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+        <div className="mx-auto mt-4 mb-4 flex flex-col items-center justify-center items-baseline lg:flex-row lg:justify-between lg:gap-24 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           <div className='w-full lg:w-2/3 flex flex-wrap gap-2 justify-center lg:justify-start'>
             <p className="bg-gray-100 rounded-full py-2 px-4 max-w-fit text-xs">
               THEME(S) :{" "}
@@ -157,9 +157,9 @@ const ViewContest = () => {
               <span className="font-extrabold uppercase">Cadeaux</span>
             </p>
           </div>
-          <div className='w-full lg:w-1/3 flex flex-wrap justify-center lg:justify-end gap-6 items-center mt-4 lg:mt-0'>
+          <div className='w-full lg:w-1/3 flex flex-wrap justify-center lg:justify-start gap-6 items-center mt-4 lg:mt-0'>
             <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><RiUserShared2Line /> {uniquePhotographers}</p>
-            <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><MdOutlineCameraAlt /> {contest.photos.length}</p>
+            <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><MdOutlineCameraAlt /> {contest.photos.filter((photo) => photo.status === true).length}</p>
             <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><AiOutlineEye /> {viewCount}</p>
           </div>
         </div>
@@ -187,6 +187,7 @@ const ViewContest = () => {
                 className="mySwiper h-full w-full"
               >
                 {contest.photos
+                  .filter((photo) => photo.status === true)
                   .map((photo) => (
                     <SwiperSlide key={photo.id}>
                       <ImageDisplay key={photo.id} imageName={photo.file} radius="rounded-xl cursor-default" />
@@ -266,7 +267,7 @@ const ViewContest = () => {
             </TabPanel>
             <TabPanel>
               <h2 className="flex items-center text-text-2xl font-normal not-italic mb-10">
-                {contest.photos.length} photos soumises par {uniquePhotographers} photographes
+                {contest.photos.filter((photo) => photo.status === true).length} photos soumises par {uniquePhotographers} photographes
               </h2>
               <div className="grid grid-cols-3 gap-5">
                 {contest.photos
@@ -342,6 +343,7 @@ const ViewContest = () => {
           <p className="text-xl font-bold not-italic leading-[160%] text-black mb-8">Dernières photos soumises</p>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mb-10'>
             {contest.photos
+              .filter((photo) => photo.status === true)
               .sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate))
               .slice(0, 8)
               .map(
