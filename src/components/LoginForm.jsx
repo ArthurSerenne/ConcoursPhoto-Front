@@ -31,12 +31,19 @@ const LoginForm = ({ closeModal }) => {
       const token = response.data.token;
       localStorage.setItem('jwt', token);
   
+<<<<<<< HEAD
       const userResponse = await axiosInstance.get(
         process.env.REACT_APP_API_URL + '/user_data',
+=======
+      // Récupérez les données de l'utilisateur
+      const userResponse = await axiosInstance.get(
+        process.env.REACT_APP_API_URL + '/users/me', // Modifiez cette URL pour correspondre à l'endpoint qui renvoie les données de l'utilisateur
+>>>>>>> 6b9b2da (test)
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+<<<<<<< HEAD
           params: {
             groups: ['user', 'member', 'social_network'],
             forceEager: true,
@@ -47,6 +54,18 @@ const LoginForm = ({ closeModal }) => {
       const userData = userResponse.data;
       login(userData);
 
+=======
+        }
+      );
+
+      console.log(userResponse.data)
+  
+      // Mettez à jour le contexte d'authentification avec les données de l'utilisateur
+      const userData = userResponse.data;
+      login(userData);
+  
+      console.log(response);
+>>>>>>> 6b9b2da (test)
       closeModal();
       navigate('/');
     } catch (err) {
@@ -57,9 +76,13 @@ const LoginForm = ({ closeModal }) => {
     } finally {
       setSubmitting(false);
     }
+<<<<<<< HEAD
   };
   
 // ...
+=======
+  };  
+>>>>>>> 6b9b2da (test)
 
   return (
     <Formik

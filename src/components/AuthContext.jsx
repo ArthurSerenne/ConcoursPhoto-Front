@@ -1,5 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+<<<<<<< HEAD
 import axiosInstance from './AxiosInstance';
+=======
+>>>>>>> 6b9b2da (test)
 
 const AuthContext = createContext();
 
@@ -10,6 +13,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+<<<<<<< HEAD
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,13 +26,23 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     } else {
       setIsLoading(false);
+=======
+  
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      setIsAuthenticated(true);
+>>>>>>> 6b9b2da (test)
     }
   }, []);
 
   const login = (userData) => {
     setIsAuthenticated(true);
     setUser(userData);
+<<<<<<< HEAD
     localStorage.setItem('user', JSON.stringify(userData));
+=======
+>>>>>>> 6b9b2da (test)
   };
 
   const logout = () => {
@@ -76,11 +90,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout }}>
 >>>>>>> d68c59c (test)
 =======
     <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout, reloadUser }}>
 >>>>>>> 6d3aba9 (profil page and file upload)
+=======
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+>>>>>>> 6b9b2da (test)
       {children}
     </AuthContext.Provider>
   );
