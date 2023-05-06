@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -14,8 +15,9 @@ const LoginSchema = Yup.object().shape({
     .required('Le mot de passe est requis'),
 });
 
-const LoginForm = () => {
+const LoginForm = ({ closeModal }) => {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
       const response = await axiosInstance.post(
@@ -29,8 +31,9 @@ const LoginForm = () => {
       const token = response.data.token;
       localStorage.setItem('jwt', token);
       login();
-      // Redirigez l'utilisateur vers la page souhaitée après l'authentification réussie.
       console.log(response);
+      closeModal();
+      navigate('/');
     } catch (err) {
       setErrors({
         form: "Erreur d'authentification. Veuillez vérifier vos identifiants.",
@@ -49,19 +52,21 @@ const LoginForm = () => {
     >
       {({ isSubmitting }) => (
         <Form>
-          <h1>Connexion</h1>
           <ErrorMessage name="form" component="p" />
           <div>
-            <label htmlFor="email">Email</label>
-            <Field type="email" name="email" placeholder="Email" />
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-7' htmlFor="email">Email ou pseudo*</label>
+            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px]' type="email" name="email" />
+            <br />
             <ErrorMessage name="email" component="span" />
           </div>
+          <br />
           <div>
-            <label htmlFor="password">Mot de passe</label>
-            <Field type="password" name="password" placeholder="Mot de passe" />
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-7' htmlFor="password">Mot de passe*</label>
+            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px]' type="password" name="password" />
+            <br />
             <ErrorMessage name="password" component="span" />
           </div>
-          <button type="submit" disabled={isSubmitting}>
+          <button className='bg-[#000000] rounded-[44px] mt-5 not-italic font-bold w-[200px] h-[59px] text-base leading-[19px] text-white' type="submit" disabled={isSubmitting}>
             Se connecter
           </button>
         </Form>
