@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -28,11 +29,24 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
 =======
   
+=======
+  const [isLoading, setIsLoading] = useState(true);
+
+>>>>>>> d68c59c (test)
   useEffect(() => {
     const jwt = localStorage.getItem('jwt');
-    if (jwt) {
+    const storedUser = localStorage.getItem('user');
+
+    if (jwt && storedUser) {
       setIsAuthenticated(true);
+<<<<<<< HEAD
 >>>>>>> 6b9b2da (test)
+=======
+      setUser(JSON.parse(storedUser));
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+>>>>>>> d68c59c (test)
     }
   }, []);
 
@@ -40,9 +54,13 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
     setUser(userData);
 <<<<<<< HEAD
+<<<<<<< HEAD
     localStorage.setItem('user', JSON.stringify(userData));
 =======
 >>>>>>> 6b9b2da (test)
+=======
+    localStorage.setItem('user', JSON.stringify(userData));
+>>>>>>> d68c59c (test)
   };
 
   const logout = () => {
@@ -50,6 +68,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('jwt');
     localStorage.removeItem('user');
+<<<<<<< HEAD
 <<<<<<< HEAD
   };
 
@@ -99,6 +118,12 @@ export const AuthProvider = ({ children }) => {
 =======
     <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
 >>>>>>> 6b9b2da (test)
+=======
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout }}>
+>>>>>>> d68c59c (test)
       {children}
     </AuthContext.Provider>
   );

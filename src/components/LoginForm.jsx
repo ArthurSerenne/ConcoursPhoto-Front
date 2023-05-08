@@ -32,6 +32,7 @@ const LoginForm = ({ closeModal }) => {
       localStorage.setItem('jwt', token);
   
 <<<<<<< HEAD
+<<<<<<< HEAD
       const userResponse = await axiosInstance.get(
         process.env.REACT_APP_API_URL + '/user_data',
 =======
@@ -39,15 +40,23 @@ const LoginForm = ({ closeModal }) => {
       const userResponse = await axiosInstance.get(
         process.env.REACT_APP_API_URL + '/users/me', // Modifiez cette URL pour correspondre à l'endpoint qui renvoie les données de l'utilisateur
 >>>>>>> 6b9b2da (test)
+=======
+      const userResponse = await axiosInstance.get(
+        process.env.REACT_APP_API_URL + '/user_data',
+>>>>>>> d68c59c (test)
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d68c59c (test)
           params: {
             groups: ['user', 'member', 'social_network'],
             forceEager: true,
           },
+<<<<<<< HEAD
         }
       );
   
@@ -55,17 +64,20 @@ const LoginForm = ({ closeModal }) => {
       login(userData);
 
 =======
+=======
+>>>>>>> d68c59c (test)
         }
       );
-
-      console.log(userResponse.data)
   
-      // Mettez à jour le contexte d'authentification avec les données de l'utilisateur
       const userData = userResponse.data;
       login(userData);
+<<<<<<< HEAD
   
       console.log(response);
 >>>>>>> 6b9b2da (test)
+=======
+
+>>>>>>> d68c59c (test)
       closeModal();
       navigate('/');
     } catch (err) {
@@ -77,12 +89,18 @@ const LoginForm = ({ closeModal }) => {
       setSubmitting(false);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
   };
   
 // ...
 =======
   };  
 >>>>>>> 6b9b2da (test)
+=======
+  };
+  
+// ...
+>>>>>>> d68c59c (test)
 
   return (
     <Formik

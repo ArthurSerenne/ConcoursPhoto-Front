@@ -74,6 +74,7 @@ const Navbar = () => {
                 >
                   <RiUserAddLine /> <span>Mon compte</span>
                 </Link>
+<<<<<<< HEAD
                 <>
                 <Link
                   to="/mon-compte"
@@ -88,6 +89,14 @@ const Navbar = () => {
                     <RiUserSharedLine /> <span>Déconnexion</span>
                   </button>
               </>
+=======
+                <button
+                  onClick={logout}
+                  className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
+                >
+                  <RiUserSharedLine /> <span>Déconnexion</span>
+                </button>
+>>>>>>> d68c59c (test)
               </>
             )}
           </div>
@@ -156,6 +165,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+<<<<<<< HEAD
       <Modal
         isOpen={isLoginModalOpen}
         onRequestClose={closeLoginModal}
@@ -178,6 +188,8 @@ const Navbar = () => {
           openLoginModal={openLoginModal}
         />
       </Modal>
+=======
+>>>>>>> d68c59c (test)
       {isLoginModalOpen && (
         <Modal
           isOpen={isLoginModalOpen}
