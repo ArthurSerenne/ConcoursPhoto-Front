@@ -74,12 +74,20 @@ const Navbar = () => {
                 >
                   <RiUserAddLine /> <span>Mon compte</span>
                 </Link>
-                <button
-                  onClick={logout}
+                <>
+                <Link
+                  to="/mon-compte"
                   className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
                 >
-                  <RiUserSharedLine /> <span>Déconnexion</span>
-                </button>
+                  <RiUserAddLine /> <span>Mon compte</span>
+                </Link>
+                <button
+                    onClick={logout}
+                    className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
+                  >
+                    <RiUserSharedLine /> <span>Déconnexion</span>
+                  </button>
+              </>
               </>
             )}
           </div>
