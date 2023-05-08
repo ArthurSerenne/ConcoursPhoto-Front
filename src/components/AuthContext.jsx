@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('jwt');
     localStorage.removeItem('user');
+<<<<<<< HEAD
   };
 
   const reloadUser = async () => {
@@ -55,6 +56,12 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout, reloadUser }}>
+=======
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout }}>
+>>>>>>> d68c59c (test)
       {children}
     </AuthContext.Provider>
   );
