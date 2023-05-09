@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import axiosInstance from './AxiosInstance';
 
 const AuthContext = createContext();
 
@@ -37,8 +38,23 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
+  const reloadUser = async () => {
+    try {
+      const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/user_data`);
+      if (response.status === 200) {
+        const updatedUser = response.data;
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      } else {
+        console.error("Erreur lors de la récupération des données utilisateur");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données utilisateur:", error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout, reloadUser }}>
       {children}
     </AuthContext.Provider>
   );

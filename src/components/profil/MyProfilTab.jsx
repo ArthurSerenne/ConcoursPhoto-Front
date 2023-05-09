@@ -3,14 +3,15 @@ import { useAuth } from '../AuthContext';
 import { Formik, Form, Field } from 'formik';
 import { format, parseISO } from "date-fns";
 import myImage from '../../assets/images/user-icon.png';
-import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 
 const MyProfilTab = () => {
-  const { isAuthenticated, user, isLoading } = useAuth();
-    const [displayedImage, setDisplayedImage] = useState(null);
+  const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
     const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
     const imagePath = user.member.photo ? `${baseUrl}${user.member.photo}` : myImage;
+    const [displayedImage, setDisplayedImage] = useState(imagePath);
     const formattedInitialValue = format(parseISO(user.birthdate), "yyyy-MM-dd");
+    const [imageFile, setImageFile] = useState(null);
     
     useEffect(() => {
         setDisplayedImage(imagePath);
@@ -32,18 +33,19 @@ const MyProfilTab = () => {
         );
     }
 
-    const handleImageChange = (event) => {
+        const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
             setDisplayedImage(reader.result);
-        };
-        reader.readAsDataURL(file);
+            };
+            reader.readAsDataURL(file);
+            setImageFile(file);
         }
-    };
-
-    const handleImageRemove = () => {
+        };
+      
+      const handleImageRemove = () => {
         if (window.confirm("Voulez-vous vraiment supprimer cette image ?")) {
           setDisplayedImage(null);
         }
@@ -55,19 +57,19 @@ const MyProfilTab = () => {
             lastname: values.lastname,
             gender: values.gender,
             birthdate: values.birthdate,
-            situation: values.situation,
             address: values.address,
             email: values.email,
-            passwword: values.passwword,
+            password: values.password ? values.password : user.password,
         };
-      
+
         const entity2Data = {
+            situation: values.situation,
+            category: values.categorie,
             username: values.username,
-            categorie: values.categorie,
-            website: values.website,
             description: values.description,
+            website: values.website,
         };
-      
+
         const entity3Data = {
             facebook: values.facebook,
             youtube: values.youtube,
@@ -78,34 +80,46 @@ const MyProfilTab = () => {
         };
       
         return { entity1Data, entity2Data, entity3Data };
-      };      
+      };
 
-    const handleSubmit = async (values, { setSubmitting }) => {
+      const handleSubmit = async (values, { setSubmitting }) => {
         const { entity1Data, entity2Data, entity3Data } = separateEntityData(values);
-      
-        try {
-          // Vous pouvez utiliser Promise.all pour envoyer les requêtes en parallèle
-          const [response1, response2, response3] = await Promise.all([
-            axios.put(process.env.REACT_APP_API_URL+'/users/'+user.id, entity1Data),
-            axios.put(process.env.REACT_APP_API_URL+'/members/'+user.member.id, entity2Data),
-            axios.put(process.env.REACT_APP_API_URL+'/social_networks/'+user.member.socialNetwork.id, entity3Data),
-          ]);
-      
-          // Vérifiez les réponses pour vous assurer que toutes les requêtes ont réussi
-          if (response1.status === 200 && response2.status === 200 && response3.status === 200) {
-            // Succès: vous pouvez gérer la réponse et afficher un message de réussite
-            console.log("Formulaire soumis avec succès");
-          } else {
-            // Échec: vous pouvez gérer l'erreur et afficher un message d'erreur
-            console.error("Erreur lors de la soumission du formulaire");
+
+        if (imageFile) {
+            entity1Data.photo = displayedImage;
           }
-        } catch (error) {
-          // Gérez les erreurs réseau ici
+
+        const data = {
+            entity1Data,
+            entity2Data,
+            entity3Data,
+        };
+
+          console.log(displayedImage);
+        
+          try {
+            const response = await axiosInstance.patch(
+              `${process.env.REACT_APP_API_URL}/user_update`,
+              data,
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+        
+            if (response.status === 200) {
+              console.log("Formulaire soumis avec succès");
+              await reloadUser();
+            } else {
+              console.error("Erreur lors de la soumission du formulaire");
+            }
+          } catch (error) {
           console.error("Erreur lors de la soumission du formulaire:", error);
         } finally {
           setSubmitting(false);
         }
-    };
+      };
 
     return (
         <Formik
@@ -150,11 +164,11 @@ const MyProfilTab = () => {
                 </div>
                 <div>
                     <button
-                    type="button"
-                    className="font-bold w-fit h-14 bg-gray-200 text-black py-2 px-8 rounded-full hover:bg-gray-100"
-                    onClick={handleImageRemove}
+                        type="button"
+                        className="font-bold w-fit h-14 bg-gray-200 text-black py-2 px-8 rounded-full hover:bg-gray-100"
+                        onClick={handleImageRemove}
                     >
-                    Supprimer
+                        Supprimer
                     </button>
                 </div>
             </div>
