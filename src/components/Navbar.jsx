@@ -162,7 +162,10 @@ const Navbar = () => {
         style={customStyles}
         contentLabel="Login Modal"
       >
-        <Login closeModal={closeLoginModal} />
+        <Login
+          closeModal={closeLoginModal}
+          openRegisterModal={openRegisterModal}
+        />
       </Modal>
       <Modal
         isOpen={isRegisterModalOpen}
@@ -170,7 +173,10 @@ const Navbar = () => {
         style={customStyles}
         contentLabel="Register Modal"
       >
-        <Register closeModal={closeRegisterModal} />
+        <Register
+          closeModal={closeRegisterModal}
+          openLoginModal={openLoginModal}
+        />
       </Modal>
     </>
   );

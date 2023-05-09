@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import emailjs from '@emailjs/browser';
 
 const RegisterSchema = Yup.object().shape({
   gender: Yup.string().required('Le genre est requis'),
@@ -25,12 +26,21 @@ const RegisterSchema = Yup.object().shape({
 });
 
 const RegisterForm = ({ closeModal }) => {
+  const form = useRef();
   const { login } = useAuth();
   const navigate = useNavigate();
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post(process.env.REACT_APP_API_URL + '/register', values);
       console.log(response);
+
+      emailjs.sendForm('service_qt5he0k', 'template_6c71ky5', form.current, '8-jHdCtLJqQqW_Q2b')
+        .then((result) => {
+          console.log('Email envoyé avec succès :', result.status, result.text);
+        })
+        .catch((error) => {
+          console.error('Erreur lors de l\'envoi de l\'email :', error);
+        });
 
       const loginResponse = await axios.post(process.env.REACT_APP_API_URL + '/login_check', {
         username: values.email,
@@ -65,7 +75,7 @@ const RegisterForm = ({ closeModal }) => {
       onSubmit={handleSubmit}
     >
       {({ isSubmitting  }) => (
-        <Form>
+        <Form ref={form}>
           <div>
             <Field type="radio" name="gender" value="homme" required />
             <label>Homme</label>
