@@ -1,8 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import axiosInstance from './AxiosInstance';
 =======
 >>>>>>> 6b9b2da (test)
+=======
+import axiosInstance from './AxiosInstance';
+>>>>>>> 6d3aba9 (profil page and file upload)
 
 const AuthContext = createContext();
 
@@ -121,9 +125,28 @@ export const AuthProvider = ({ children }) => {
 =======
   };
 
+  const reloadUser = async () => {
+    try {
+      const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/user_data`);
+      if (response.status === 200) {
+        const updatedUser = response.data;
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      } else {
+        console.error("Erreur lors de la récupération des données utilisateur");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données utilisateur:", error);
+    }
+  };
+
   return (
+<<<<<<< HEAD
     <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout }}>
 >>>>>>> d68c59c (test)
+=======
+    <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout, reloadUser }}>
+>>>>>>> 6d3aba9 (profil page and file upload)
       {children}
     </AuthContext.Provider>
   );
