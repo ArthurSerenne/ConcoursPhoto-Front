@@ -3,6 +3,7 @@ import { BiLike } from 'react-icons/bi';
 import { RiUserShared2Line } from 'react-icons/ri';
 import { AiOutlineEye } from 'react-icons/ai';
 
+
 const PhotoCard = (props) => {
   return (
     <div className="mb-12 max-h-[330px] max-w-lg rounded-b-lg">

@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { BiLike } from 'react-icons/bi';
 import { RiUserShared2Line } from 'react-icons/ri';
 import { AiOutlineEye } from 'react-icons/ai';
+import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 
 const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
@@ -14,6 +15,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
   const [loaded, setLoaded] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [viewCount, setViewCount] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleError = () => {
     setImageSrc(defaultImagePath);
@@ -34,6 +36,22 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
     setModalIsOpen(false);
   };
 
+  const handlePrevImage = () => {
+    if (currentImageIndex > 0) {
+      setCurrentImageIndex(currentImageIndex - 1);
+      setImageSrc(imageName[currentImageIndex - 1]);
+      setLoaded(false);
+    }
+  };
+  
+  const handleNextImage = () => {
+    if (currentImageIndex < imageName.length - 1) {
+      setCurrentImageIndex(currentImageIndex + 1);
+      setImageSrc(imageName[currentImageIndex + 1]);
+      setLoaded(false);
+    }
+  };
+
   return (
     <div
       className={`relative h-full w-full ${
@@ -43,7 +61,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
     >
       <img
         src={imageSrc}
-        alt={`Image ${imageName}`}
+        alt={`Image ${currentImageIndex}`}
         onError={handleError}
         onLoad={handleImageLoad}
         className={`h-full w-full cursor-pointer object-cover transition-opacity duration-500 ${
@@ -53,16 +71,25 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
           openModal();
         }}
       />
+      
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-80 p-4"
-        overlayClassName="fixed inset-0"
-      >
+        overlayClassName="fixed inset-0">
+        <button
+          className="top-1/2 transform -translate-y-1/2 bg-white opacity-30 py-2 px-3"
+          onClick={(e) => {
+            handlePrevImage();
+            e.stopPropagation();
+          }}
+          disabled={currentImageIndex === 0}
+        >
+          <RiArrowLeftSLine className="text-gray-500 text-lg" />
+        </button>
         <div
           className="relative max-h-[728px] max-w-[1024px]"
-          onClick={closeModal}
-        >
+          onClick={closeModal}>
           <img
             src={imageSrc}
             alt={`Image ${imageName}`}
@@ -100,6 +127,19 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
             </div>
           </div>
         </div>
+        <button
+          className="top-1/2 transform -translate-y-1/2 bg-white opacity-30 py-2 px-3"
+          onClick={(e) => {
+            handleNextImage();
+            e.stopPropagation();
+          }}
+          disabled={currentImageIndex === imageName.length - 1}
+        >
+          <RiArrowRightSLine className="text-gray-500 text-lg" />
+        </button>
+        {/* <button className=" top-1/2 transform -translate-y-1/2 bg-white opacity-30 py-2 px-3">
+          <RiArrowRightSLine className="text-gray-500 text-lg" />
+        </button> */}
       </Modal>
     </div>
   );
