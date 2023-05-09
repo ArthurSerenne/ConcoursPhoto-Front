@@ -325,7 +325,6 @@ const ViewContest = () => {
                 </Link>
               </div>
             </TabPanel>
-
             <TabPanel>
               <h2 className="flex items-center text-text-2xl font-normal not-italic">
                 Résultats du concours photo
@@ -388,7 +387,6 @@ const ViewContest = () => {
                 </Link>
               </div>
             </TabPanel>
-
           </Tabs>
         )}
         </div>
