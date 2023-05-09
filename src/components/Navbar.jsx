@@ -9,6 +9,7 @@ import {
 import { useAuth } from './AuthContext';
 import Modal from 'react-modal';
 import Login from '../pages/Login';
+import Register from '../pages/Register';
 
 const customStyles = {
   content: {
@@ -30,6 +31,7 @@ Modal.setAppElement('#root');
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -41,6 +43,14 @@ const Navbar = () => {
 
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
+  };
+
+  const openRegisterModal = () => {
+    setIsRegisterModalOpen(true);
+  };
+
+  const closeRegisterModal = () => {
+    setIsRegisterModalOpen(false);
   };
 
   const { isAuthenticated, logout } = useAuth();
@@ -58,12 +68,12 @@ const Navbar = () => {
           <div className="flex gap-2 md:order-2">
             {!isAuthenticated && (
               <>
-                <Link
-                  to="/register"
+                <button
+                  onClick={openRegisterModal}
                   className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
                 >
                   <RiUserAddLine /> <span>S'inscrire</span>
-                </Link>
+                </button>
                 <button
                   onClick={openLoginModal}
                   className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
@@ -153,6 +163,14 @@ const Navbar = () => {
         contentLabel="Login Modal"
       >
         <Login closeModal={closeLoginModal} />
+      </Modal>
+      <Modal
+        isOpen={isRegisterModalOpen}
+        onRequestClose={closeRegisterModal}
+        style={customStyles}
+        contentLabel="Register Modal"
+      >
+        <Register closeModal={closeRegisterModal} />
       </Modal>
     </>
   );
