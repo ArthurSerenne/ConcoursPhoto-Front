@@ -9,6 +9,22 @@ import {
 import { useAuth } from './AuthContext';
 import Modal from 'react-modal';
 import Login from '../pages/Login';
+import Register from '../pages/Register'
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    background: '#FFFFFF',
+    borderRadius: '10px',
+    width: '530px',
+    height: '491px',
+  },
+};
 
 Modal.setAppElement('#root');
 
@@ -68,12 +84,6 @@ const Navbar = () => {
             )}
             {isAuthenticated && (
               <>
-                <Link
-                  to="/mon-compte"
-                  className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
-                >
-                  <RiUserAddLine /> <span>Mon compte</span>
-                </Link>
                 <>
                 <Link
                   to="/mon-compte"
@@ -157,21 +167,10 @@ const Navbar = () => {
         </div>
       </nav>
       <Modal
-        isOpen={isLoginModalOpen}
-        onRequestClose={closeLoginModal}
-        style={customStyles}
-        contentLabel="Login Modal"
-      >
-        <Login
-          closeModal={closeLoginModal}
-          openRegisterModal={openRegisterModal}
-        />
-      </Modal>
-      <Modal
         isOpen={isRegisterModalOpen}
         onRequestClose={closeRegisterModal}
-        style={customStyles}
         contentLabel="Register Modal"
+        style={customStyles}
       >
         <Register
           closeModal={closeRegisterModal}

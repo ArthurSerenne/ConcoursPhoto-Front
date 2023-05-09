@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import axiosInstance from './AxiosInstance';
 import { useAuth } from './AuthContext';
 
 const LoginSchema = Yup.object().shape({
@@ -10,7 +11,7 @@ const LoginSchema = Yup.object().shape({
     .email('Adresse e-mail invalide')
     .required("L'adresse e-mail est requise"),
   password: Yup.string()
-    .min(8, 'Le mot de passe doit comporter au moins 8 caractères')
+    .min(3, 'Le mot de passe doit comporter au moins 8 caractères')
     .required('Le mot de passe est requis'),
 });
 
@@ -31,53 +32,22 @@ const LoginForm = ({ closeModal }) => {
       const token = response.data.token;
       localStorage.setItem('jwt', token);
   
-<<<<<<< HEAD
-<<<<<<< HEAD
       const userResponse = await axiosInstance.get(
         process.env.REACT_APP_API_URL + '/user_data',
-=======
-      // Récupérez les données de l'utilisateur
-      const userResponse = await axiosInstance.get(
-        process.env.REACT_APP_API_URL + '/users/me', // Modifiez cette URL pour correspondre à l'endpoint qui renvoie les données de l'utilisateur
->>>>>>> 6b9b2da (test)
-=======
-      const userResponse = await axiosInstance.get(
-        process.env.REACT_APP_API_URL + '/user_data',
->>>>>>> d68c59c (test)
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d68c59c (test)
           params: {
             groups: ['user', 'member', 'social_network'],
             forceEager: true,
           },
-<<<<<<< HEAD
         }
       );
   
       const userData = userResponse.data;
       login(userData);
 
-=======
-=======
->>>>>>> d68c59c (test)
-        }
-      );
-  
-      const userData = userResponse.data;
-      login(userData);
-<<<<<<< HEAD
-  
-      console.log(response);
->>>>>>> 6b9b2da (test)
-=======
-
->>>>>>> d68c59c (test)
       closeModal();
       navigate('/');
     } catch (err) {
@@ -88,19 +58,9 @@ const LoginForm = ({ closeModal }) => {
     } finally {
       setSubmitting(false);
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
   };
   
 // ...
-=======
-  };  
->>>>>>> 6b9b2da (test)
-=======
-  };
-  
-// ...
->>>>>>> d68c59c (test)
 
   return (
     <Formik
