@@ -64,7 +64,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
         alt={`Image ${currentImageIndex}`}
         onError={handleError}
         onLoad={handleImageLoad}
-        className={`h-full w-full cursor-pointer object-cover transition-opacity duration-500 ${
+        className={`h-full w-full object-cover transition-opacity duration-500 ${
           loaded ? 'opacity-100' : 'opacity-0'
         } ${radius}`}
         onClick={(e) => {

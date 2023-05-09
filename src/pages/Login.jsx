@@ -28,9 +28,7 @@ const Login = ({ closeModal, openRegisterModal }) => {
         </p>
       </div>
       <LoginForm closeModal={closeModal} />
-      <p className="mt-5 text-sm font-normal not-italic leading-[17px] text-black">
-        Vous avez oublié votre mot de passe ? Cliquez ici
-      </p>
+      <p className='not-italic font-normal text-sm mt-5 leading-[17px] text-black'>Vous avez oublié votre mot de passe ? Cliquez ici</p>
     </div>
   );
 };
