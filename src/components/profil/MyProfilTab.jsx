@@ -294,7 +294,7 @@ const MyProfilTab = () => {
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                         <label>
                             <p>Votre page Facebook</p>
-                            <Field type='text' name='facebook' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <Field type='text' name='facebook' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 lg:mb-4' />
                         </label>
                         <label>
                             <p>Votre chaîne Youtube</p>
@@ -304,7 +304,7 @@ const MyProfilTab = () => {
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                         <label>
                             <p>Votre page Instagram</p>
-                            <Field type='text' name='instagram' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <Field type='text' name='instagram' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 lg:mb-4' />
                         </label>
                         <label>
                             <p>Votre compte Twitter</p>
@@ -314,7 +314,7 @@ const MyProfilTab = () => {
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                         <label>
                             <p>Votre page Linkedin</p>
-                            <Field type='text' name='linkedin' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <Field type='text' name='linkedin' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 lg:mb-4' />
                         </label>
                         <label>
                             <p>Votre compte TikTok</p>
