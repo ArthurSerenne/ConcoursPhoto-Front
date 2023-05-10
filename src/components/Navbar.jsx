@@ -9,7 +9,7 @@ import {
 import { useAuth } from './AuthContext';
 import Modal from 'react-modal';
 import Login from '../pages/Login';
-import Register from '../pages/Register';
+import Register from '../pages/Register'
 
 const customStyles = {
   content: {
@@ -57,7 +57,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="left-0 top-0 w-full bg-gray-400">
+      <nav className="left-0 top-0 w-full bg-[#A8A8A8]">
         <div className="mx-auto flex flex-wrap items-center justify-between p-6 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
           <a
             href="/"
@@ -83,12 +83,22 @@ const Navbar = () => {
               </>
             )}
             {isAuthenticated && (
-              <button
-                onClick={logout}
-                className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
-              >
-                <RiUserSharedLine /> <span>Déconnexion</span>
-              </button>
+              <>
+                <>
+                <Link
+                  to="/mon-compte"
+                  className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
+                >
+                  <RiUserAddLine /> <span>Mon compte</span>
+                </Link>
+                <button
+                    onClick={logout}
+                    className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
+                  >
+                    <RiUserSharedLine /> <span>Déconnexion</span>
+                  </button>
+              </>
+              </>
             )}
           </div>
           <button
@@ -157,27 +167,27 @@ const Navbar = () => {
         </div>
       </nav>
       <Modal
-        isOpen={isLoginModalOpen}
-        onRequestClose={closeLoginModal}
-        style={customStyles}
-        contentLabel="Login Modal"
-      >
-        <Login
-          closeModal={closeLoginModal}
-          openRegisterModal={openRegisterModal}
-        />
-      </Modal>
-      <Modal
         isOpen={isRegisterModalOpen}
         onRequestClose={closeRegisterModal}
-        style={customStyles}
         contentLabel="Register Modal"
+        style={customStyles}
       >
         <Register
           closeModal={closeRegisterModal}
           openLoginModal={openLoginModal}
         />
       </Modal>
+      {isLoginModalOpen && (
+        <Modal
+          isOpen={isLoginModalOpen}
+          onRequestClose={closeLoginModal}
+          contentLabel="Login Modal"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
+          className="relative bg-white rounded-lg w-[530px] h-[445px] pt-6"
+        >
+          <Login closeModal={closeLoginModal} />
+        </Modal>
+      )}
     </>
   );
 };
