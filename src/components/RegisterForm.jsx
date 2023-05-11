@@ -66,6 +66,7 @@ const RegisterForm = ({ closeModal }) => {
       }}
       validationSchema={RegisterSchema}
       onSubmit={handleSubmit}
+      className='z-100'
     >
       {({ isSubmitting  }) => (
         <Form ref={form}>
@@ -78,29 +79,29 @@ const RegisterForm = ({ closeModal }) => {
             <label>Non binaire</label>
           </div>
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-7'>Prénom*</label>
-            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px]' type="text" name="firstname" required />
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-12 mb-2'>Prénom*</label>
+            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="text" name="firstname" required />
             <br />
             <ErrorMessage name="firstname" />
           </div>
           <br />
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-7'>Nom*</label>
-            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px]' type="text" name="lastname" required />
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-12 mb-2'>Nom*</label>
+            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="text" name="lastname" required />
             <br />
             <ErrorMessage name="lastname" />
           </div>
           <br />
           <div className='flex justify-between'>
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-7'>Date de naissance*</label>
-              <Field className='bg-[#f1f1f1] rounded-[5px] w-[210px] h-[43px]' type="date" name="birthdate" required />
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-6 mb-1'>Date de naissance*</label>
+              <Field className='bg-[#f1f1f1] rounded-[5px] w-[216px] h-[43px]' type="date" name="birthdate" required />
               <br />
             <ErrorMessage name="birthdate" />
           </div>
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-7'>Vous êtes*</label>
-            <Field className='bg-[#f1f1f1] rounded-[5px] w-[210px] h-[43px]' as="select" name="situation" required>
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-6 mb-1'>Vous êtes*</label>
+            <Field className='bg-[#f1f1f1] rounded-[5px] w-[216px] h-[43px]' as="select" name="situation" required>
               <option value="">Cliquez ici</option>
               <option value="photographe">Photographe</option>
               <option value="organisateur">Organisateur</option>
@@ -111,15 +112,15 @@ const RegisterForm = ({ closeModal }) => {
           </div>
           <br />
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-7'>Email*</label>
-            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px]' type="email" name="email" required />
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-12 mb-2'>Email*</label>
+            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="email" name="email" required />
             <br />
             <ErrorMessage name="email" />
           </div>
           <br />
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-7'>Mot de passe*</label>
-            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px]' type="password" name="password" placeholder="8 caractères min dont 1 chiffre et 1 lettre majuscule" required />
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-12 mb-2'>Mot de passe*</label>
+            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="password" name="password" placeholder="8 caractères min dont 1 chiffre et 1 lettre majuscule" required />
             <br />
             <ErrorMessage name="password" />
           </div>
