@@ -6,9 +6,9 @@ function Breadcrumb() {
 
   return (
     <nav>
-      <ul class="flex">
+      <ul class="flex space-x-2">
         <li>
-          <Link to="/">Accueil</Link>
+          <Link to="/">Accueil  {">"}</Link>
         </li>
         {pathnames.map((pathname, index) => {
           const routeTo = `/${pathnames.slice(0, index + 1).join('>')}`;
@@ -19,6 +19,7 @@ function Breadcrumb() {
           ) : (
             <li key={routeTo}>
               <Link to={routeTo}>{label}</Link>
+              <span className="mx-2">{'>'}</span>
             </li>
           );
         })}
