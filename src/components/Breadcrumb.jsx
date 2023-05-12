@@ -1,0 +1,30 @@
+import { Link, useLocation } from 'react-router-dom';
+
+function Breadcrumb() {
+  const location = useLocation();
+  const pathnames = location.pathname.split('/').filter((x) => x);
+
+  return (
+    <nav>
+      <ul class="flex">
+        <li>
+          <Link to="/">Accueil</Link>
+        </li>
+        {pathnames.map((pathname, index) => {
+          const routeTo = `/${pathnames.slice(0, index + 1).join('>')}`;
+          const label = pathname.charAt(0).toUpperCase() + pathname.slice(1);
+          const isLast = index === pathnames.length - 1;
+          return isLast ? (
+            <li key={routeTo}>{label}</li>
+          ) : (
+            <li key={routeTo}>
+              <Link to={routeTo}>{label}</Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+export default Breadcrumb;
