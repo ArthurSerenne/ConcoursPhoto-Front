@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import axiosInstance from './AxiosInstance';
 import { useAuth } from './AuthContext';
 
 const RegisterSchema = Yup.object().shape({
@@ -33,8 +34,6 @@ const RegisterForm = ({ closeModal }) => {
       const response = await axios.post(process.env.REACT_APP_API_URL + '/register', values);
       console.log(response);
 
-
-
       const loginResponse = await axios.post(process.env.REACT_APP_API_URL + '/login_check', {
         username: values.email,
         password: values.password,
@@ -42,7 +41,25 @@ const RegisterForm = ({ closeModal }) => {
 
       const token = loginResponse.data.token;
       localStorage.setItem('jwt', token);
-      login();
+
+      const userResponse = await axiosInstance.get(
+        process.env.REACT_APP_API_URL + '/user_data',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            groups: ['user', 'member', 'social_network'],
+            forceEager: true,
+          },
+        }
+      );
+
+      const userData = userResponse.data;
+      login(userData);
+
+      localStorage.setItem('user', JSON.stringify(userData));
+
       closeModal();
       navigate('/');
     } catch (error) {
@@ -50,7 +67,9 @@ const RegisterForm = ({ closeModal }) => {
     } finally {
       setSubmitting(false);
     }
-};
+  };
+
+
 
   return (
     <Formik

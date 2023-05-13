@@ -16,7 +16,9 @@ export const AuthProvider = ({ children }) => {
 
     if (jwt && storedUser) {
       setIsAuthenticated(true);
-      setUser(JSON.parse(storedUser));
+      if (storedUser !== 'undefined') {
+        setUser(JSON.parse(storedUser));
+      }
       setIsLoading(false);
     } else {
       setIsLoading(false);
