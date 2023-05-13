@@ -18,7 +18,6 @@ const LoginSchema = Yup.object().shape({
 const LoginForm = ({ closeModal }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  // ...
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
       const response = await axios.post(
@@ -28,10 +27,10 @@ const LoginForm = ({ closeModal }) => {
           password: values.password,
         }
       );
-  
+
       const token = response.data.token;
       localStorage.setItem('jwt', token);
-  
+
       const userResponse = await axiosInstance.get(
         process.env.REACT_APP_API_URL + '/user_data',
         {
@@ -44,9 +43,11 @@ const LoginForm = ({ closeModal }) => {
           },
         }
       );
-  
+
       const userData = userResponse.data;
       login(userData);
+
+      localStorage.setItem('user', JSON.stringify(userData));
 
       closeModal();
       navigate('/');
@@ -59,8 +60,7 @@ const LoginForm = ({ closeModal }) => {
       setSubmitting(false);
     }
   };
-  
-// ...
+
 
   return (
     <Formik
