@@ -11,21 +11,6 @@ import Modal from 'react-modal';
 import Login from '../pages/Login';
 import Register from '../pages/Register'
 
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    background: '#FFFFFF',
-    borderRadius: '10px',
-    width: '530px',
-    height: '491px',
-  },
-};
-
 Modal.setAppElement('#root');
 
 const Navbar = () => {
