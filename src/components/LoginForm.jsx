@@ -73,14 +73,14 @@ const LoginForm = ({ closeModal }) => {
         <Form>
           <ErrorMessage name="form" />
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-12 mb-2' htmlFor="email">Email ou pseudo*</label>
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2' htmlFor="email">Email ou pseudo*</label>
             <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="email" name="email" />
             <br />
             <ErrorMessage name="email" />
           </div>
           <br />
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black ml-12 mb-2' htmlFor="password">Mot de passe*</label>
+            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2' htmlFor="password">Mot de passe*</label>
             <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="password" name="password" />
             <br />
             <ErrorMessage name="password" />

@@ -8,6 +8,7 @@ import ListContest from './pages/ListContest';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Profil from './pages/Profil';
+import './sass/components/select.scss';
 
 const App = () => {
   return (
