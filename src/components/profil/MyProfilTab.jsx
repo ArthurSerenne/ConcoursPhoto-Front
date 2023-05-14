@@ -4,18 +4,53 @@ import { Formik, Form, Field } from 'formik';
 import { format, parseISO } from "date-fns";
 import myImage from '../../assets/images/user-icon.png';
 import axiosInstance from '../AxiosInstance';
+import SituationEnum from './enums/SituationEnum';
+import CategoryEnum from './enums/CategoryEnum';
+import axios from 'axios';
+import AsyncSelect from 'react-select/async';
 
 const MyProfilTab = () => {
-  const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
+    const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
     const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
-    const imagePath = user.member.photo ? `${baseUrl}${user.member.photo}` : myImage;
+    const imagePath = user.member?.photo ? `${baseUrl}${user.member.photo}` : myImage;
     const [displayedImage, setDisplayedImage] = useState(imagePath);
+    const [originalImage, setOriginalImage] = useState(imagePath);
     const formattedInitialValue = format(parseISO(user.birthdate), "yyyy-MM-dd");
-    const [imageFile, setImageFile] = useState(null);
+    const [imageRemoved, setImageRemoved] = useState(false);
+
+    console.log(user);
     
     useEffect(() => {
         setDisplayedImage(imagePath);
+        setOriginalImage(imagePath);
     }, [imagePath]);
+
+    const loadZipCode = (inputValue) => {
+        return axios.get(process.env.REACT_APP_API_URL + '/cities.json', {
+            params: {
+                zip_code: inputValue
+            }
+        }).then(res => {
+            return res.data.map(city => ({
+                value: city.id,
+                label: city.zip_code
+            }));
+        });
+    };
+
+    const loadCities = (inputValue) => {
+        return axios.get(process.env.REACT_APP_API_URL + '/cities.json', {
+            params: {
+                name: inputValue
+            }
+        }).then(res => {
+            return res.data.map(city => ({
+                value: `${process.env.REACT_APP_API_URL}/cities/${city.id}`,
+                label: city.name
+            }));
+        });
+    };
+
 
     if (isLoading) {
         return (
@@ -33,23 +68,25 @@ const MyProfilTab = () => {
         );
     }
 
-        const handleImageChange = (event) => {
+    const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-            setDisplayedImage(reader.result);
+                setDisplayedImage(reader.result);
+                setImageRemoved(false);
             };
             reader.readAsDataURL(file);
-            setImageFile(file);
         }
-        };
+    };
       
-      const handleImageRemove = () => {
-        if (window.confirm("Voulez-vous vraiment supprimer cette image ?")) {
-          setDisplayedImage(null);
-        }
-      };
+        const handleImageRemove = () => {
+            if (window.confirm("Voulez-vous vraiment supprimer cette image ?")) {
+                setDisplayedImage(null);
+                setOriginalImage(null);
+                setImageRemoved(true);
+            }
+        };      
 
       const separateEntityData = (values) => {
         const entity1Data = {
@@ -60,6 +97,7 @@ const MyProfilTab = () => {
             address: values.address,
             email: values.email,
             password: values.password ? values.password : user.password,
+            city: values.city ? values.city.value : null,
         };
 
         const entity2Data = {
@@ -85,17 +123,17 @@ const MyProfilTab = () => {
       const handleSubmit = async (values, { setSubmitting }) => {
         const { entity1Data, entity2Data, entity3Data } = separateEntityData(values);
 
-        if (imageFile) {
+        if (imageRemoved) {
+            entity1Data.photo = null;
+        } else if (originalImage !== displayedImage) {
             entity1Data.photo = displayedImage;
-          }
+        }
 
         const data = {
             entity1Data,
             entity2Data,
             entity3Data,
         };
-
-          console.log(displayedImage);
         
           try {
             const response = await axiosInstance.patch(
@@ -109,10 +147,11 @@ const MyProfilTab = () => {
             );
         
             if (response.status === 200) {
-              console.log("Formulaire soumis avec succès");
-              await reloadUser();
+                console.log("Formulaire soumis avec succès");
+                setImageRemoved(false);
+                await reloadUser();
             } else {
-              console.error("Erreur lors de la soumission du formulaire");
+                console.error("Erreur lors de la soumission du formulaire");
             }
           } catch (error) {
           console.error("Erreur lors de la soumission du formulaire:", error);
@@ -130,8 +169,8 @@ const MyProfilTab = () => {
             lastname: user.lastname ?? "",
             firstname: user.firstname ?? "",
             address: user.address ?? "",
-            city: user.city?.name ?? "",
-            zipcode: user.city?.zip_code ?? "",
+            city: user.city ? { value: `${process.env.REACT_APP_API_URL}/cities/${user.city.id}`, label: user.city.name } : "",
+            zipcode: user.city ? { value: user.city, label: user.city.zip_code } : null,
             email: user.email ?? "",
             passwword: user.passwword ?? "",
             username: user.member?.username ?? "",
@@ -152,7 +191,7 @@ const MyProfilTab = () => {
                 <img src={displayedImage || myImage} className={`h-[112px] w-[112px] object-cover rounded-full`} />
                 <div className="relative">
                     <label htmlFor="file-upload" className="w-[200px] px-8 py-5 bg-gray-300 rounded-full font-bold cursor-pointer hover:bg-gray-200">
-                    Télécharger ma photo
+                        Télécharger ma photo
                     </label>
                     <input
                     type="file"
@@ -222,7 +261,13 @@ const MyProfilTab = () => {
                             </label>
                             <label>
                                 <p>Vous êtes*</p>
-                                <Field type='text' name='situation' className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4' />
+                                <Field as='select' name='situation' className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4'>
+                                    {Object.entries(SituationEnum).map(([key, value]) => (
+                                        <option value={key} key={key}>
+                                            {value}
+                                        </option>
+                                    ))}
+                                </Field>
                             </label>
                         </div>
                         <label>
@@ -242,11 +287,29 @@ const MyProfilTab = () => {
                         <div className='grid grid-cols-2 max-w-[432px] gap-4'>
                             <label>
                                 <p>Code postal</p>
-                                <Field type='text' name='zipcode' className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4' />
+                                <Field name="zipcode">
+                                    {({ field, form }) => (
+                                        <AsyncSelect
+                                        {...field}
+                                        className='bg-gray-100 rounded-md p-1 w-[210px] h-[43px] mt-1 mb-4 gray-select'
+                                        loadOptions={loadZipCode}
+                                        onChange={option => form.setFieldValue(field.name, option)}
+                                        />
+                                    )}
+                                </Field>
                             </label>
                             <label>
                                 <p>Ville</p>
-                                <Field type='text' name='city' className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4' />
+                                <Field name="city">
+                                    {({ field, form }) => (
+                                        <AsyncSelect
+                                        {...field}
+                                        className='bg-gray-100 rounded-md p-1 w-[210px] h-[43px] mt-1 mb-4 gray-select'
+                                        loadOptions={loadCities}
+                                        onChange={option => form.setFieldValue(field.name, option)}
+                                        />
+                                    )}
+                                </Field>
                             </label>
                         </div>
                         <div className='grid grid-cols-2 max-w-[432px] gap-4'>
@@ -272,20 +335,26 @@ const MyProfilTab = () => {
                 <div className='mt-10'>
                     <p className='font-bold mb-4'>Si vous êtes photographe</p>
                     <p className='text-sm w-96 lg:w-full'>Bio / fiche de présentation dans l’annuaire des photographes (si vous avez soumis au moins 1 photo à un concours)</p>
-                    <textarea
+                    <Field
+                        as='textarea'
                         name='description'
-                        defaultValue={user.member.description}
-                        className='bg-gray-100 w-full h-[242px] mt-3 rounded-md p-4 text-sm mb-4 lg:w-[929px]' 
-                        placeholder='Présentez vous brièvement : qui êtes-vous ? que faites-vous ? quelle est votre expérience, vos centres d’intérêts et vos spécialités en tant que photographe ?'  
+                        className='bg-gray-100 w-full mt-3 rounded-md px-4 pt-4 h-[242px] text-sm mb-4 lg:w-[929px]' 
+                        placeholder='Présentez vous brièvement : qui êtes-vous ? que faites-vous ? quelle est votre expérience, vos centres d’intérêts et vos spécialités en tant que photographe ?'
                     />
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                         <label>
                             <p>Votre catégorie en tant que photographe ?</p>
-                            <Field type='text' name='categorie' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <Field as='select' name='categorie' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4'>
+                                {Object.entries(CategoryEnum).map(([key, value]) => (
+                                    <option value={key} key={key}>
+                                        {value}
+                                    </option>
+                                ))}
+                            </Field>
                         </label>
                         <label>
                             <p>Votre site web personnel</p>
-                            <Field type='text' name='website' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <Field type='text' name='website' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' placeholder='https://' />
                         </label>
                     </div>
                 </div>

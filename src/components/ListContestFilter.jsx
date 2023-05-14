@@ -76,7 +76,7 @@ const ThemeFilter = ({ applyFilters }) => {
         </div>
         <div className="flex flex h-[55px] gap-6">
           <Select
-            className="w-full bg-gray-100 p-2"
+            className="w-full bg-gray-100 p-2 gray-select"
             options={themes.map((theme) => ({
               value: theme.id,
               label: theme.name,
@@ -86,7 +86,7 @@ const ThemeFilter = ({ applyFilters }) => {
             onChange={handleThemeChange}
           />
           <Select
-            className="w-full bg-gray-100 p-2"
+            className="w-full bg-gray-100 p-2 gray-select"
             options={[
               { value: 'true', label: 'concours actifs' },
               { value: 'false', label: 'concours inactifs' },
@@ -115,14 +115,14 @@ const ThemeFilter = ({ applyFilters }) => {
         <div className='w-full'>
           <p>Pays</p>
           <Select
-            className="mt-2 h-[55px] w-full bg-gray-100 p-2"
+            className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
             options={[{ value: 'FR', label: 'France' }]}
           />
         </div>
         <div className="w-full">
           <p>Région</p>
           <Select
-            className="mt-2 h-[55px] w-full bg-gray-100 p-2"
+            className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
             options={regions.map((region) => ({
               value: region.id,
               label: region.name,
@@ -133,7 +133,7 @@ const ThemeFilter = ({ applyFilters }) => {
         <div className="w-full">
           <p>Départements</p>
           <Select
-            className="mt-2 h-[55px] w-full bg-gray-100 p-2"
+            className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
             options={departments.map((department) => ({
               value: department.id,
               label: department.name,
@@ -144,7 +144,7 @@ const ThemeFilter = ({ applyFilters }) => {
         <div className="w-full">
           <p>Catégorie (réservé aux)</p>
           <Select
-            className="mt-2 h-[55px] w-full bg-gray-100 p-2"
+            className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
             options={categories.map((categorie) => ({
               value: categorie.id,
               label: categorie.name,
@@ -154,11 +154,11 @@ const ThemeFilter = ({ applyFilters }) => {
         </div>
         <div className="w-full">
           <p>Âge (réservé aux)</p>
-          <Select className="mt-2 h-[55px] w-full bg-gray-100 p-2" />
+          <Select className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select" />
         </div>
         <div className="w-full">
           <p>Prix/dotations</p>
-          <Select className="mt-2 h-[55px] w-full bg-gray-100 p-2" />
+          <Select className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select" />
         </div>
       </div>
     </div>

@@ -6,11 +6,10 @@ import MyOrganizationTab from '../components/profil/MyOrganizationTab';
 import ContestOrganizationTab from '../components/profil/ContestOrganizationTab';
 import ContestParticipationTab from '../components/profil/ContestParticipationTab';
 import AdTab from '../components/profil/AdTab';
+import '../sass/components/tabs.scss';
 
 const Profil = () => {
-  const { isAuthenticated, user, isLoading } = useAuth();
-
-  console.log(user);
+  const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (

@@ -9,7 +9,7 @@ import {
 import { useAuth } from './AuthContext';
 import Modal from 'react-modal';
 import Login from '../pages/Login';
-import Register from '../pages/Register';
+import Register from '../pages/Register'
 
 const customStyles = {
   content: {
@@ -166,6 +166,18 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+      <Modal
+        isOpen={isRegisterModalOpen}
+        onRequestClose={closeRegisterModal}
+        contentLabel="Register Modal"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
+          className="relative bg-white rounded-lg w-[530px] h-[875px] pt-6"
+      >
+        <Register
+          closeModal={closeRegisterModal}
+          openLoginModal={openLoginModal}
+        />
+      </Modal>
       {isLoginModalOpen && (
         <Modal
           isOpen={isLoginModalOpen}
