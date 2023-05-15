@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 
-function Breadcrumb() {
+function Breadcrumb({contest}) {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
 
@@ -15,7 +15,7 @@ function Breadcrumb() {
           const label = pathname.charAt(0).toUpperCase() + pathname.slice(1);
           const isLast = index === pathnames.length - 1;
           return isLast ? (
-            <li key={routeTo}>{label}</li>
+            <li key={routeTo}>{contest.name}</li>
           ) : (
             <li key={routeTo}>
               <Link to={routeTo}>{label}</Link>
