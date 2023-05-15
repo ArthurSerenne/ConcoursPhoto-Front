@@ -13,16 +13,15 @@ const Profil = () => {
 
   if (isLoading) {
     return (
-      <div>
-        <p>Chargement...</p>
-      </div>
+      <>
+      </>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div>
-        <p>Veuillez vous connecter pour accéder à cette page.</p>
+      <div className='text-center py-36'>
+        <p className='text-lg'>Veuillez vous connecter pour accéder à cette page.</p>
       </div>
     );
   }
