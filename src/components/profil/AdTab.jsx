@@ -6,7 +6,7 @@ import { RiSortAsc, RiSortDesc, RiArrowRightSLine, RiArrowLeftSLine } from "reac
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 
 const AdTab = () => {
-  const { isAuthenticated, user, isLoading } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const columns = React.useMemo(
     () => [
@@ -86,22 +86,6 @@ const AdTab = () => {
     useSortBy,
     usePagination
   );
-
-  if (isLoading) {
-    return (
-      <div>
-        <p>Chargement...</p>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div>
-        <p>Veuillez vous connecter pour accéder à cette page.</p>
-      </div>
-    );
-  }
   
   return (
     <div>

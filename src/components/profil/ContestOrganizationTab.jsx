@@ -6,39 +6,49 @@ import { RiSortAsc, RiSortDesc, RiArrowRightSLine, RiArrowLeftSLine } from "reac
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 
 const ContestOrganizationTab = () => { 
-  const { isAuthenticated, user, isLoading } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
-  const columns = React.useMemo(
-    () => [
-      { Header: 'Nom du concours', accessor: 'name' },
-      {
-        Header: 'Date de début du concours',
-        accessor: 'creationDate',
-        Cell: ({ value }) => {
-          const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
-          return <span>{formattedDate}</span>;
+  const columns = React.useMemo(() => {
+    if (user.organizations[0]) {
+      return [
+        { Header: 'Nom du concours', accessor: 'name' },
+        {
+          Header: 'Date de début du concours',
+          accessor: 'creationDate',
+          Cell: ({ value }) => {
+            const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
+            return <span>{formattedDate}</span>;
+          },
         },
-      },
-      {
-        Header: 'Date de fin du concours',
-        accessor: 'resultsDate',
-        Cell: ({ value }) => {
-          const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
-          return <span>{formattedDate}</span>;
+        {
+          Header: 'Date de fin du concours',
+          accessor: 'resultsDate',
+          Cell: ({ value }) => {
+            const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
+            return <span>{formattedDate}</span>;
+          },
         },
-      },
-      { 
-        Header: 'Statut', 
-        accessor: 'status',
-        Cell: ({value}) => {
-          return <span>{value === true ? 'Actif' : 'Inactif'}</span>
-        }
-      },
-      { Header: 'Participants', accessor: 'contest.trend' },
-      { Header: 'Photos', accessor: 'photos.length' },
-    ],
-    []
-  );
+        { 
+          Header: 'Statut', 
+          accessor: 'status',
+          Cell: ({value}) => {
+            return <span>{value === true ? 'Actif' : 'Inactif'}</span>
+          }
+        },
+        { Header: 'Participants', accessor: 'contest.trend' },
+        { Header: 'Photos', accessor: 'photos.length' },
+      ];
+    } else {
+      return [
+        { Header: 'Nom du concours' },
+        { Header: 'Date de début du concours' },
+        { Header: 'Date de fin du concours' },
+        { Header: 'Statut' },
+        { Header: 'Participants' },
+        { Header: 'Photos' },
+      ];
+    }
+  }, [user.organizations]);  
 
   const data = React.useMemo(() => isAuthenticated && user.organizations[0].contests || [], [isAuthenticated, user.organizations[0].contests]);
 
@@ -86,22 +96,6 @@ const ContestOrganizationTab = () => {
     useSortBy,
     usePagination
   );
-
-  if (isLoading) {
-      return (
-        <div>
-          <p>Chargement...</p>
-        </div>
-      );
-  }
-
-  if (!isAuthenticated) {
-      return (
-        <div>
-          <p>Veuillez vous connecter pour accéder à cette page.</p>
-        </div>
-      );
-  }
   
     return (
       <div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { format, parseISO } from "date-fns";
 import myImage from '../../assets/images/user-icon.png';
 import axiosInstance from '../AxiosInstance';
@@ -10,9 +10,10 @@ import axios from 'axios';
 import AsyncSelect from 'react-select/async';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import * as Yup from 'yup';
 
 const MyProfilTab = () => {
-    const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
+    const { user, reloadUser, logout } = useAuth();
     const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
     const imagePath = user.member?.photo ? `${baseUrl}${user.member.photo}` : myImage;
     const [displayedImage, setDisplayedImage] = useState(imagePath);
@@ -53,23 +54,6 @@ const MyProfilTab = () => {
         });
     };
 
-
-    if (isLoading) {
-        return (
-        <div>
-            <p>Chargement...</p>
-        </div>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return (
-        <div>
-            <p>Veuillez vous connecter pour accéder à cette page.</p>
-        </div>
-        );
-    }
-
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -98,7 +82,7 @@ const MyProfilTab = () => {
             birthdate: values.birthdate,
             address: values.address,
             email: values.email,
-            password: values.password ? values.password : user.password,
+            password: values.password,
             city: values.city ? values.city.value : null,
         };
 
@@ -122,52 +106,74 @@ const MyProfilTab = () => {
         return { entity1Data, entity2Data, entity3Data };
       };
 
-      const handleSubmit = async (values, { setSubmitting }) => {
+      const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
         const { entity1Data, entity2Data, entity3Data } = separateEntityData(values);
 
+        if (values.email !== user.email && !values.password) {
+            setFieldError('password', 'Le mot de passe est requis lorsque vous changez votre email');
+            setSubmitting(false);
+            return;
+        }        
+    
         if (imageRemoved) {
             entity1Data.photo = null;
         } else if (originalImage !== displayedImage) {
             entity1Data.photo = displayedImage;
         }
-
+    
         const data = {
             entity1Data,
             entity2Data,
             entity3Data,
         };
-
-          try {
+    
+        try {
             const response = await axiosInstance.patch(
-              `${process.env.REACT_APP_API_URL}/user_update`,
-              data,
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }
+                `${process.env.REACT_APP_API_URL}/user_update`,
+                data,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
             );
-
+    
             if (response.status === 200) {
                 console.log("Formulaire soumis avec succès");
                 setImageRemoved(false);
-                await reloadUser();
-                toast.success('Profil mis à jour avec succès !');
+                if (values.email !== user.email) {
+                    logout();
+                    toast.info('Veuillez vous reconnecter avec votre nouvelle adresse e-mail.');
+                } else {
+                    await reloadUser();
+                    toast.success('Profil mis à jour avec succès !');
+                }
             } else {
                 console.error("Erreur lors de la soumission du formulaire");
                 toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
-            }
-          } catch (error) {
-              console.error("Erreur lors de la soumission du formulaire:", error);
-              toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
+            }            
+        } catch (error) {
+            console.error("Erreur lors de la soumission du formulaire:", error);
+            toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
         } finally {
-          setSubmitting(false);
+            setSubmitting(false);
         }
-      };
+    };
 
+    const validationSchema = Yup.object().shape({
+        email: Yup.string()
+          .email('Adresse email invalide')
+          .required('Ce champ est requis'),
+        password: Yup.string(),
+      });    
+    
     return (
         <Formik
+        validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        validateOnBlur={true}
+        validateOnChange={true}
+        context={{ initialValues: { email: user.email } }}
         initialValues={{
             photo: user.member?.photo ?? "",
             gender: user.gender ?? "",
@@ -176,8 +182,8 @@ const MyProfilTab = () => {
             address: user.address ?? "",
             city: user.city ? { value: `${process.env.REACT_APP_API_URL}/cities/${user.city.id}`, label: user.city.name } : "",
             zipcode: user.city ? { value: user.city, label: user.city.zip_code } : null,
-            email: user.email ?? "",
-            passwword: user.passwword ?? "",
+            email: user.email,
+            password: "",
             username: user.member?.username ?? "",
             situation: user.member?.situation ?? "",
             categorie: user.member?.category ?? "",
@@ -278,10 +284,12 @@ const MyProfilTab = () => {
                         <label>
                             <p>Email*</p>
                             <Field type='text' name='email' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <ErrorMessage name="email" component="div" className="text-red-500" />
                         </label>
                         <label>
                             <p>Mot de passe*</p>
                             <Field type='text' name='password' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4 text-sm' placeholder='8 caractères min dont 1 chiffre et 1 lettre majuscule' />
+                            <ErrorMessage name="password" component="div" className="text-red-500" />
                         </label>
                     </div>
                     <div>

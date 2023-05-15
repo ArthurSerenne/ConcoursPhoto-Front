@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const MyOrganizationTab = () => {
-    const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
+    const { user, reloadUser } = useAuth();
     const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
     const imagePath = user.organizations[0]?.logo ? `${baseUrl}${user.organizations[0].logo}` : myImage;
     const [displayedImage, setDisplayedImage] = useState(imagePath);
@@ -47,23 +47,6 @@ const MyOrganizationTab = () => {
             }));
         });
     };
-
-
-    if (isLoading) {
-        return (
-        <div>
-            <p>Chargement...</p>
-        </div>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return (
-        <div>
-            <p>Veuillez vous connecter pour accéder à cette page.</p>
-        </div>
-        );
-    }
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -332,7 +315,7 @@ const MyOrganizationTab = () => {
                             </label>
                         </div>
                     </div>
-                    <button className='bg-black text-white font-semibold px-14 py-5 rounded-full mt-10' type='submit'>Mettre à jour</button>
+                    <button className='bg-black text-white font-semibold px-14 py-5 rounded-full mt-10 hover:bg-gray-500' type='submit'>Mettre à jour</button>
                 </div>
             </div>
             </Form>
