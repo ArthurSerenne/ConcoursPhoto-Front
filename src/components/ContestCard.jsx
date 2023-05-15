@@ -48,8 +48,8 @@ const ContestCard = (props) => {
                         .join(", ")
                         .split(", ")
                         .slice(0,1)
-                        .map((themeName) => (
-                            <span style={{ maxWidth: '15ch', display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '4px' }}>{themeName} </span>
+                        .map((themeName, index) => (
+                            <span key={themeName} style={{ maxWidth: '15ch', display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '4px' }}>{themeName} </span>
                         ))}
                     </p>
                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs uppercase">{props.contest.status === true ? 'Actif' : 'Inactif'}</p>
