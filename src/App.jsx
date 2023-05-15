@@ -9,12 +9,15 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import Profil from './pages/Profil';
 import './sass/components/select.scss';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
     <AuthProvider>
       <div className="App">
         <Navbar />
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/concours-photo" element={<ListContest />} />

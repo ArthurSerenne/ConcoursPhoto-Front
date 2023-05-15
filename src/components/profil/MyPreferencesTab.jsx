@@ -1,6 +1,8 @@
 import { useAuth } from '../AuthContext';
 import { Formik, Form, Field } from 'formik';
 import axiosInstance from '../AxiosInstance';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyPreferencesTab = () => {
     const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
@@ -34,7 +36,7 @@ const MyPreferencesTab = () => {
             submissionContest: values.submissionContest,
             endSubmissionContest: values.endSubmissionContest,
         };
-      
+
         return { entity1Data };
       };
 
@@ -44,7 +46,7 @@ const MyPreferencesTab = () => {
         const data = {
             entity1Data,
         };
-        
+
           try {
             const response = await axiosInstance.patch(
               `${process.env.REACT_APP_API_URL}/preferencies_update`,
@@ -55,15 +57,18 @@ const MyPreferencesTab = () => {
                 },
               }
             );
-        
+
             if (response.status === 200) {
                 console.log("Formulaire soumis avec succès");
                 await reloadUser();
+                toast.success('Préférences mises à jour avec succès !');
             } else {
                 console.error("Erreur lors de la soumission du formulaire");
+                toast.error('Erreur lors de la mise à jour des préférences. Veuillez réessayer.');
             }
           } catch (error) {
-          console.error("Erreur lors de la soumission du formulaire:", error);
+              console.error("Erreur lors de la soumission du formulaire:", error);
+              toast.error('Erreur lors de la mise à jour des préférences. Veuillez réessayer.');
         } finally {
           setSubmitting(false);
         }

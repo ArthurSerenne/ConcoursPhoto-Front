@@ -5,6 +5,8 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import axiosInstance from './AxiosInstance';
 import { useAuth } from './AuthContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RegisterSchema = Yup.object().shape({
   gender: Yup.string().required('Le genre est requis'),
@@ -33,6 +35,8 @@ const RegisterForm = ({ closeModal }) => {
     try {
       const response = await axios.post(process.env.REACT_APP_API_URL + '/register', values);
       console.log(response);
+
+      toast.success("Inscription réussie !");
 
       const loginResponse = await axios.post(process.env.REACT_APP_API_URL + '/login_check', {
         username: values.email,
@@ -64,6 +68,7 @@ const RegisterForm = ({ closeModal }) => {
       navigate('/');
     } catch (error) {
       console.log(error);
+      toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
     } finally {
       setSubmitting(false);
     }

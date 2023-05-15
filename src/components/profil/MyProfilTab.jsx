@@ -8,6 +8,8 @@ import SituationEnum from './enums/SituationEnum';
 import CategoryEnum from './enums/CategoryEnum';
 import axios from 'axios';
 import AsyncSelect from 'react-select/async';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyProfilTab = () => {
     const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
@@ -19,7 +21,7 @@ const MyProfilTab = () => {
     const [imageRemoved, setImageRemoved] = useState(false);
 
     console.log(user);
-    
+
     useEffect(() => {
         setDisplayedImage(imagePath);
         setOriginalImage(imagePath);
@@ -79,14 +81,14 @@ const MyProfilTab = () => {
             reader.readAsDataURL(file);
         }
     };
-      
+
         const handleImageRemove = () => {
             if (window.confirm("Voulez-vous vraiment supprimer cette image ?")) {
                 setDisplayedImage(null);
                 setOriginalImage(null);
                 setImageRemoved(true);
             }
-        };      
+        };
 
       const separateEntityData = (values) => {
         const entity1Data = {
@@ -116,7 +118,7 @@ const MyProfilTab = () => {
             linkedin: values.linkedin,
             tiktok: values.tiktok,
         };
-      
+
         return { entity1Data, entity2Data, entity3Data };
       };
 
@@ -134,7 +136,7 @@ const MyProfilTab = () => {
             entity2Data,
             entity3Data,
         };
-        
+
           try {
             const response = await axiosInstance.patch(
               `${process.env.REACT_APP_API_URL}/user_update`,
@@ -145,16 +147,19 @@ const MyProfilTab = () => {
                 },
               }
             );
-        
+
             if (response.status === 200) {
                 console.log("Formulaire soumis avec succès");
                 setImageRemoved(false);
                 await reloadUser();
+                toast.success('Profil mis à jour avec succès !');
             } else {
                 console.error("Erreur lors de la soumission du formulaire");
+                toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
             }
           } catch (error) {
-          console.error("Erreur lors de la soumission du formulaire:", error);
+              console.error("Erreur lors de la soumission du formulaire:", error);
+              toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
         } finally {
           setSubmitting(false);
         }
@@ -338,7 +343,7 @@ const MyProfilTab = () => {
                     <Field
                         as='textarea'
                         name='description'
-                        className='bg-gray-100 w-full mt-3 rounded-md px-4 pt-4 h-[242px] text-sm mb-4 lg:w-[929px]' 
+                        className='bg-gray-100 w-full mt-3 rounded-md px-4 pt-4 h-[242px] text-sm mb-4 lg:w-[929px]'
                         placeholder='Présentez vous brièvement : qui êtes-vous ? que faites-vous ? quelle est votre expérience, vos centres d’intérêts et vos spécialités en tant que photographe ?'
                     />
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>

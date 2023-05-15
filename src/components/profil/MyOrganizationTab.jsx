@@ -6,6 +6,8 @@ import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import AsyncSelect from 'react-select/async';
 import OrganizationTypeEnum from './enums/OrganizationTypeEnum';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyOrganizationTab = () => {
     const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
@@ -74,14 +76,14 @@ const MyOrganizationTab = () => {
             reader.readAsDataURL(file);
         }
     };
-      
+
         const handleImageRemove = () => {
             if (window.confirm("Voulez-vous vraiment supprimer cette image ?")) {
                 setDisplayedImage(null);
                 setOriginalImage(null);
                 setImageRemoved(true);
             }
-        };      
+        };
 
       const separateEntityData = (values) => {
         const entity1Data = {
@@ -106,7 +108,7 @@ const MyOrganizationTab = () => {
             linkedin: values.linkedin,
             tiktok: values.tiktok,
         };
-      
+
         return { entity1Data, entity2Data };
       };
 
@@ -127,7 +129,7 @@ const MyOrganizationTab = () => {
         };
 
         console.log(data);
-        
+
           try {
             const response = await axiosInstance.patch(
               `${process.env.REACT_APP_API_URL}/organization_update`,
@@ -138,16 +140,19 @@ const MyOrganizationTab = () => {
                 },
               }
             );
-        
+
             if (response.status === 200) {
                 console.log("Formulaire soumis avec succès");
                 setImageRemoved(false);
                 await reloadUser();
+                toast.success('Informations de l\'organisation mises à jour avec succès !');
             } else {
                 console.error("Erreur lors de la soumission du formulaire");
+                toast.error('Erreur lors de la mise à jour des informations de l\'organisation. Veuillez réessayer.');
             }
           } catch (error) {
-          console.error("Erreur lors de la soumission du formulaire:", error);
+              console.error("Erreur lors de la soumission du formulaire:", error);
+              toast.error('Erreur lors de la mise à jour des informations de l\'organisation. Veuillez réessayer.');
         } finally {
           setSubmitting(false);
         }
@@ -290,7 +295,7 @@ const MyOrganizationTab = () => {
                         <Field
                         as='textarea'
                         name='description'
-                        className='bg-gray-100 w-full mt-3 rounded-md px-4 pt-4 h-[242px] text-sm mb-4 lg:w-[929px]' 
+                        className='bg-gray-100 w-full mt-3 rounded-md px-4 pt-4 h-[242px] text-sm mb-4 lg:w-[929px]'
                         placeholder='Présentez brièvement votre organisation...'
                     />
                     </div>
