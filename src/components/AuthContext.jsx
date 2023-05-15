@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axiosInstance from './AxiosInstance';
-
 const AuthContext = createContext();
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -44,8 +43,8 @@ export const AuthProvider = ({ children }) => {
       const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/user_data`);
       if (response.status === 200) {
         const updatedUser = response.data;
-        console.log(updatedUser);
-        login(updatedUser);
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
       } else {
         console.error("Erreur lors de la récupération des données utilisateur");
       }
