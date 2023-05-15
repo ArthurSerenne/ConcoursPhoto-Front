@@ -6,7 +6,7 @@ function Breadcrumb({contest}) {
 
   return (
     <nav>
-      <ul class="flex space-x-2">
+      <ul className="flex space-x-2">
         <li>
           <Link to="/">Accueil  {">"}</Link>
         </li>
