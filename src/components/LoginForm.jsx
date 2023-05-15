@@ -5,6 +5,9 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import axiosInstance from './AxiosInstance';
 import { useAuth } from './AuthContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -18,7 +21,7 @@ const LoginSchema = Yup.object().shape({
 const LoginForm = ({ closeModal }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post(
         process.env.REACT_APP_API_URL + '/login_check',
@@ -49,12 +52,12 @@ const LoginForm = ({ closeModal }) => {
 
       localStorage.setItem('user', JSON.stringify(userData));
 
+      toast.success('Vous êtes connecté !');
+
       closeModal();
       navigate('/');
     } catch (err) {
-      setErrors({
-        form: "Erreur d'authentification. Veuillez vérifier vos identifiants.",
-      });
+      toast.error("Erreur d'authentification. Veuillez vérifier vos identifiants.");
       console.log(err);
     } finally {
       setSubmitting(false);
