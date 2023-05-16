@@ -1,8 +1,20 @@
 import { useAuth } from '../AuthContext';
-import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axiosInstance from '../AxiosInstance';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+const validationSchema = Yup.object().shape({
+    newContest: Yup.boolean(),
+    voteContest: Yup.boolean(),
+    endContest: Yup.boolean(),
+    resultContest: Yup.boolean(),
+    blog: Yup.boolean(),
+    newContestProfil: Yup.boolean(),
+    submissionContest: Yup.boolean(),
+    endSubmissionContest: Yup.boolean(),
+});
 
 const MyPreferencesTab = () => {
     const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
@@ -11,17 +23,17 @@ const MyPreferencesTab = () => {
 
     if (isLoading) {
         return (
-        <div>
-            <p>Chargement...</p>
-        </div>
+            <div>
+                <p>Chargement...</p>
+            </div>
         );
     }
 
     if (!isAuthenticated) {
         return (
-        <div>
-            <p>Veuillez vous connecter pour accéder à cette page.</p>
-        </div>
+            <div>
+                <p>Veuillez vous connecter pour accéder à cette page.</p>
+            </div>
         );
     }
 
@@ -38,24 +50,24 @@ const MyPreferencesTab = () => {
         };
 
         return { entity1Data };
-      };
+    };
 
-      const handleSubmit = async (values, { setSubmitting }) => {
+    const handleSubmit = async (values, { setSubmitting }) => {
         const { entity1Data } = separateEntityData(values);
 
         const data = {
             entity1Data,
         };
 
-          try {
+        try {
             const response = await axiosInstance.patch(
-              `${process.env.REACT_APP_API_URL}/preferencies_update`,
-              data,
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }
+                `${process.env.REACT_APP_API_URL}/preferencies_update`,
+                data,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
             );
 
             if (response.status === 200) {
@@ -66,17 +78,18 @@ const MyPreferencesTab = () => {
                 console.error("Erreur lors de la soumission du formulaire");
                 toast.error('Erreur lors de la mise à jour des préférences. Veuillez réessayer.');
             }
-          } catch (error) {
-              console.error("Erreur lors de la soumission du formulaire:", error);
-              toast.error('Erreur lors de la mise à jour des préférences. Veuillez réessayer.');
+        } catch (error) {
+            console.error("Erreur lors de la soumission du formulaire:", error);
+            toast.error('Erreur lors de la mise à jour des préférences. Veuillez réessayer.');
         } finally {
-          setSubmitting(false);
+            setSubmitting(false);
         }
-      };
+    };
 
     return (
         <Formik
             onSubmit={handleSubmit}
+            validationSchema={validationSchema}
             initialValues={{
                 newContest: user.preferencies?.newContest ?? false,
                 voteContest: user.preferencies?.voteContest ?? false,
@@ -87,7 +100,7 @@ const MyPreferencesTab = () => {
                 submissionContest: user.preferencies?.submissionContest ?? false,
                 endSubmissionContest: user.preferencies?.endSubmissionContest ?? false,
             }}
-            >
+        >
             <Form>
                 <div>
                     <div className='mt-10'>
@@ -96,22 +109,27 @@ const MyPreferencesTab = () => {
                             <label>
                                 <Field type='checkbox' name='newContest' className='mr-3 scale-150' />
                                 Être informé par email lorsqu’un nouveau concours est publié
+                                <ErrorMessage name='newContest' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <Field type='checkbox' name='voteContest' className='mr-3 scale-150' />
                                 Être informé par email lorsqu’un concours entre en phase de vote
+                                <ErrorMessage name='voteContest' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <Field type='checkbox' name='endContest' className='mr-3 scale-150' />
                                 Être informé par email 48h avant la date de fin des votes d’un concours
+                                <ErrorMessage name='endContest' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <Field type='checkbox' name='resultContest' className='mr-3 scale-150' />
                                 Être informé par email lorsque les résultats d’un concours sont publiés
+                                <ErrorMessage name='resultContest' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <Field type='checkbox' name='blog' className='mr-3 scale-150' />
                                 Être informé par email lorsqu’une nouvel article/actualité est publiée dans le blog
+                                <ErrorMessage name='blog' component='div' className='text-red-500' />
                             </label>
                         </div>
                     </div>
@@ -121,14 +139,17 @@ const MyPreferencesTab = () => {
                             <label>
                                 <Field type='checkbox' name='newContestProfil' className='mr-3 scale-150' />
                                 Être informé lorsqu’un nouveau concours est publié et que mon profil satisfait les critères de participation
+                                <ErrorMessage name='newContestProfil' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <Field type='checkbox' name='submissionContest' className='mr-3 scale-150' />
-                                Être informé lorsqu’un concours entre en phase de soumission
+                                Être informé lorsqu’un concours entre en phase de soumissions
+                                <ErrorMessage name='submissionContest' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <Field type='checkbox' name='endSubmissionContest' className='mr-3 scale-150' />
                                 Être informé 48h avant la date de fin des soumissions d’un concours
+                                <ErrorMessage name='endSubmissionContest' component='div' className='text-red-500' />
                             </label>
                         </div>
                     </div>
@@ -137,6 +158,6 @@ const MyPreferencesTab = () => {
             </Form>
         </Formik>
     );
-}
+};
 
 export default MyPreferencesTab;

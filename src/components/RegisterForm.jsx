@@ -7,6 +7,7 @@ import axiosInstance from './AxiosInstance';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PasswordChecklist from "react-password-checklist";
 
 const RegisterSchema = Yup.object().shape({
   gender: Yup.string().required('Le genre est requis'),
@@ -74,8 +75,6 @@ const RegisterForm = ({ closeModal }) => {
     }
   };
 
-
-
   return (
     <Formik
       initialValues={{
@@ -92,7 +91,7 @@ const RegisterForm = ({ closeModal }) => {
       onSubmit={handleSubmit}
       className='z-100'
     >
-      {({ isSubmitting  }) => (
+      {({ isSubmitting, values  }) => (
         <Form ref={form}>
           <div className='flex gap-4 mb-4'>
             <div className='flex gap-2'>
@@ -112,14 +111,14 @@ const RegisterForm = ({ closeModal }) => {
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2'>Prénom*</label>
             <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="text" name="firstname" required />
             <br />
-            <ErrorMessage name="firstname" />
+            <ErrorMessage name="firstname" component="div" className='text-red-500' />
           </div>
           <br />
           <div>
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2'>Nom*</label>
             <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="text" name="lastname" required />
             <br />
-            <ErrorMessage name="lastname" />
+            <ErrorMessage name="lastname" component="div" className='text-red-500' />
           </div>
           <br />
           <div className='flex justify-between'>
@@ -127,7 +126,7 @@ const RegisterForm = ({ closeModal }) => {
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-1'>Date de naissance*</label>
               <Field className='bg-[#f1f1f1] rounded-[5px] w-[210px] h-[43px] pl-3' type="date" name="birthdate" required />
               <br />
-            <ErrorMessage name="birthdate" />
+            <ErrorMessage name="birthdate" component="div" className='text-red-500' />
           </div>
           <div>
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-1'>Vous êtes*</label>
@@ -137,7 +136,7 @@ const RegisterForm = ({ closeModal }) => {
               <option value="organisateur">Organisateur</option>
               </Field>
               <br />
-            <ErrorMessage name="situation" />
+            <ErrorMessage name="situation" component="div" className='text-red-500' />
             </div>
           </div>
           <br />
@@ -145,21 +144,29 @@ const RegisterForm = ({ closeModal }) => {
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2'>Email*</label>
             <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="email" name="email" required />
             <br />
-            <ErrorMessage name="email" />
+            <ErrorMessage name="email" component="div" className='text-red-500' />
           </div>
           <br />
           <div>
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2'>Mot de passe*</label>
             <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="password" name="password" placeholder="8 caractères min dont 1 chiffre et 1 lettre majuscule" required />
-            <br />
-            <ErrorMessage name="password" />
+            <PasswordChecklist
+                    rules={["minLength","number","capital"]}
+                    minLength={8}
+                    value={values.password}
+                    messages={{
+                            minLength: "Le mot de passe doit contenir au moins 8 caractères.",
+                            number: "Le mot de passe doit contenir au moins un chiffre.",
+                            capital: "Le mot de passe doit contenir au moins une lettre majuscule.",
+				            }}
+            />
           </div>
           <br />
           <div className='flex gap-2 align-top'>
             <Field type="checkbox" name="acceptTerms" required className="scale-150" />
             <label className='text-xs'>En cochant cette case, j'accepte les conditions générales d'utilisation ainsi que la politique d'utilisation de mes données personnelles.</label>
             <br />
-            <ErrorMessage name="acceptTerms" />
+            <ErrorMessage name="acceptTerms" component="div" className='text-red-500' />
           </div>
           <div className="flex justify-center">
             <button className="bg-[#000000] rounded-[44px] mt-5 not-italic font-bold w-[200px] h-[59px] text-base leading-[19px] text-white" type="submit" disabled={isSubmitting}>
