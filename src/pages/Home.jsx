@@ -45,21 +45,25 @@ const Home = () => {
 
       const uniquePhotographers = new Set();
 
-      contestsData.forEach((contest) => {
-        contest.photos?.forEach((photo) => {
+      contestsData.filter((contest) => contest.status === true && contest.deletionDate !== null).forEach((contest) => {
+        contest.photos?.filter((photo) => photo.status === true).forEach((photo) => {
           uniquePhotographers.add(photo.member.id);
         });
       });
 
-      const uniqueOrganizations = contestsData.reduce((acc, contest) => {
+      const uniqueOrganizations = contestsData
+      .filter((contest) => contest.status === true && contest.deletionDate === undefined)
+      .reduce((acc, contest) => {
         acc.add(contest.organization.id);
         return acc;
       }, new Set());
 
       setTotalPhotos(
-        contestsData.reduce(
+        contestsData
+        .filter((contest) => contest.status === true && contest.deletionDate === undefined)
+        .reduce(
           (total, contest) =>
-            total + (contest.photos ? contest.photos.length : 0),
+            total + (contest.photos.filter((photo) => photo.status === true) ? contest.photos.filter((photo) => photo.status === true).length : 0),
           0
         )
       );
@@ -74,13 +78,15 @@ const Home = () => {
     setCurrentPage(0);
   };
 
-  const totalPages = Math.ceil(contests.length / itemsPerPage);
+  const totalPages = Math.ceil(contests.filter((contest) => contest.status === true && contest.deletionDate === undefined).length / itemsPerPage);
 
   const handlePageClick = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
 
-  const sortedContests = contests.sort(
+  const sortedContests = contests
+  .filter((contest) => contest.status === true && contest.deletionDate === undefined)
+  .sort(
     (a, b) => new Date(b.creationDate) - new Date(a.creationDate)
   );
 
@@ -91,7 +97,7 @@ const Home = () => {
   };
 
   return (
-    <div className='mx-12'>
+    <div className='mx-6 md:mx-24'>
       <div className="mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <div>
           <p className="text-4xl font-bold not-italic leading-[160%] text-black">
@@ -99,7 +105,7 @@ const Home = () => {
           </p>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-6 align-baseline">
-          <p>{contests.length} concours publiés</p>
+          <p>{sortedContests.length} concours publiés</p>
           <p className="text-2xl text-gray-300">|</p>
           <p>{totalOrganizations} organisateurs</p>
           <p className="text-2xl text-gray-300">|</p>
@@ -107,7 +113,7 @@ const Home = () => {
           <p className="text-2xl text-gray-300">|</p>
           <p>{totalPhotos} photos</p>
           <p className="text-2xl text-gray-300">|</p>
-          <p>{members.length} membres</p>
+          <p>{members.filter((member) => member.status === true).length} membres</p>
         </div>
       </div>
       <div className="mx-auto mt-10 mb-10 grid grid-cols-3 gap-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
@@ -176,7 +182,7 @@ const Home = () => {
                 : sortedContests
                     .filter(
                         (contest) =>
-                            contest.deletionDate === undefined
+                            contest.deletionDate === undefined && contest.status === true
                     )
                     .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
                     .map((contest) => (
