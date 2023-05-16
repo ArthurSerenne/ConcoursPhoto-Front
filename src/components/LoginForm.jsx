@@ -14,7 +14,7 @@ const LoginSchema = Yup.object().shape({
     .email('Adresse e-mail invalide')
     .required("L'adresse e-mail est requise"),
   password: Yup.string()
-    .min(3, 'Le mot de passe doit comporter au moins 8 caractères')
+    .min(8, 'Le mot de passe doit comporter au moins 8 caractères')
     .required('Le mot de passe est requis'),
 });
 
@@ -79,14 +79,14 @@ const LoginForm = ({ closeModal }) => {
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2' htmlFor="email">Email ou pseudo*</label>
             <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="email" name="email" />
             <br />
-            <ErrorMessage name="email" />
+            <ErrorMessage name="email" component="div" className='text-red-500' />
           </div>
           <br />
           <div>
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2' htmlFor="password">Mot de passe*</label>
             <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="password" name="password" />
             <br />
-            <ErrorMessage name="password" />
+            <ErrorMessage name="password" component="div" className='text-red-500' />
           </div>
           <button className='bg-[#000000] rounded-[44px] mt-5 not-italic font-bold w-[200px] h-[59px] text-base leading-[19px] text-white' type="submit" disabled={isSubmitting}>
             Se connecter

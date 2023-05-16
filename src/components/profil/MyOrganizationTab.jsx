@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
-import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import myImage from '../../assets/images/user-icon.png';
 import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
@@ -8,6 +9,44 @@ import AsyncSelect from 'react-select/async';
 import OrganizationTypeEnum from './enums/OrganizationTypeEnum';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+const validationSchema = Yup.object().shape({
+    logo: Yup.string()
+        .required('Ce champ est requis'),
+    name: Yup.string()
+        .required('Ce champ est requis'),
+    address: Yup.string()
+        .required('Ce champ est requis'),
+    type: Yup.string(),
+    email: Yup.string()
+        .email('Email invalide')
+        .required('Ce champ est requis'),
+    phone: Yup.string()
+        .required('Ce champ est requis'),
+    website: Yup.string()
+        .url('URL invalide'),
+    siret: Yup.string(),
+    vat: Yup.string(),
+    description: Yup.string(),
+    city: Yup.object()
+        .nullable()
+        .required('Ce champ est requis'),
+    zipcode: Yup.object()
+        .nullable()
+        .required('Ce champ est requis'),
+    facebook: Yup.string()
+        .url('URL invalide'),
+    youtube: Yup.string()
+        .url('URL invalide'),
+    linkedin: Yup.string()
+        .url('URL invalide'),
+    tiktok: Yup.string()
+        .url('URL invalide'),
+    instagram: Yup.string()
+        .url('URL invalide'),
+    twitter: Yup.string()
+        .url('URL invalide'),
+});
 
 const MyOrganizationTab = () => {
     const { user, reloadUser } = useAuth();
@@ -144,6 +183,7 @@ const MyOrganizationTab = () => {
     return (
         <Formik
             onSubmit={handleSubmit}
+            validationSchema={validationSchema}
             initialValues={{
                 logo: user.organizations?.[0]?.logo ?? myImage,
                 name: user.organizations?.[0]?.name ?? "",
@@ -197,6 +237,7 @@ const MyOrganizationTab = () => {
                             <label>
                                 <p>Nom de l’organisation*</p>
                                 <Field type='text' name='name' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='name' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Type d’organisation</p>
@@ -207,24 +248,29 @@ const MyOrganizationTab = () => {
                                         </option>
                                     ))}
                                 </Field>
+                                <ErrorMessage name='type' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Email*</p>
                                 <Field type='email' name='email' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='email' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Téléphone*</p>
                                 <Field type='text' name='phone' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='phone' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Site web de l’organisation</p>
                                 <Field type='text' name='website' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='website' component='div' className='text-red-500' />
                             </label>
                         </div>
                         <div>
                             <label>
                                 <p>Adresse*</p>
                                 <Field type='text' name='address' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='address' component='div' className='text-red-500' />
                             </label>
                             <div className='grid grid-cols-2 max-w-[432px] gap-4'>
                             <label>
@@ -239,6 +285,7 @@ const MyOrganizationTab = () => {
                                         />
                                     )}
                                 </Field>
+                                <ErrorMessage name='zipcode' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Ville*</p>
@@ -252,6 +299,7 @@ const MyOrganizationTab = () => {
                                         />
                                     )}
                                 </Field>
+                                <ErrorMessage name='city' component='div' className='text-red-500' />
                             </label>
                         </div>
                             <div className='grid grid-cols-2 max-w-[432px] gap-4'>
@@ -260,15 +308,18 @@ const MyOrganizationTab = () => {
                                     <Field name="country" as="select" className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4' >
                                         <option value="FR">France</option>
                                     </Field>
+                                    <ErrorMessage name='country' component='div' className='text-red-500' />
                                 </label>
                             </div>
                             <label>
                                 <p>N° de Siret</p>
-                                <Field type='text' name='siret' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4 mt-1 mb-4' />
+                                <Field type='text' name='siret' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='siret' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>TVA intracommunautaire</p>
-                                <Field type='text' name='vat' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4 mt-1 mb-4' />
+                                <Field type='text' name='vat' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='vat' component='div' className='text-red-500' />
                             </label>
                         </div>
                     </div>
@@ -280,7 +331,8 @@ const MyOrganizationTab = () => {
                         name='description'
                         className='bg-gray-100 w-full mt-3 rounded-md px-4 pt-4 h-[242px] text-sm mb-4 lg:w-[929px]'
                         placeholder='Présentez brièvement votre organisation...'
-                    />
+                        />
+                        <ErrorMessage name='description' component='div' className='text-red-500' />
                     </div>
                     <div className='mt-10'>
                         <p className='font-bold mb-4'>Réseaux sociaux de l’organisation</p>
@@ -288,30 +340,36 @@ const MyOrganizationTab = () => {
                             <label>
                                 <p>Votre page Facebook</p>
                                 <Field type='text' name='facebook' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='facebook' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Votre chaîne Youtube</p>
                                 <Field type='text' name='youtube' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='youtube' component='div' className='text-red-500' />
                             </label>
                         </div>
                         <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                             <label>
                                 <p>Votre page Instagram</p>
                                 <Field type='text' name='instagram' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='instagram' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Votre compte Twitter</p>
                                 <Field type='text' name='twitter' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='twitter' component='div' className='text-red-500' />
                             </label>
                         </div>
                         <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                             <label>
                                 <p>Votre page Linkedin</p>
                                 <Field type='text' name='linkedin' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='linkedin' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Votre compte TikTok</p>
                                 <Field type='text' name='tiktok' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='tiktok' component='div' className='text-red-500' />
                             </label>
                         </div>
                     </div>
@@ -321,6 +379,6 @@ const MyOrganizationTab = () => {
             </Form>
         </Formik>
     );
-}
+};
 
 export default MyOrganizationTab;
