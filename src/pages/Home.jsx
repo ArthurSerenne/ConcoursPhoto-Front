@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper';
 import ContestCard from '../components/ContestCard';
+import ContestCardList from '../components/ContestCardList';
 import ContestCardSkeleton from '../components/ContestCardSkeleton';
 import SwiperSlideSkeleton from '../components/SwiperSlideSkeleton';
 import AdSpaceSkeleton from '../components/AdSpaceSkeleton';
@@ -14,6 +15,9 @@ import '../sass/pages/home.scss';
 import { useNavigate } from 'react-router-dom';
 import ImageDisplay from '../components/ImageDisplay';
 import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
+import { BsGrid3X3GapFill } from "react-icons/bs";
+import { FaList } from "react-icons/fa";
+import { TbMap2 } from "react-icons/tb";
 
 const Home = () => {
   const [contests, setContests] = useState([]);
@@ -89,6 +93,8 @@ const Home = () => {
       navigate(`/concours-photo/${contest.id}`, { state: { contest } });
     };
   };
+
+  const [isGridMode, setIsGridMode] = useState(true);
 
   return (
     <div className='mx-12'>
@@ -167,8 +173,29 @@ const Home = () => {
         </div>
       </div>
       <div className="mx-auto mt-12 mb-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-        <p className="text-3xl mb-12">Derniers concours photo publiés</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="flex justify-between items-center">
+          <p className="text-3xl mb-12">Derniers concours photo publiés</p>
+          <div className="flex gap-4">
+            <button
+              onClick={() => setIsGridMode(true)}
+              className={isGridMode ? "text-black" : "text-gray-300"}
+            >
+              <BsGrid3X3GapFill />
+            </button>
+            <button
+              onClick={() => setIsGridMode(false)}
+              className={!isGridMode ? "text-black" : "text-gray-300"}
+            >
+              <FaList />
+            </button>
+            <button
+              className="text-gray-300"
+            >
+              <TbMap2 />
+            </button>
+          </div>
+        </div>
+        <div className={isGridMode ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" : "list"}>
             {loading
                 ? Array.from({ length: itemsPerPage }, (_, i) => (
                       <ContestCardSkeleton key={i} />
@@ -180,8 +207,12 @@ const Home = () => {
                     )
                     .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
                     .map((contest) => (
+                      isGridMode ? (
                         <ContestCard contest={contest} key={contest.id} />
-                    ))}
+                      ) : (
+                        <ContestCardList contest={contest} key={contest.id} />
+                      )
+                  ))}
         </div>
         <div>
           <div className="mb-6 mt-6">
