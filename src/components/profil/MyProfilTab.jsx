@@ -20,8 +20,24 @@ const validationSchema = Yup.object().shape({
     address: Yup.string(),
     city: Yup.object().nullable(),
     zipcode: Yup.object().nullable(),
-    email: Yup.string().email('Email invalide').required("Ce champ est requis"),
-    password: Yup.string().min(8, 'Le mot de passe doit contenir au moins 8 caractères').required("Ce champ est requis"),
+    email: Yup.string().email('Email invalide').required("Ce champ est requis").test('email', 'Cet email est déjà utilisé', async (value) => {
+        const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/users.json`, {
+            params: {
+                email: value
+            }
+        });
+
+        if(response.data.find(user => user.email === value)) {
+            return false;
+        }
+
+        return true;
+    }),
+    password: Yup.string()
+    .min(8, 'Le mot de passe doit comporter au moins 8 caractères')
+    .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une majuscule')
+    .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre')
+    .required('Le mot de passe est requis'),
     username: Yup.string().required("Ce champ est requis"),
     birthdate: Yup.date().required("Ce champ est requis"),
     situation: Yup.string().required("Ce champ est requis"),

@@ -91,10 +91,9 @@ const ViewContest = () => {
   };
 
   return (
-    <div className='mx-12 md: mx-24'>
+    <div className='mx-12 md:mx-24'>
       <div>
         <div className="mx-auto mt-10 mb-10 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-          {/* <p><span>Accueil</span> {'>'} <span>Concours photos</span> {'>'} <span className='font-bold'>Concours photo "{contest.name}"</span></p> */}
           <Breadcrumb  contest={contest} />
         </div>
         <div className="mx-auto mt-10 mb-10 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-24 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
