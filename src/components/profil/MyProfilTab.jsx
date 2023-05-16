@@ -37,7 +37,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const MyProfilTab = () => {
-    const { isAuthenticated, user, isLoading, reloadUser } = useAuth();
+    const { user, reloadUser, logout } = useAuth();
     const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
     const imagePath = user.member?.photo ? `${baseUrl}${user.member.photo}` : myImage;
     const [displayedImage, setDisplayedImage] = useState(imagePath);
@@ -77,24 +77,7 @@ const MyProfilTab = () => {
             }));
         });
     };
-
-
-    if (isLoading) {
-        return (
-            <div>
-                <p>Chargement...</p>
-            </div>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return (
-            <div>
-                <p>Veuillez vous connecter pour accéder à cette page.</p>
-            </div>
-        );
-    }
-
+  
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -123,7 +106,7 @@ const MyProfilTab = () => {
             birthdate: values.birthdate,
             address: values.address,
             email: values.email,
-            password: values.password ? values.password : user.password,
+            password: values.password,
             city: values.city ? values.city.value : null,
         };
 
@@ -147,21 +130,27 @@ const MyProfilTab = () => {
         return { entity1Data, entity2Data, entity3Data };
     };
 
-    const handleSubmit = async (values, { setSubmitting }) => {
+      const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
         const { entity1Data, entity2Data, entity3Data } = separateEntityData(values);
 
+        if (values.email !== user.email && !values.password) {
+            setFieldError('password', 'Le mot de passe est requis lorsque vous changez votre email');
+            setSubmitting(false);
+            return;
+        }        
+    
         if (imageRemoved) {
             entity1Data.photo = null;
         } else if (originalImage !== displayedImage) {
             entity1Data.photo = displayedImage;
         }
-
+    
         const data = {
             entity1Data,
             entity2Data,
             entity3Data,
         };
-
+        
         try {
             const response = await axiosInstance.patch(
                 `${process.env.REACT_APP_API_URL}/user_update`,
@@ -172,16 +161,21 @@ const MyProfilTab = () => {
                     },
                 }
             );
-
+    
             if (response.status === 200) {
                 console.log("Formulaire soumis avec succès");
                 setImageRemoved(false);
-                await reloadUser();
-                toast.success('Profil mis à jour avec succès !');
+                if (values.email !== user.email) {
+                    logout();
+                    toast.info('Veuillez vous reconnecter avec votre nouvelle adresse e-mail.');
+                } else {
+                    await reloadUser();
+                    toast.success('Profil mis à jour avec succès !');
+                }
             } else {
                 console.error("Erreur lors de la soumission du formulaire");
                 toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
-            }
+            }            
         } catch (error) {
             console.error("Erreur lors de la soumission du formulaire:", error);
             toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
@@ -190,39 +184,125 @@ const MyProfilTab = () => {
         }
     };
 
+    const validationSchema = Yup.object().shape({
+        email: Yup.string()
+          .email('Adresse email invalide')
+          .required('Ce champ est requis'),
+        password: Yup.string(),
+      });    
+    
     return (
         <Formik
-            onSubmit={handleSubmit}
-            validationSchema={validationSchema}
-            initialValues={{
-                photo: user.member?.photo ?? "",
-                gender: user.gender ?? "",
-                lastname: user.lastname ?? "",
-                firstname: user.firstname ?? "",
-                address: user.address ?? "",
-                city: user.city ? { value: `${process.env.REACT_APP_API_URL}/cities/${user.city.id}`, label: user.city.name } : "",
-                zipcode: user.city ? { value: user.city, label: user.city.zip_code } : null,
-                email: user.email ?? "",
-                passwword: user.passwword ?? "",
-                username: user.member?.username ?? "",
-                situation: user.member?.situation ?? "",
-                categorie: user.member?.category ?? "",
-                description: user.member?.description ?? "",
-                website: user.member?.website ?? "",
-                facebook: user.member?.socialNetwork?.facebook ?? "",
-                youtube: user.member?.socialNetwork?.youtube ?? "",
-                linkedin: user.member?.socialNetwork?.linkedin ?? "",
-                tiktok: user.member?.socialNetwork?.tiktok ?? "",
-                instagram: user.member?.socialNetwork?.instagram ?? "",
-                twitter: user.member?.socialNetwork?.twitter ?? "",
-            }}>
-            <Form>
-                <div className="sm:max-w-screen-sm 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md">
-                    <div className='flex flex-col lg:flex-row gap-6 items-center'>
-                        <img src={displayedImage || myImage} className={`h-[112px] w-[112px] object-cover rounded-full`} />
-                        <div className="relative">
-                            <label htmlFor="file-upload" className="w-[200px] px-8 py-5 bg-gray-300 rounded-full font-bold cursor-pointer hover:bg-gray-200">
-                                Télécharger ma photo
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        validateOnBlur={true}
+        validateOnChange={true}
+        context={{ initialValues: { email: user.email } }}
+        initialValues={{
+            photo: user.member?.photo ?? "",
+            gender: user.gender ?? "",
+            lastname: user.lastname ?? "",
+            firstname: user.firstname ?? "",
+            address: user.address ?? "",
+            city: user.city ? { value: `${process.env.REACT_APP_API_URL}/cities/${user.city.id}`, label: user.city.name } : "",
+            zipcode: user.city ? { value: user.city, label: user.city.zip_code } : null,
+            email: user.email,
+            password: "",
+            username: user.member?.username ?? "",
+            situation: user.member?.situation ?? "",
+            categorie: user.member?.category ?? "",
+            description: user.member?.description ?? "",
+            website: user.member?.website ?? "",
+            facebook: user.member?.socialNetwork?.facebook ?? "",
+            youtube: user.member?.socialNetwork?.youtube ?? "",
+            linkedin: user.member?.socialNetwork?.linkedin ?? "",
+            tiktok: user.member?.socialNetwork?.tiktok ?? "",
+            instagram: user.member?.socialNetwork?.instagram ?? "",
+            twitter: user.member?.socialNetwork?.twitter ?? "",
+          }}>
+        <Form>
+        <div className="sm:max-w-screen-sm 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md">
+            <div className='flex flex-col lg:flex-row gap-6 items-center'>
+                <img src={displayedImage || myImage} className={`h-[112px] w-[112px] object-cover rounded-full`} />
+                <div className="relative">
+                    <label htmlFor="file-upload" className="w-[200px] px-8 py-5 bg-gray-300 rounded-full font-bold cursor-pointer hover:bg-gray-200">
+                        Télécharger ma photo
+                    </label>
+                    <input
+                    type="file"
+                    id="file-upload"
+                    className="hidden"
+                    name='photo'
+                    onChange={handleImageChange}
+                    />
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        className="font-bold w-fit h-14 bg-gray-200 text-black py-2 px-8 rounded-full hover:bg-gray-100"
+                        onClick={handleImageRemove}
+                    >
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+            <div className="mt-8 md:px-36">
+                <div className='flex flex-col gap-4 lg:flex-row'>
+                    <label htmlFor="male">
+                        <Field
+                            type="radio"
+                            className='mr-3 scale-150 bg-black'
+                            name='gender'
+                            id="male"
+                            value='male'
+                        />
+                        Homme
+                    </label>
+                    <label htmlFor="female">
+                        <Field
+                            type="radio"
+                            className='mr-3 scale-150'
+                            name='gender'
+                            id="female"
+                            value='female'
+                        />
+                        Femme
+                    </label>
+                    <label htmlFor="other">
+                        <Field
+                            type="radio"
+                            className='mr-3 scale-150'
+                            name='gender'
+                            id="other"
+                            value='other'
+                        />
+                        Non binaire
+                    </label>
+                </div>
+                <div className='grid grid-cols-1 mt-6 lg:grid-cols-2 lg:gap-16'>
+                    <div>
+                        <label>
+                            <p>Prénom*</p>
+                            <Field type='text' name='firstname' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                        </label>
+                        <label>
+                            <p>Nom*</p>
+                            <Field type='text' name='lastname' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                        </label>
+                        <div className='grid grid-cols-2 max-w-[432px] gap-4'>
+                            <label>
+                                <p>Date de naissance*</p>
+                                <Field type='date' name='birthdate' defaultValue={formattedInitialValue} className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4' />
+                            </label>
+                            <label>
+                                <p>Vous êtes*</p>
+                                <Field as='select' name='situation' className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4'>
+                                    {Object.entries(SituationEnum).map(([key, value]) => (
+                                        <option value={key} key={key}>
+                                            {value}
+                                        </option>
+                                    ))}
+                                </Field>
                             </label>
                             <input
                                 type="file"
