@@ -165,7 +165,7 @@ const MyProfilTab = () => {
           .email('Adresse email invalide')
           .required('Ce champ est requis'),
         password: Yup.string(),
-      });    
+      });
     
     return (
         <Formik
@@ -198,7 +198,7 @@ const MyProfilTab = () => {
           }}>
         <Form>
         <div className="sm:max-w-screen-sm 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md">
-            <div className='flex flex-col lg:flex-row gap-6 items-center'>
+            <div className='flex flex-col md:flex-row gap-6 items-center'>
                 <img src={displayedImage || myImage} className={`h-[112px] w-[112px] object-cover rounded-full`} />
                 <div className="relative">
                     <label htmlFor="file-upload" className="w-[200px] px-8 py-5 bg-gray-300 rounded-full font-bold cursor-pointer hover:bg-gray-200">
@@ -255,7 +255,7 @@ const MyProfilTab = () => {
                         Non binaire
                     </label>
                 </div>
-                <div className='grid grid-cols-1 mt-6 lg:grid-cols-2 lg:gap-16'>
+                <div className='grid grid-cols-1 mt-6 md:grid-cols-2 md:gap-16'>
                     <div>
                         <label>
                             <p>Prénom*</p>

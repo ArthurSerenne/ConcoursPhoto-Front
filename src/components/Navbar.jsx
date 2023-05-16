@@ -43,7 +43,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="left-0 top-0 w-full bg-[#A8A8A8]">
-        <div className="mx-auto flex flex-wrap items-center justify-between py-6 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+        <div className="mx-6 flex flex-wrap items-center justify-between py-6 sm:max-w-screen-sm md:mx-24 lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
           <a
             href="/"
             className="flex items-center rounded bg-white px-8 py-4 font-bold"
@@ -74,7 +74,7 @@ const Navbar = () => {
                   to="/mon-compte"
                   className="w-32 justify-between rounded bg-neutral-100 px-2 py-2.5 text-sm"
                 >
-                  <RiUserAddLine /> <span>Mon compte</span>
+                  <RiUserAddLine /> <span>Mon profil</span>
                 </Link>
                 <button
                     onClick={logout}
@@ -98,7 +98,7 @@ const Navbar = () => {
             }`}
             id="navbar-sticky"
           >
-            <ul className="mt-4 flex flex-col gap-8 rounded-lg border border-gray-100 p-4 font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:p-0">
+            <ul className="mt-4 flex flex-col gap-8 rounded-lg border border-gray-100 p-4 font-medium md:mt-0 md:flex-row md:space-x-4 md:border-0 md:p-0">
               <li>
                 <Link
                   to="/"
@@ -159,10 +159,12 @@ const Navbar = () => {
           overlayClassName="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
           className="relative bg-white rounded-lg w-[530px] h-[491px] pt-6"
         >
-          <Login
-            closeModal={closeLoginModal}
-            openRegisterModal={openRegisterModal}
-          />
+          <div className="overflow-y-auto">
+            <Login
+              closeModal={closeLoginModal}
+              openRegisterModal={openRegisterModal}
+            />
+          </div>
         </Modal>
       )}
       {isRegisterModalOpen && (
@@ -171,13 +173,15 @@ const Navbar = () => {
           onRequestClose={closeRegisterModal}
           contentLabel="Register Modal"
           overlayClassName="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
-          className="relative bg-white rounded-lg w-[530px] h-[875px] pt-6"
+          className="relative bg-white rounded-lg w-[530px] pt-6"
         >
-          <Register
-            closeModal={closeRegisterModal}
-            openLoginModal={openLoginModal}
-          />
-        </Modal>
+          <div className="h-[80vh] overflow-y-auto">
+            <Register
+              closeModal={closeRegisterModal}
+              openLoginModal={openLoginModal}
+            />
+          </div>
+        </Modal>      
       )}
     </>
   );

@@ -20,6 +20,7 @@ import { Autoplay, Pagination, Navigation } from 'swiper';
 import PhotoCard from '../components/PhotoCard';
 import ReactPaginate from 'react-paginate';
 import Breadcrumb from '../components/Breadcrumb';
+import ContestDateStatus from '../components/ContestDateStatus';
 
 const ViewContest = () => {
   const { id } = useParams();
@@ -91,7 +92,7 @@ const ViewContest = () => {
   };
 
   return (
-    <div className='mx-12 md: mx-24'>
+    <div className='mx-6 md: mx-24'>
       <div>
         <div className="mx-auto mt-10 mb-10 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           {/* <p><span>Accueil</span> {'>'} <span>Concours photos</span> {'>'} <span className='font-bold'>Concours photo "{contest.name}"</span></p> */}
@@ -103,8 +104,8 @@ const ViewContest = () => {
           </div>
           <div className='w-full sm:w-1/3'>
             <p>Organisateur : <span className='underline font-bold'>{contest.organization.name}</span></p>
-            <div className="mx-auto flex flex-wrap items-end space-x-4 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-              <p className="bg-black text-white rounded-full py-1 px-4 max-w-fit mt-4 text-xs">PHASE DE VOTE</p>
+            <div className="mx-auto flex flex-wrap items-baseline mt-6 space-x-4 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+              <ContestDateStatus contest={contest} color={'bg-black text-white rounded-full py-1 px-4 max-w-fit mt-4 text-sm'} />
               <p>Fin le {formattedDate} ({daysDifference} jours) <TbClockHour3 /></p>
             </div>
           </div>
@@ -165,11 +166,11 @@ const ViewContest = () => {
             <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><AiOutlineEye /> {viewCount}</p>
           </div>
         </div>
-        <div className="mx-auto mt-10 mb-10 grid grid-cols-3 gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+        <div className="mx-auto mt-10 mb-10 grid grid-cols-1 md:grid-cols-3 md:gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           <div className="col-span-2 max-h-[38rem]">
             <ImageDisplay imageName={contest.visual} radius="rounded-xl object-cover h-[38rem] w-full cursor-default" />
           </div>
-          <div className="flex flex-col space-y-7">
+          <div className="grid grid-cols-2 gap-4 mt-4 md:flex md:flex-col md:space-y-7 md:mt-0">
             <div className="flex flex-grow justify-center max-h-[18rem]">
               <ImageDisplay imageName={contest.organization.logo} radius="rounded-xl cursor-default" />
             </div>
@@ -201,12 +202,12 @@ const ViewContest = () => {
         </div>
       </div>
       <div>
-      <div className={`mx-auto mt-10 mb-10 grid grid-cols-3 ${activeTab === 4 ? 'grid-cols-1' : 'grid-cols-3'} gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm`}>
+      <div className={`mx-auto mt-10 mb-10 grid grid-cols-1 md:${activeTab === 4 ? 'grid-cols-1' : 'grid-cols-3'} md:gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm`}>
         <div className={`col-span-2 h-full relative ${activeTab === 4 ? 'col-span-3' : 'col-span-2'}`}>
         {loading ? (
           <Spinner color="#000" />
         ) : (
-          <Tabs onSelect={handleTabChange}>
+          <Tabs onSelect={handleTabChange} className={'mb-6'}>
             <TabList className={'mb-10'}>
               <Tab>Le concours</Tab>
               <Tab>Réglement</Tab>
@@ -271,7 +272,7 @@ const ViewContest = () => {
               <h2 className="flex items-center text-text-2xl font-normal not-italic mb-10">
                 {contest.photos.filter((photo) => photo.status === true).length} photos soumises par {uniquePhotographers} photographes
               </h2>
-              <div className="grid grid-cols-3 gap-5">
+              <div className="grid md:grid-cols-3 gap-5">
                 {contest.photos
                 .sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate))
                 .filter(
@@ -394,7 +395,7 @@ const ViewContest = () => {
         </div>
         <div className={`${activeTab === 4 ? 'hidden' : ''}`}>
           <p className="text-xl font-bold not-italic leading-[160%] text-black mb-8">Dernières photos soumises</p>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mb-10'>
+          <div className='grid grid-cols-2 gap-5 mb-10'>
             {contest.photos
               .filter((photo) => photo.status === true)
               .sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate))
@@ -403,7 +404,7 @@ const ViewContest = () => {
                 (photo) => <ImageDisplay key={photo.id} name={photo.member.username} imageName={photo.file} modalEnabled={true} radius={'hover:scale-105 ease-in-out duration-300 cursor-pointer'} />
               )}
           </div>
-          <Link onClick={goBack} className="rounded-[44px] bg-gray-400 text-white px-[30px] py-3.5 mt-8">
+          <Link onClick={goBack} className="rounded-[44px] bg-gray-400 text-white px-[30px] py-3.5 mt-8 hover:bg-gray-300">
             Voir les photos et voter
           </Link>
         </div>
