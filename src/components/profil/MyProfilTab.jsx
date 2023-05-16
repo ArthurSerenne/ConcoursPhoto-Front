@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
+import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { format, parseISO } from "date-fns";
 import myImage from '../../assets/images/user-icon.png';
@@ -10,7 +11,30 @@ import axios from 'axios';
 import AsyncSelect from 'react-select/async';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+    photo: Yup.string(),
+    gender: Yup.string().required("Ce champ est requis"),
+    lastname: Yup.string().required("Ce champ est requis"),
+    firstname: Yup.string().required("Ce champ est requis"),
+    address: Yup.string(),
+    city: Yup.object().nullable(),
+    zipcode: Yup.object().nullable(),
+    email: Yup.string().email('Email invalide').required("Ce champ est requis"),
+    password: Yup.string().min(8, 'Le mot de passe doit contenir au moins 8 caractères').required("Ce champ est requis"),
+    username: Yup.string().required("Ce champ est requis"),
+    birthdate: Yup.date().required("Ce champ est requis"),
+    situation: Yup.string().required("Ce champ est requis"),
+    category: Yup.string(),
+    description: Yup.string(),
+    website: Yup.string().url('URL invalide'),
+    facebook: Yup.string().url('URL invalide'),
+    youtube: Yup.string().url('URL invalide'),
+    linkedin: Yup.string().url('URL invalide'),
+    tiktok: Yup.string().url('URL invalide'),
+    instagram: Yup.string().url('URL invalide'),
+    twitter: Yup.string().url('URL invalide'),
+});
 
 const MyProfilTab = () => {
     const { user, reloadUser, logout } = useAuth();
@@ -113,20 +137,20 @@ const MyProfilTab = () => {
             setFieldError('password', 'Le mot de passe est requis lorsque vous changez votre email');
             setSubmitting(false);
             return;
-        }        
-    
+        }
+
         if (imageRemoved) {
             entity1Data.photo = null;
         } else if (originalImage !== displayedImage) {
             entity1Data.photo = displayedImage;
         }
-    
+
         const data = {
             entity1Data,
             entity2Data,
             entity3Data,
         };
-    
+
         try {
             const response = await axiosInstance.patch(
                 `${process.env.REACT_APP_API_URL}/user_update`,
@@ -137,7 +161,7 @@ const MyProfilTab = () => {
                     },
                 }
             );
-    
+
             if (response.status === 200) {
                 console.log("Formulaire soumis avec succès");
                 setImageRemoved(false);
@@ -151,7 +175,7 @@ const MyProfilTab = () => {
             } else {
                 console.error("Erreur lors de la soumission du formulaire");
                 toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
-            }            
+            }
         } catch (error) {
             console.error("Erreur lors de la soumission du formulaire:", error);
             toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
@@ -160,13 +184,6 @@ const MyProfilTab = () => {
         }
     };
 
-    const validationSchema = Yup.object().shape({
-        email: Yup.string()
-          .email('Adresse email invalide')
-          .required('Ce champ est requis'),
-        password: Yup.string(),
-      });    
-    
     return (
         <Formik
         validationSchema={validationSchema}
@@ -260,15 +277,18 @@ const MyProfilTab = () => {
                         <label>
                             <p>Prénom*</p>
                             <Field type='text' name='firstname' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <ErrorMessage name='firstname' component='div' className='text-red-500' />
                         </label>
                         <label>
                             <p>Nom*</p>
                             <Field type='text' name='lastname' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <ErrorMessage name='lastname' component='div' className='text-red-500' />
                         </label>
                         <div className='grid grid-cols-2 max-w-[432px] gap-4'>
                             <label>
                                 <p>Date de naissance*</p>
                                 <Field type='date' name='birthdate' defaultValue={formattedInitialValue} className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4' />
+                                <ErrorMessage name='birthdate' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Vous êtes*</p>
@@ -279,23 +299,25 @@ const MyProfilTab = () => {
                                         </option>
                                     ))}
                                 </Field>
+                                <ErrorMessage name='situation' component='div' className='text-red-500' />
                             </label>
                         </div>
                         <label>
                             <p>Email*</p>
                             <Field type='text' name='email' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
-                            <ErrorMessage name="email" component="div" className="text-red-500" />
+                            <ErrorMessage name='email' component='div' className='text-red-500' />
                         </label>
                         <label>
                             <p>Mot de passe*</p>
                             <Field type='text' name='password' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4 text-sm' placeholder='8 caractères min dont 1 chiffre et 1 lettre majuscule' />
-                            <ErrorMessage name="password" component="div" className="text-red-500" />
+                            <ErrorMessage name='password' component='div' className='text-red-500' />
                         </label>
                     </div>
                     <div>
                         <label>
                             <p>Adresse</p>
                             <Field type='text' name='address' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <ErrorMessage name='address' component='div' className='text-red-500' />
                         </label>
                         <div className='grid grid-cols-2 max-w-[432px] gap-4'>
                             <label>
@@ -310,6 +332,7 @@ const MyProfilTab = () => {
                                         />
                                     )}
                                 </Field>
+                                <ErrorMessage name='zipcode' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Ville</p>
@@ -323,6 +346,7 @@ const MyProfilTab = () => {
                                         />
                                     )}
                                 </Field>
+                                <ErrorMessage name='city' component='div' className='text-red-500' />
                             </label>
                         </div>
                         <div className='grid grid-cols-2 max-w-[432px] gap-4'>
@@ -331,17 +355,20 @@ const MyProfilTab = () => {
                                 <Field name="country" as="select" className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4' >
                                     <option value="FR">France</option>
                                 </Field>
+                                <ErrorMessage name='country' component='div' className='text-red-500' />
                             </label>
                             <label>
                                 <p>Langue</p>
                                 <Field name="langage" as="select" className='bg-gray-100 rounded-md px-4 py-2 w-[210px] h-[43px] mt-1 mb-4' >
                                     <option value="fr">Français</option>
                                 </Field>
+                                <ErrorMessage name='langage' component='div' className='text-red-500' />
                             </label>
                         </div>
                         <label>
                             <p>Pseudo</p>
-                            <Field type='text' name='username' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4 mt-1 mb-4' />
+                            <Field type='text' name='username' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <ErrorMessage name='username' component='div' className='text-red-500' />
                         </label>
                     </div>
                 </div>
@@ -354,6 +381,7 @@ const MyProfilTab = () => {
                         className='bg-gray-100 w-full mt-3 rounded-md px-4 pt-4 h-[242px] text-sm mb-4 lg:w-[929px]'
                         placeholder='Présentez vous brièvement : qui êtes-vous ? que faites-vous ? quelle est votre expérience, vos centres d’intérêts et vos spécialités en tant que photographe ?'
                     />
+                    <ErrorMessage name='description' component='div' className='text-red-500' />
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                         <label>
                             <p>Votre catégorie en tant que photographe ?</p>
@@ -364,10 +392,12 @@ const MyProfilTab = () => {
                                     </option>
                                 ))}
                             </Field>
+                            <ErrorMessage name='categorie' component='div' className='text-red-500' />
                         </label>
                         <label>
                             <p>Votre site web personnel</p>
                             <Field type='text' name='website' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' placeholder='https://' />
+                            <ErrorMessage name='website' component='div' className='text-red-500' />
                         </label>
                     </div>
                 </div>
@@ -377,30 +407,36 @@ const MyProfilTab = () => {
                         <label>
                             <p>Votre page Facebook</p>
                             <Field type='text' name='facebook' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 lg:mb-4' />
+                            <ErrorMessage name='facebook' component='div' className='text-red-500' />
                         </label>
                         <label>
                             <p>Votre chaîne Youtube</p>
                             <Field type='text' name='youtube' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <ErrorMessage name='youtube' component='div' className='text-red-500' />
                         </label>
                     </div>
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                         <label>
                             <p>Votre page Instagram</p>
                             <Field type='text' name='instagram' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 lg:mb-4' />
+                            <ErrorMessage name='instagram' component='div' className='text-red-500' />
                         </label>
                         <label>
                             <p>Votre compte Twitter</p>
                             <Field type='text' name='twitter' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <ErrorMessage name='twitter' component='div' className='text-red-500' />
                         </label>
                     </div>
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
                         <label>
                             <p>Votre page Linkedin</p>
                             <Field type='text' name='linkedin' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 lg:mb-4' />
+                            <ErrorMessage name='linkedin' component='div' className='text-red-500' />
                         </label>
                         <label>
                             <p>Votre compte TikTok</p>
                             <Field type='text' name='tiktok' className='bg-gray-100 rounded-md px-4 py-2 w-[432px] h-[43px] mt-1 mb-4' />
+                            <ErrorMessage name='tiktok' component='div' className='text-red-500' />
                         </label>
                     </div>
                 </div>
@@ -410,6 +446,6 @@ const MyProfilTab = () => {
     </Form>
     </Formik>
     );
-}
+};
 
 export default MyProfilTab;
