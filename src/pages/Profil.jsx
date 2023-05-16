@@ -29,7 +29,7 @@ const Profil = () => {
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
 
   return (
-    <div className='mx-6 xl:mx-12'>
+    <div className='mx-6 md:mx-24'>
       <div className="mx-auto mt-10 mb-8 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <p><span>Accueil</span> {'>'} <span className="font-bold">Mon compte</span></p>
       </div>

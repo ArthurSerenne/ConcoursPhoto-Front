@@ -88,8 +88,11 @@ const ThemeFilter = ({ applyFilters }) => {
           <Select
             className="w-full bg-gray-100 p-2 gray-select"
             options={[
-              { value: 'true', label: 'concours actifs' },
-              { value: 'false', label: 'concours inactifs' },
+              { value: 'active', label: 'Concours actifs' },
+              { value: 'publication', label: 'En phase de publication' },
+              { value: 'vote', label: 'En phase de vote' },
+              { value: 'submission', label: 'En phase de soumission' },
+              { value: 'result', label: 'En phase de résultat' },
             ]}
             defaultValue={'true'}
             placeholder="Etat"

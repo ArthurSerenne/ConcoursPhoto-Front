@@ -5,6 +5,7 @@ import { AiOutlineClockCircle } from 'react-icons/ai';
 import { BiLike } from 'react-icons/bi';
 import { RiUserShared2Line } from 'react-icons/ri';
 import { MdOutlineCameraAlt } from 'react-icons/md';
+import ContestDateStatus from './ContestDateStatus';
 
 const ContestCard = (props) => {
   const navigate = useNavigate();
@@ -48,16 +49,16 @@ const ContestCard = (props) => {
                         .join(", ")
                         .split(", ")
                         .slice(0,1)
-                        .map((themeName, index) => (
+                        .map((themeName) => (
                             <span key={themeName} style={{ maxWidth: '15ch', display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '4px' }}>{themeName} </span>
                         ))}
                     </p>
-                    <p className="bg-gray-100 rounded-full py-2 px-3 text-xs uppercase">{props.contest.status === true ? 'Actif' : 'Inactif'}</p>
+                    <ContestDateStatus contest={props.contest} />
                 </div>
                 <div className="flex flex-wrap gap-1 mt-6 justify-between">
                     <div className="flex gap-1">
                         <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><RiUserShared2Line /> 121</p>
-                        <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><MdOutlineCameraAlt /> {props.contest.photos.length}</p>
+                        <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><MdOutlineCameraAlt /> {props.contest.photos.filter((photo) => photo.status === true).length}</p>
                         <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><BiLike /> 458</p>
                     </div>
                     <div>

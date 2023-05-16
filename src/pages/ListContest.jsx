@@ -45,18 +45,13 @@ const ListContest = () => {
   useEffect(() => {
     if (contests.length === 0) return;
 
+    const today = new Date();
     const filtered = contests.filter((contest) => {
       const themesMatch =
         filterValues.themes.length === 0 ||
         filterValues.themes.some((theme) =>
           contest.themes.some((t) => t.id === theme.value)
         );
-
-      const statusMatch =
-        filterValues.status === null ||
-        filterValues.status.value === null ||
-        (filterValues.status.value !== undefined &&
-          contest.status === JSON.parse(filterValues.status.value));
 
       const searchMatch =
         filterValues.search.trim() === '' ||
@@ -69,21 +64,44 @@ const ListContest = () => {
             .includes(filterValues.search.trim().toLowerCase())
         );
 
-      return (
-        contest.deletionDate === undefined &&
-        themesMatch &&
-        statusMatch &&
-        searchMatch
-      );
-    });
-    setFilteredContests(filtered);
-  }, [contests, filterValues]);
+        let statusMatch = false;
+
+        switch (filterValues.status?.value) {
+          case 'active':
+            statusMatch = true;
+            break;
+          case 'publication':
+            statusMatch = new Date(contest.publicationDate) > today;
+            break;
+          case 'vote':
+            statusMatch =
+              new Date(contest.votingStartDate) <= today &&
+              new Date(contest.votingEndDate) >= today;
+            break;
+          case 'submission':
+            statusMatch =
+              new Date(contest.submissionStartDate) <= today &&
+              new Date(contest.submissionEndDate) >= today;
+            break;
+          default:
+            statusMatch = true;
+        }
+    
+        return (
+          contest.deletionDate === undefined &&
+          themesMatch &&
+          statusMatch &&
+          searchMatch
+        );
+      });
+      setFilteredContests(filtered);
+    }, [contests, filterValues]);
 
   const applyFilters = (themes, status, search) => {
     setFilterValues({ themes, status, search });
   };
 
-  const sortedContests = filteredContests.sort(
+  const sortedContests = filteredContests.filter((contest) => contest.status === true).sort(
     (a, b) => new Date(b.creationDate) - new Date(a.creationDate)
   );
 
@@ -92,7 +110,7 @@ const ListContest = () => {
   const [isGridMode, setIsGridMode] = useState(true);
 
   return (
-    <div className='mx-12 md: mx-24'>
+    <div className='mx-6 md:mx-24'>
       <div className="mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <div>
           <p className="text-4xl font-bold not-italic leading-[160%] text-black">

@@ -6,24 +6,22 @@ function Breadcrumb({contest}) {
 
   return (
     <nav>
-      <ul className="flex space-x-2">
-        <li>
-          <Link to="/">Accueil  {">"}</Link>
-        </li>
+      <div className='md:flex md:space-x-2'>
+        <Link to="/" className='flex-none'>Accueil  {">"}</Link>
         {pathnames.map((pathname, index) => {
           const routeTo = `/${pathnames.slice(0, index + 1).join('>')}`;
           const label = pathname.charAt(0).toUpperCase() + pathname.slice(1);
           const isLast = index === pathnames.length - 1;
           return isLast ? (
-            <li key={routeTo}>{contest.name}</li>
+            <p className='flex-1' key={routeTo}>{contest.name}</p>
           ) : (
-            <li key={routeTo}>
+            <p key={routeTo} className='flex-initial'>
               <Link to={routeTo}>{label}</Link>
               <span className="mx-2">{'>'}</span>
-            </li>
+            </p>
           );
         })}
-      </ul>
+      </div>
     </nav>
   );
 }
