@@ -8,6 +8,7 @@ import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PasswordChecklist from "react-password-checklist";
+import SituationEnum from './profil/enums/SituationEnum';
 
 const RegisterSchema = Yup.object().shape({
   gender: Yup.string().required('Le genre est requis'),
@@ -132,10 +133,12 @@ const RegisterForm = ({ closeModal }) => {
           </div>
           <div>
             <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-1'>Vous êtes*</label>
-            <Field className='bg-[#f1f1f1] rounded-[5px] w-[210px] h-[43px] pl-3' as="select" name="situation" required>
-              <option value="">Cliquez ici</option>
-              <option value="photographe">Photographe</option>
-              <option value="organisateur">Organisateur</option>
+              <Field as='select' name='situation' className='bg-[#f1f1f1] rounded-[5px] w-[210px] h-[43px] pl-3' required>
+                {Object.entries(SituationEnum).map(([key, value]) => (
+                  <option value={key} key={key}>
+                    {value}
+                  </option>
+                ))}
               </Field>
               <br />
               <ErrorMessage name="situation" component="div" className='text-red-500' />

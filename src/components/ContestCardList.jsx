@@ -5,6 +5,7 @@ import { AiOutlineClockCircle } from 'react-icons/ai';
 import { BiLike } from 'react-icons/bi';
 import { RiUserShared2Line } from 'react-icons/ri';
 import { MdOutlineCameraAlt } from 'react-icons/md';
+import ContestDateStatus from './ContestDateStatus';
 
 const ContestCardList = (props) => {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ const ContestCardList = (props) => {
 
     return (
         <div className='w-full max-h-[440px] sm:max-h-[500px] rounded-b-lg shadow-xl hover:scale-105 ease-in-out duration-300 cursor-pointer mb-10 flex' onClick={handleClick(props.contest)}>
-            <div className="max-h-[260px] max-w-lg overflow-hidden">
-                <ImageDisplay imageName={props.contest.visual} radius='rounded-t-lg rounded-b-lg w-full' />
+            <div className="max-w-lg">
+                <ImageDisplay imageName={props.contest.visual} radius='rounded-l-lg w-full' />
             </div>
             <div className='p-3'>
                 <div className='h-12'>
@@ -48,11 +49,11 @@ const ContestCardList = (props) => {
                         .join(", ")
                         .split(", ")
                         .slice(0,1)
-                        .map((themeName, index) => (
+                        .map((themeName) => (
                             <span key={themeName} style={{ maxWidth: '15ch', display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '4px' }}>{themeName} </span>
                         ))}
                     </p>
-                    <p className="bg-gray-100 rounded-full py-2 px-3 text-xs uppercase">{props.contest.status === true ? 'Actif' : 'Inactif'}</p>
+                    <ContestDateStatus contest={props.contest} />
                 </div>
                 <div className="flex flex-wrap gap-1 mt-20 justify-between">
                     <div className="flex gap-1">

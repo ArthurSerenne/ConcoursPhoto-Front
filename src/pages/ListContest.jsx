@@ -17,6 +17,10 @@ const ListContest = () => {
     themes: [],
     status: { value: null },
     search: '',
+    regions: [],
+    categories: [],
+    departments: [],
+    ageRange: [0, 100],
   });
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(9);
@@ -53,6 +57,27 @@ const ListContest = () => {
           contest.themes.some((t) => t.id === theme.value)
         );
 
+      const regionsMatch =
+        filterValues.regions.length === 0 ||
+        filterValues.regions.some((region) =>
+          contest.regions.some((r) => r.id === region.value)
+        );
+
+      const departmentsMatch =
+        filterValues.departments.length === 0 ||
+        filterValues.departments.some((department) =>
+          contest.departments.some((d) => d.id === department.value)
+        );
+
+      const categorieMatch =
+        filterValues.categories.length === 0 ||
+        filterValues.categories.some((category) =>
+          contest.categories.some((c) => c.id === category.value)
+        );
+      
+      const ageMatch =
+        contest.ageMin >= filterValues.ageRange[0] && contest.ageMax <= filterValues.ageRange[1];
+
       const searchMatch =
         filterValues.search.trim() === '' ||
         contest.name
@@ -68,10 +93,13 @@ const ListContest = () => {
 
         switch (filterValues.status?.value) {
           case 'active':
-            statusMatch = true;
+            statusMatch = 
+            new Date(contest.publicationDate) <= today && new Date(contest.resultsDate) >= today;
             break;
           case 'publication':
-            statusMatch = new Date(contest.publicationDate) > today;
+            statusMatch = 
+            new Date(contest.publicationDate) >= today &&
+            new Date(contest.submissionStartDate) <= today;
             break;
           case 'vote':
             statusMatch =
@@ -83,6 +111,10 @@ const ListContest = () => {
               new Date(contest.submissionStartDate) <= today &&
               new Date(contest.submissionEndDate) >= today;
             break;
+          case 'result':
+            statusMatch =
+              new Date(contest.resultsDate) <= today;
+            break;
           default:
             statusMatch = true;
         }
@@ -91,15 +123,19 @@ const ListContest = () => {
           contest.deletionDate === undefined &&
           themesMatch &&
           statusMatch &&
-          searchMatch
+          searchMatch &&
+          regionsMatch &&
+          departmentsMatch &&
+          categorieMatch &&
+          ageMatch
         );
       });
       setFilteredContests(filtered);
     }, [contests, filterValues]);
 
-  const applyFilters = (themes, status, search) => {
-    setFilterValues({ themes, status, search });
-  };
+  const applyFilters = (themes, status, search, regions, categories, departments, ageRange) => {
+    setFilterValues({ themes, status, search, regions, categories, departments, ageRange });
+  };  
 
   const sortedContests = filteredContests.filter((contest) => contest.status === true).sort(
     (a, b) => new Date(b.creationDate) - new Date(a.creationDate)

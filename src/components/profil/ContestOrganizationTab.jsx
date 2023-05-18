@@ -50,7 +50,7 @@ const ContestOrganizationTab = () => {
     }
   }, [user.organizations]);  
 
-  const data = React.useMemo(() => isAuthenticated && user.organizations[0].contests || [], [isAuthenticated, user.organizations[0].contests]);
+  const data = React.useMemo(() => isAuthenticated && user.organizations[0]?.contests || [], [isAuthenticated, user.organizations[0]?.contests]);
 
   const sortTypes = {
     datetime: (rowA, rowB, columnId) => {

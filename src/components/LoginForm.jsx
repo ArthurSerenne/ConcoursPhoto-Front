@@ -14,7 +14,6 @@ const LoginSchema = Yup.object().shape({
     .email('Adresse e-mail invalide')
     .required("L'adresse e-mail est requise"),
   password: Yup.string()
-    .min(8, 'Le mot de passe doit comporter au moins 8 caractères')
     .required('Le mot de passe est requis'),
 });
 

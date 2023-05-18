@@ -122,8 +122,8 @@ const Home = () => {
           <p>{members.filter((member) => member.status === true).length} membres</p>
         </div>
       </div>
-      <div className="mx-auto mt-10 mb-10 grid grid-cols-3 gap-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-        <div className="col-span-2 h-full relative max-h-[36rem]">
+      <div className="mx-auto mt-10 mb-10 grid grid-cols-1 md:grid-cols-3 gap-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+        <div className="md:col-span-2 h-full relative max-h-[36rem]">
         <Swiper
           spaceBetween={30}
           centeredSlides={true}
@@ -156,7 +156,7 @@ const Home = () => {
                 ))}
         </Swiper>
         </div>
-        <div className="col-span-1 flex h-full flex-col space-y-7">
+        <div className="col-span-1 flex h-full flex-row space-x-4 md:space-y-7 md:flex-col md:space-x-0">
           {loadingAds
             ? Array.from({ length: 2 }, (_, i) => (
                 <div
