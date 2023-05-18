@@ -21,7 +21,7 @@ const ContestCard = (props) => {
     };
 
     return (
-        <div className='max-w-lg max-h-[440px] sm:max-h-[500px] rounded-b-lg shadow-xl hover:scale-105 ease-in-out duration-300 cursor-pointer' onClick={handleClick(props.contest)}>
+        <div className='max-w-lg max-h-[465px] sm:max-h-[500px] rounded-b-lg shadow-xl hover:scale-105 ease-in-out duration-300 cursor-pointer' onClick={handleClick(props.contest)}>
             <div className="max-h-[260px] w-full overflow-hidden">
                 <ImageDisplay imageName={props.contest.visual} radius='rounded-t-lg w-full' />
             </div>

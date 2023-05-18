@@ -12,46 +12,6 @@ import AsyncSelect from 'react-select/async';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const validationSchema = Yup.object().shape({
-    photo: Yup.string(),
-    gender: Yup.string().required("Ce champ est requis"),
-    lastname: Yup.string().required("Ce champ est requis"),
-    firstname: Yup.string().required("Ce champ est requis"),
-    address: Yup.string(),
-    city: Yup.object().nullable(),
-    zipcode: Yup.object().nullable(),
-    email: Yup.string().email('Email invalide').required("Ce champ est requis").test('email', 'Cet email est déjà utilisé', async (value) => {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/users.json`, {
-            params: {
-                email: value
-            }
-        });
-
-        if(response.data.find(user => user.email === value)) {
-            return false;
-        }
-
-        return true;
-    }),
-    password: Yup.string()
-    .min(8, 'Le mot de passe doit comporter au moins 8 caractères')
-    .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une majuscule')
-    .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre')
-    .required('Le mot de passe est requis'),
-    username: Yup.string().required("Ce champ est requis"),
-    birthdate: Yup.date().required("Ce champ est requis"),
-    situation: Yup.string().required("Ce champ est requis"),
-    category: Yup.string(),
-    description: Yup.string(),
-    website: Yup.string().url('URL invalide'),
-    facebook: Yup.string().url('URL invalide'),
-    youtube: Yup.string().url('URL invalide'),
-    linkedin: Yup.string().url('URL invalide'),
-    tiktok: Yup.string().url('URL invalide'),
-    instagram: Yup.string().url('URL invalide'),
-    twitter: Yup.string().url('URL invalide'),
-});
-
 const MyProfilTab = () => {
     const { user, reloadUser, logout } = useAuth();
     const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
@@ -199,6 +159,59 @@ const MyProfilTab = () => {
             setSubmitting(false);
         }
     };
+
+    const validationSchema = Yup.object().shape({
+        photo: Yup.string(),
+        gender: Yup.string().required("Ce champ est requis"),
+        lastname: Yup.string().required("Ce champ est requis"),
+        firstname: Yup.string().required("Ce champ est requis"),
+        address: Yup.string(),
+        city: Yup.object().nullable(),
+        zipcode: Yup.object().nullable(),
+        email: Yup.string().email('Email invalide').required("Ce champ est requis").test('email', 'Cet email est déjà utilisé', async function(value) {
+            if (user.email === value) {
+                return true;
+            }
+    
+            const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/users.json`, {
+                params: {
+                    email: value
+                }
+            });
+    
+            if(response.data.find(user => user.email === value)) {
+                return false;
+            }
+    
+            return true;
+        }),
+        password: Yup.string()
+        .min(8, 'Le mot de passe doit comporter au moins 8 caractères')
+        .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une majuscule')
+        .matches(/\d/, 'Le mot de passe doit contenir au moins un chiffre')
+        .when('email', (email, schema) => {
+            return schema.test('password', 'Le mot de passe est requis', function(value) {
+                if (user.email !== email[0]) {
+                    if (!value) {
+                        return this.createError({ message: 'Le mot de passe est requis' });
+                    }
+                }
+    
+                return true;
+            })
+        }),
+        username: Yup.string().required("Ce champ est requis"),
+        situation: Yup.string().required("Ce champ est requis"),
+        category: Yup.string(),
+        description: Yup.string(),
+        website: Yup.string().url('URL invalide'),
+        facebook: Yup.string().url('URL invalide'),
+        youtube: Yup.string().url('URL invalide'),
+        linkedin: Yup.string().url('URL invalide'),
+        tiktok: Yup.string().url('URL invalide'),
+        instagram: Yup.string().url('URL invalide'),
+        twitter: Yup.string().url('URL invalide'),
+    });
 
     return (
         <Formik

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import { IoIosArrowDown } from 'react-icons/io';
+import AsyncSelect from 'react-select/async';
+import Slider from "react-slider";
 
 const ThemeFilter = ({ applyFilters }) => {
   const [moreCriteria, setMoreCriteria] = useState(false);
@@ -11,11 +13,28 @@ const ThemeFilter = ({ applyFilters }) => {
   const [categories, setCategories] = useState([]);
 
   const [selectedThemes, setSelectedThemes] = useState([]);
+  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState({ value: null });
   const [searchValue, setSearchValue] = useState('');
+  const [selectedAge, setSelectedAge] = useState([0, 100]);
 
   const criteriaToggle = () => {
     setMoreCriteria(!moreCriteria);
+  };
+
+  const loadDepartments = (inputValue) => {
+    return axios.get(process.env.REACT_APP_API_URL + '/departments.json', {
+        params: {
+            name: inputValue
+        }
+    }).then(res => {
+        return res.data.map(department => ({
+            value: department.id,
+            label: department.name
+        }));
+    });
   };
 
   useEffect(() => {
@@ -41,20 +60,40 @@ const ThemeFilter = ({ applyFilters }) => {
 
   const handleThemeChange = (selectedThemes) => {
     setSelectedThemes(selectedThemes || []);
-    applyFilters(selectedThemes || [], selectedStatus, searchValue);
+    applyFilters(selectedThemes || [], selectedStatus, searchValue, selectedRegions, selectedCategory, selectedDepartment, selectedAge);
   };
+
+  const handleRegionChange = (selectedRegions) => {
+    setSelectedRegions(selectedRegions || []);
+    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions || [], selectedCategory, selectedDepartment, selectedAge);
+  }
+
+  const handleCategoryChange = (selectedCategory) => {
+    setSelectedCategory(selectedCategory || []);
+    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions, selectedCategory || [], selectedDepartment, selectedAge);
+  }
+
+  const handleDepartmentChange = (selectedDepartment) => {
+    setSelectedDepartment(selectedDepartment || []);
+    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions, selectedCategory, selectedDepartment || [], selectedAge);
+  }
 
   const handleStatusChange = (selectedStatus) => {
     setSelectedStatus(selectedStatus || null);
-    applyFilters(selectedThemes, selectedStatus || null, searchValue);
+    applyFilters(selectedThemes, selectedStatus || null, searchValue, selectedRegions, selectedCategory, selectedDepartment, selectedAge);
+  };
+
+  const handleAgeChange = (selectedAge) => {
+    setSelectedAge(selectedAge);
+    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions, selectedCategory, selectedDepartment, selectedAge || [0, 100]);
+  };
+
+  const handleSearchButtonClick = () => {
+    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions, selectedCategory, selectedDepartment, selectedAge);
   };
 
   const handleInputChange = (event) => {
     setSearchValue(event.target.value);
-  };
-
-  const handleSearchButtonClick = () => {
-    applyFilters(selectedThemes, selectedStatus, searchValue);
   };
 
   return (
@@ -131,17 +170,21 @@ const ThemeFilter = ({ applyFilters }) => {
               label: region.name,
             }))}
             isMulti={true}
+            onChange={handleRegionChange}
           />
         </div>
         <div className="w-full">
           <p>Départements</p>
-          <Select
+          <AsyncSelect
+            loadOptions={loadDepartments}
             className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
-            options={departments.map((department) => ({
-              value: department.id,
-              label: department.name,
-            }))}
+            isClearable={true}
             isMulti={true}
+            onChange={handleDepartmentChange}
+            defaultOptions={departments.map((region) => ({
+              value: region.id,
+              label: region.name,
+            }))}
           />
         </div>
         <div className="w-full">
@@ -153,11 +196,26 @@ const ThemeFilter = ({ applyFilters }) => {
               label: categorie.name,
             }))}
             isMulti={true}
+            onChange={handleCategoryChange}
           />
         </div>
         <div className="w-full">
           <p>Âge (réservé aux)</p>
-          <Select className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select" />
+          <Slider
+            value={selectedAge}
+            className="horizontal-slider mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
+            renderThumb={(props, state) => <div {...props} >{state.valueNow}</div>}
+            pearling
+            min={0}
+            max={100}
+            ariaValuetext={(state) => `Thumb value ${state.valueNow}`}
+            renderTrack={(props) => (
+              <div {...props} className='mx-2 mt-5 h-1 bg-gray-400 rounded-full' />
+            )}
+            minDistance={1}
+            withTracks
+            onChange={handleAgeChange}
+          />
         </div>
         <div className="w-full">
           <p>Prix/dotations</p>

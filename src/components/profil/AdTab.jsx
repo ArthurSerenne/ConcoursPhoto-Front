@@ -40,7 +40,7 @@ const AdTab = () => {
     []
   );
 
-  const data = React.useMemo(() => isAuthenticated && user.organizations[0].sponsors || [], [isAuthenticated, user.organizations[0].sponsors]);
+  const data = React.useMemo(() => isAuthenticated && user.organizations[0]?.sponsors || [], [isAuthenticated, user.organizations[0]?.sponsors]);
 
   const sortTypes = {
     datetime: (rowA, rowB, columnId) => {
