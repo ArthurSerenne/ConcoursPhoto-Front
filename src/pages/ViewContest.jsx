@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import '../sass/components/tabs.scss';
 import { Spinner } from 'react-spinners-css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { format, differenceInDays } from 'date-fns';
+import { format, differenceInDays, set } from 'date-fns';
 import { AiOutlineEye, AiOutlineArrowLeft } from 'react-icons/ai';
 import { TbClockHour3 } from 'react-icons/tb';
 import {
@@ -20,9 +20,14 @@ import { Autoplay, Pagination, Navigation } from 'swiper';
 import PhotoCard from '../components/PhotoCard';
 import ReactPaginate from 'react-paginate';
 import Breadcrumb from '../components/Breadcrumb';
+import { Editor } from '@tinymce/tinymce-react';
 import ContestDateStatus from '../components/ContestDateStatus';
+import { useAuth } from '../components/AuthContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ViewContest = () => {
+  const { user } = useAuth();
   const { id } = useParams();
   const location = useLocation();
   const passedContest = location.state && location.state.contest;
@@ -89,6 +94,10 @@ const ViewContest = () => {
 
   const handlePageClick = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
+  };
+
+  const emptyContent = (content) => {
+    return (!content || /^\s*$/.test(content));
   };
 
   return (
@@ -208,50 +217,164 @@ const ViewContest = () => {
         ) : (
           <Tabs onSelect={handleTabChange} className={'mb-6'}>
             <TabList className={'mb-10'}>
-              <Tab>Le concours</Tab>
-              <Tab>Réglement</Tab>
-              <Tab>Prix à gagner</Tab>
+            {!emptyContent(contest.description) && <Tab>Le concours</Tab>}
+            {!emptyContent(contest.rules) && <Tab>Réglement</Tab>}
+            {!emptyContent(contest.prizes) && <Tab>Prix à gagner</Tab>}
               <Tab>Membres du Jury</Tab>
               <Tab>Les photos</Tab>
               <Tab>Résultats</Tab>
             </TabList>
 
-            <TabPanel>
-              <h2 className="flex items-center text-text-2xl font-normal not-italic">
-                Présentation du concours photo
-              </h2>
-              {contest.description}
-              <div className=" mx-auto mt-10 flex 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-                <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex">
-                  <AiOutlineArrowLeft className='mr-2' /> Retour
-                </Link>
-                <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5">
-                  Télécharger la version PDF
-                </Link>
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <h2 className="flex items-center text-text-2xl font-normal not-italic">
-                Règlement du concours
-              </h2>
-              {contest.rules}
-              <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-                <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
-                  <AiOutlineArrowLeft className='mr-2' /> Retour
-                </Link>
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <h2 className="flex items-center text-text-2xl font-normal not-italic">
-                Prix à gagner
-              </h2>
-              {contest.prizes}
-              <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-                <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
-                  <AiOutlineArrowLeft className='mr-2' /> Retour
-                </Link>
-              </div>
-            </TabPanel>
+                  {!emptyContent(contest.description) && (
+                    <TabPanel>
+                      <h2 className="flex items-center text-text-2xl font-normal not-italic">
+                        Présentation du concours photo
+                      </h2>
+                      {user && user.organizations && contest.organization && user.organizations.some(org => org.id === contest.organization.id) ? (
+                        <Editor
+                          apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
+                          initialValue={contest.description}
+                          init={{
+                            height: 500,
+                            menubar: false,
+                            plugins: [
+                              'advlist autolink lists link image charmap print preview anchor',
+                              'searchreplace visualblocks code fullscreen',
+                              'insertdatetime media table paste code help wordcount'
+                            ],
+                            toolbar: 'undo redo | formatselect | ' +
+                            'bold italic backcolor | alignleft aligncenter ' +
+                            'alignright alignjustify | bullist numlist outdent indent | ' +
+                            'removeformat | help',
+                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                          }}
+                          onEditorChange={(content) => {
+                            contest.description = content;
+                            axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
+                              description: content
+                            })
+                            .then(response => {
+                              setContest(response.data);
+                              console.log(response);
+                              toast.success('La description du concours a bien été mise à jour !');
+                            })
+                            .catch(error => {
+                              console.log(error);
+                              toast.error('Une erreur est survenue lors de la mise à jour de la description du concours.');
+                            });
+                          }}
+                        />
+                      ) : (
+                        <p>{contest.description}</p>
+                      )}
+                      <div className=" mx-auto mt-10 flex 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+                        <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex">
+                          <AiOutlineArrowLeft className='mr-2' /> Retour
+                        </Link>
+                        <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5">
+                          Télécharger la version PDF
+                        </Link>
+                      </div>
+                    </TabPanel>
+                  )}
+                  {!emptyContent(contest.rules) && (
+                    <TabPanel>
+                      <h2 className="flex items-center text-text-2xl font-normal not-italic">
+                        Règlement du concours
+                      </h2>
+                      {user && user.organizations && contest.organization && user.organizations.some(org => org.id === contest.organization.id) ? (
+                      <Editor
+                        apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
+                        initialValue={contest.rules}
+                        init={{
+                          height: 500,
+                          menubar: false,
+                          plugins: [
+                            'advlist autolink lists link image charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen',
+                            'insertdatetime media table paste code help wordcount'
+                          ],
+                          toolbar: 'undo redo | formatselect | ' +
+                          'bold italic backcolor | alignleft aligncenter ' +
+                          'alignright alignjustify | bullist numlist outdent indent | ' +
+                          'removeformat | help',
+                          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                        }}
+                        onEditorChange={(content) => {
+                          contest.rules = content;
+                          axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
+                            rules: content
+                          })
+                          .then(response => {
+                            setContest(response.data);
+                            console.log(response);
+                            toast.success('Le règlement du concours a bien été mis à jour !');
+                          })
+                          .catch(error => {
+                            console.log(error);
+                            toast.error('Une erreur est survenue lors de la mise à jour du règlement du concours.');
+                          });
+                        }}
+                      />
+                      ) : (
+                        <p>{contest.rules}</p>
+                      )}
+                      <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+                        <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
+                          <AiOutlineArrowLeft className='mr-2' /> Retour
+                        </Link>
+                      </div>
+                    </TabPanel>
+                  )}
+                  {!emptyContent(contest.prizes) && (
+                    <TabPanel>
+                      <h2 className="flex items-center text-text-2xl font-normal not-italic">
+                        Prix à gagner
+                      </h2>
+                      {user && user.organizations && contest.organization && user.organizations.some(org => org.id === contest.organization.id) ? (
+                      <Editor
+                        apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
+                        initialValue={contest.prizes}
+                        init={{
+                          height: 500,
+                          menubar: false,
+                          plugins: [
+                            'advlist autolink lists link image charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen',
+                            'insertdatetime media table paste code help wordcount'
+                          ],
+                          toolbar: 'undo redo | formatselect | ' +
+                          'bold italic backcolor | alignleft aligncenter ' +
+                          'alignright alignjustify | bullist numlist outdent indent | ' +
+                          'removeformat | help',
+                          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                        }}
+                          onEditorChange={(content) => {
+                            contest.prizes = content;
+                            axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
+                              prizes: content
+                            })
+                            .then(response => {
+                              setContest(response.data);
+                              console.log(response);
+                              toast.success('La dotation du concours a bien été mise à jour !');
+                            })
+                            .catch(error => {
+                              console.log(error);
+                              toast.error('Une erreur est survenue lors de la mise à jour de la dotation du concours.');
+                            });
+                        }}
+                      />
+                      ) : (
+                        <p>{contest.prizes}</p>
+                      )}
+                      <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+                        <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
+                          <AiOutlineArrowLeft className='mr-2' /> Retour
+                        </Link>
+                      </div>
+                    </TabPanel>
+                  )}
             <TabPanel>
               <h2 className="flex items-center text-text-2xl font-normal not-italic mb-6">
                 {contest.juryMembers.length} membres du Jury
