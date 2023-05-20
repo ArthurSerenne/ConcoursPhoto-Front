@@ -20,6 +20,8 @@ const ContestCard = (props) => {
         };
     };
 
+    console.log(props.contest);
+
     return (
         <div className='max-w-lg max-h-[465px] sm:max-h-[500px] rounded-b-lg shadow-xl hover:scale-105 ease-in-out duration-300 cursor-pointer' onClick={handleClick(props.contest)}>
             <div className="max-h-[260px] w-full overflow-hidden">
@@ -30,7 +32,7 @@ const ContestCard = (props) => {
                     <p className='text-base font-bold not-italic leading-[160%] text-black overflow-hidden w-full' style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }}>{props.contest.name}</p>
                 </div>
                 <div className="flex flex-wrap gap-1 mt-2">
-                    <p className="rounded-full bg-gray-100 px-3 py-2 text-xs uppercase">
+                    {props.contest.organization.name ? <p className="rounded-full bg-gray-100 px-3 py-2 text-xs uppercase">
                         <span
                         style={{
                             maxWidth: '25ch',
@@ -42,7 +44,7 @@ const ContestCard = (props) => {
                         >
                         {props.contest.organization.name}
                         </span>
-                    </p>
+                    </p> : <></>}
                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs uppercase">
                         {props.contest.themes
                         .map((theme) => theme.name)

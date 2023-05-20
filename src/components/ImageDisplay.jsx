@@ -88,7 +88,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
           <RiArrowLeftSLine className="text-gray-500 text-lg" />
         </button>
         <div
-          className="relative max-h-[728px] max-w-[1024px]"
+          className="relative max-h-[1200px] max-w-[1024px]"
           onClick={closeModal}>
           <img
             src={imageSrc}
@@ -137,9 +137,6 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
         >
           <RiArrowRightSLine className="text-gray-500 text-lg" />
         </button>
-        {/* <button className=" top-1/2 transform -translate-y-1/2 bg-white opacity-30 py-2 px-3">
-          <RiArrowRightSLine className="text-gray-500 text-lg" />
-        </button> */}
       </Modal>
     </div>
   );

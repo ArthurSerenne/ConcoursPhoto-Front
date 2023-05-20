@@ -11,13 +11,13 @@ const ContestDateStatus = (props) => {
     console.log(props.contest);
 
     if (isAfter(parsedDate(props.contest.publicationDate), today)) {
-        text = 'Indisponible';
+        text = 'A venir';
     } else if (isBefore(parsedDate(props.contest.publicationDate), today) && isAfter(parsedDate(props.contest.submissionStartDate), today)) {
-        text = 'Phase d\'attente 1'
+        text = 'Va bientôt commencé'
     } else if (isBefore(parsedDate(props.contest.submissionStartDate), today) && isAfter(parsedDate(props.contest.submissionEndDate), today)) {
         text = 'Phase de soumission';
     } else if (isBefore(parsedDate(props.contest.submissionEndDate), today) && isAfter(parsedDate(props.contest.votingStartDate), today)) {
-        text = 'Phase d\'attente 2';
+        text = 'Récupération des photos';
     } else if (isBefore(parsedDate(props.contest.votingStartDate), today) && isAfter(parsedDate(props.contest.votingEndDate), today)) {
         text = 'Phase de vote';
     } else if (isBefore(parsedDate(props.contest.votingEndDate), today) && isAfter(parsedDate(props.contest.resultsDate), today)) {
