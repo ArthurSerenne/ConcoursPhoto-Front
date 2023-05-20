@@ -104,7 +104,7 @@ const ViewContest = () => {
     <div className='mx-6 md:mx-24'>
       <div>
         <div className="mx-auto mt-10 mb-10 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-          <Breadcrumb contest={contest} />
+          <Breadcrumb  contest={contest} />
         </div>
         <div className="mx-auto mt-10 mb-10 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-24 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           <div className='w-full sm:w-2/3'>
@@ -122,20 +122,20 @@ const ViewContest = () => {
           <div className='w-full lg:w-2/3 flex flex-wrap gap-2 justify-center lg:justify-start'>
             <p className="bg-gray-100 rounded-full py-2 px-4 max-w-fit text-xs">
               THEME(S) :{" "}
-              {contest.themes
+              {contest.themes && contest.themes
                 .map((theme) => theme.name)
                 .join(", ")
                 .split(", ")
                 .map((themeName, index) => (
                   <span key={index} className="font-extrabold uppercase">{themeName} </span>
-                ))}
+              ))}
             </p>
             <p className="bg-gray-100 rounded-full py-2 px-4 max-w-fit text-xs">
               PAYS : <span className="font-extrabold uppercase">France</span>
             </p>
             <p className="max-w-fit rounded-full bg-gray-100 px-4 py-2 text-xs">
               REGION(S):{' '}
-              {contest.regions
+              {contest.regions && contest.regions
                 .map((region) => region.name)
                 .join(', ')
                 .split(', ')
@@ -143,11 +143,11 @@ const ViewContest = () => {
                   <span key={index} className="font-extrabold uppercase">
                     {regionName}{' '}
                   </span>
-                ))}
+              ))}
             </p>
             <p className="max-w-fit rounded-full bg-gray-100 px-4 py-2 text-xs">
               CATEGORIES(S) :{' '}
-              {contest.categories
+              {contest.categories && contest.categories
                 .map((category) => category.name)
                 .join(', ')
                 .split(', ')
@@ -155,7 +155,7 @@ const ViewContest = () => {
                   <span key={index} className="font-extrabold uppercase">
                     {categoryName}{' '}
                   </span>
-                ))}
+              ))}
             </p>
             <p className="max-w-fit rounded-full bg-gray-100 px-4 py-2 text-xs">
               ÂGE :{' '}
@@ -176,11 +176,11 @@ const ViewContest = () => {
         </div>
         <div className="mx-auto mt-10 mb-10 grid grid-cols-1 md:grid-cols-3 md:gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           <div className="col-span-2 max-h-[38rem]">
-            <ImageDisplay imageName={contest.visual} radius="rounded-xl object-cover h-[38rem] w-full cursor-default" />
+            <ImageDisplay imageName={contest.visual ? contest.visual : 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg'} radius="rounded-xl object-cover h-[38rem] w-full cursor-default" />
           </div>
           <div className="grid grid-cols-2 gap-4 mt-4 md:flex md:flex-col md:space-y-7 md:mt-0">
             <div className="flex flex-grow justify-center max-h-[18rem]">
-              <ImageDisplay imageName={contest.organization.logo} radius="rounded-xl cursor-default" />
+              <ImageDisplay imageName={contest.organization.logo ? contest.organization.logo : 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg'} radius="rounded-xl cursor-default" />
             </div>
             <div className="z-0 flex max-h-[18rem] flex-grow justify-center">
               <Swiper
@@ -377,9 +377,9 @@ const ViewContest = () => {
                   )}
             <TabPanel>
               <h2 className="flex items-center text-text-2xl font-normal not-italic mb-6">
-                {contest.juryMembers.length} membres du Jury
+                {contest.juryMembers?.length} membres du Jury
               </h2>
-              {contest.juryMembers.map((juryMember) => (
+              {contest.juryMembers?.map((juryMember) => (
                 <div key={juryMember.id} className='bg-[#F1F1F1] p-5 mt-2'>
                   <p><span className='font-bold'>{juryMember.member.user.firstname} {juryMember.member.user.lastname}</span>, {juryMember.fonction}</p>
                 </div>
@@ -523,7 +523,7 @@ const ViewContest = () => {
               .sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate))
               .slice(0, 8)
               .map(
-                (photo) => <ImageDisplay key={photo.id} name={photo.member.username} imageName={photo.file} modalEnabled={true} radius={'hover:scale-105 ease-in-out duration-300 cursor-pointer'} />
+                (photo) => <ImageDisplay key={photo.id} name={photo.member?.username} imageName={photo.file} modalEnabled={true} radius={'hover:scale-105 ease-in-out duration-300 cursor-pointer'} />
               )}
           </div>
           <Link onClick={goBack} className="rounded-[44px] bg-gray-400 text-white px-[30px] py-3.5 mt-8 hover:bg-gray-300">

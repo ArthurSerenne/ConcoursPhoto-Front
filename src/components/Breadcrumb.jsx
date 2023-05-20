@@ -13,7 +13,7 @@ function Breadcrumb({contest}) {
           const label = pathname.charAt(0).toUpperCase() + pathname.slice(1);
           const isLast = index === pathnames.length - 1;
           return isLast ? (
-            <p className='flex-1' key={routeTo}>{contest.name}</p>
+            <p className='flex-1 font-bold' key={routeTo}>{contest.name}</p>
           ) : (
             <p key={routeTo} className='flex-initial'>
               <Link to={routeTo}>{label}</Link>
