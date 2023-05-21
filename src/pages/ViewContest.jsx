@@ -46,17 +46,14 @@ const ViewContest = () => {
   const [itemsPerPage, setItemsPerPage] = useState(9);
 
   useEffect(() => {
-    if (!passedContest) {
-      axios
-        .get(process.env.REACT_APP_API_URL + `/contests/${id}`)
-        .then((res) => {
-          setContest(res.data);
-          setLoading(false);
-        });
-    } else {
+    const fetchData = async () => {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/contests/${id}`);
+      setContest(res.data);
       setLoading(false);
-    }
-  }, [id, !passedContest]);
+    };
+  
+    fetchData();
+  }, [id]);  
 
   useEffect(() => {
     if (contest.photos) {
@@ -171,7 +168,7 @@ const ViewContest = () => {
           <div className='w-full lg:w-1/3 flex flex-wrap justify-center lg:justify-start gap-6 items-center mt-4 lg:mt-0'>
             <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><RiUserShared2Line /> {uniquePhotographers}</p>
             <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><MdOutlineCameraAlt /> {contest.photos.filter((photo) => photo.status === true).length}</p>
-            <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><AiOutlineEye /> {viewCount}</p>
+            <p className="bg-gray-100 rounded-full py-1 px-4 max-w-fit"><AiOutlineEye /> {contest.view ? contest.view : '0'}</p>
           </div>
         </div>
         <div className="mx-auto mt-10 mb-10 grid grid-cols-1 md:grid-cols-3 md:gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
@@ -213,7 +210,9 @@ const ViewContest = () => {
       <div className={`mx-auto mt-10 mb-10 grid grid-cols-1 md:${activeTab === 4 ? 'grid-cols-1' : 'grid-cols-3'} md:gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm`}>
         <div className={`col-span-2 h-full relative ${activeTab === 4 ? 'col-span-3' : 'col-span-2'}`}>
         {loading ? (
-          <Spinner color="#000" />
+          <div className="flex justify-center items-center">
+            <Spinner color="#000" />
+          </div>        
         ) : (
           <Tabs onSelect={handleTabChange} className={'mb-6'}>
             <TabList className={'mb-10'}>
@@ -523,7 +522,7 @@ const ViewContest = () => {
               .sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate))
               .slice(0, 8)
               .map(
-                (photo) => <ImageDisplay key={photo.id} name={photo.member?.username} imageName={photo.file} modalEnabled={true} radius={'hover:scale-105 ease-in-out duration-300 cursor-pointer'} />
+                (photo) => <ImageDisplay key={photo.id} name={photo.member?.username} imageName={photo.file} modalEnabled={false} />
               )}
           </div>
           <Link onClick={goBack} className="rounded-[44px] bg-gray-400 text-white px-[30px] py-3.5 mt-8 hover:bg-gray-300">

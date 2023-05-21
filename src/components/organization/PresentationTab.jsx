@@ -92,15 +92,15 @@ const PresentationTab = () => {
                     ) : (
                     organization && organization.city && (
                         <MapContainer center={[organization.city.gps_lat, organization.city.gps_lng]} zoom={7} scrollWheelZoom={false} className='w-full h-full rounded-xl'>
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <Marker position={[organization.city.gps_lat, organization.city.gps_lng]}>
-                            <Popup>
-                            {organization.city.name} <br /> {organization.city.zip_code}
-                            </Popup>
-                        </Marker>
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <Marker position={[organization.city.gps_lat, organization.city.gps_lng]}>
+                                <Popup>
+                                {organization.city.name} <br /> {organization.city.zip_code}
+                                </Popup>
+                            </Marker>
                         </MapContainer>
                     )
                     )}
