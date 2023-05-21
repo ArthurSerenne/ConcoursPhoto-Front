@@ -6,6 +6,7 @@ import { BiLike } from 'react-icons/bi';
 import { RiUserShared2Line } from 'react-icons/ri';
 import { MdOutlineCameraAlt } from 'react-icons/md';
 import ContestDateStatus from './ContestDateStatus';
+import axios from 'axios';
 
 const ContestCard = (props) => {
   const navigate = useNavigate();
@@ -14,11 +15,23 @@ const ContestCard = (props) => {
     'dd/MM/yyyy'
   );
 
-    const handleClick = (contest) => {
-        return () => {
-            navigate(`/concours-photo/${contest.id}`, { state: { contest } });
-        };
+  const handleClick = (contest) => {
+    return async () => {
+      const viewCount = contest.view ? contest.view + 1 : 1;
+      
+      await axios.patch(
+        `${process.env.REACT_APP_API_URL}/contests/${contest.id}`, 
+        { view: viewCount },
+        {
+          headers: {
+            'Content-Type': 'application/merge-patch+json',
+          },
+        }
+      );
+  
+      navigate(`/concours-photo/${contest.id}`, { state: { contest: {...contest, view: viewCount } } });
     };
+  };   
 
     console.log(props.contest);
 

@@ -5,7 +5,7 @@ import { RiUserShared2Line } from 'react-icons/ri';
 import { AiOutlineEye } from 'react-icons/ai';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 
-const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
+const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = null, viewCount, onViewCountChange }) => {
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
   const imagePath = `${baseUrl}${imageName}`;
   const defaultImagePath =
@@ -14,7 +14,6 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
   const [imageSrc, setImageSrc] = useState(imagePath);
   const [loaded, setLoaded] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [viewCount, setViewCount] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleError = () => {
@@ -26,10 +25,13 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
   };
 
   const openModal = () => {
-    if (modalEnabled) {
-      setModalIsOpen(true);
-      setViewCount(viewCount + 1);
-    }
+    return async () => {
+      await onViewCountChange();
+
+      if (modalEnabled) {
+        setModalIsOpen(true);
+      }
+    };
   };
 
   const closeModal = () => {
@@ -67,9 +69,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false }) => {
         className={`h-full w-full object-cover transition-opacity duration-500 ${
           loaded ? 'opacity-100' : 'opacity-0'
         } ${radius}`}
-        onClick={(e) => {
-          openModal();
-        }}
+        onClick={openModal()}
       />
       
       <Modal
