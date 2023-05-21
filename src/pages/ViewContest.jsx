@@ -264,7 +264,7 @@ const ViewContest = () => {
                           }}
                         />
                       ) : (
-                        <p>{contest.description}</p>
+                        <p dangerouslySetInnerHTML={{ __html: contest.description }}></p>
                       )}
                       <div className=" mx-auto mt-10 flex 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                         <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex">
@@ -316,7 +316,7 @@ const ViewContest = () => {
                         }}
                       />
                       ) : (
-                        <p>{contest.rules}</p>
+                        <p dangerouslySetInnerHTML={{ __html: contest.rules }}></p>
                       )}
                       <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                         <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">
@@ -365,7 +365,7 @@ const ViewContest = () => {
                         }}
                       />
                       ) : (
-                        <p>{contest.prizes}</p>
+                        <p dangerouslySetInnerHTML={{ __html: contest.prizes }}></p>
                       )}
                       <div className="mx-auto mt-10 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                         <Link onClick={goBack} className="rounded-[44px] bg-button-grey px-[25px] py-3.5 mr-4 items-center flex w-fit">

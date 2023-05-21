@@ -2,9 +2,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import '../../sass/components/tabs.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
-import 'leaflet-defaulticon-compatibility';
 import { useParams } from 'react-router';
 import ContestCardList from '../ContestCardList';
 
