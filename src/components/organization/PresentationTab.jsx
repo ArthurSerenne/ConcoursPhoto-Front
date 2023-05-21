@@ -14,7 +14,6 @@ import ContestCardSkeleton from '../../components/ContestCardSkeleton';
 import { GrLinkedin, GrFacebook, GrYoutube, GrTwitter } from 'react-icons/gr';
 import { FaTiktok } from 'react-icons/fa';
 import { RiInstagramFill } from 'react-icons/ri';
-import Skeleton from 'react-loading-skeleton';
 
 const PresentationTab = () => {
     const { id } = useParams();
