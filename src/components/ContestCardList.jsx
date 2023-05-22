@@ -30,7 +30,7 @@ const ContestCardList = (props) => {
                     <p className='text-2xl font-bold not-italic leading-[160%] text-black overflow-hidden w-full' style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }}>{props.contest.name}</p>
                 </div>
                 <div className="flex flex-wrap gap-1 mt-10">
-                    {props.contest.organization.name ? 
+                    {props.contest.organization.name ?
                         <p className="rounded-full bg-gray-100 px-3 py-2 text-xs uppercase">
                         <span
                         style={{
@@ -60,7 +60,7 @@ const ContestCardList = (props) => {
                 <div className="flex flex-col sm:flex-row flex-wrap gap-1 justify-end md:justify-between mt-auto">
                     <div className="flex flex-wrap sm:flex-row gap-1">
                         {
-                            new Date(props.contest.publicationDate) < new Date() ? 
+                            new Date(props.contest.publicationDate) < new Date() ?
                             (
                                 <>
                                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
@@ -69,32 +69,34 @@ const ContestCardList = (props) => {
                                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
                                         <MdOutlineCameraAlt /> {props.contest.photos.length}
                                     </p>
+                                    {props.contest.photos && props.contest.photos.length > 0 && (
                                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
-                                        <BiLike /> 458
+                                        <BiLike /> {props.contest.photos[0].voteCount}
                                     </p>
+                                    )}
                                 </>
-                            ) 
-                            : 
+                            )
+                            :
                             ''
                         }
-                        {new Date(props.contest.publicationDate) < new Date() ? 
+                        {new Date(props.contest.publicationDate) < new Date() ?
                             (
-                                new Date(props.contest.submissionStartDate) < new Date() && new Date() < new Date(props.contest.votingEndDate) ? 
+                                new Date(props.contest.submissionStartDate) < new Date() && new Date() < new Date(props.contest.votingEndDate) ?
                                 <p className="py-2 px-3 text-sm">
                                     Jusqu'au {formattedDate} <AiOutlineClockCircle />
                                 </p> :
                                 <p className="py-2 px-3 text-sm">
                                     Clôturé le {formattedDate} <AiOutlineClockCircle />
                                 </p>
-                            ) : 
+                            ) :
                             <p className="py-2 px-3 text-sm">
                                 <AiOutlineClockCircle /> Commence le {formattedDate}
                             </p>
                         }
                     </div>
                     <div className="flex justify-end md:inline w-full md:w-auto">
-                        <a 
-                            className='text-xs md:text-base text-white bg-gray-400 px-4 py-3 md:px-9 py-2 md:py-5 rounded-full hover:cursor-pointer hover:bg-gray-300' 
+                        <a
+                            className='text-xs md:text-base text-white bg-gray-400 px-4 py-3 md:px-9 py-2 md:py-5 rounded-full hover:cursor-pointer hover:bg-gray-300'
                             onClick={handleClick(props.contest)}
                         >
                             <span className="md:hidden"><AiOutlineArrowRight className='scale-150' /></span>
@@ -104,7 +106,7 @@ const ContestCardList = (props) => {
                 </div>
             </div>
         </div>
-    );    
+    );
 };
 
 export default ContestCardList;
