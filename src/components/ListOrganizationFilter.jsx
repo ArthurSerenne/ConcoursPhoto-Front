@@ -82,7 +82,7 @@ const ListOrganizationFilter = ({ applyFilters }) => {
   
     return (
       <div className="mx-auto mt-10 mb-12 space-y-4 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-        <div className="flex flex-row justify-between gap-6">
+        <div className="grid grid-cols-1 md:flex flex-row justify-between gap-6">
           <div className="flex h-[55px] mb-4 md:mb-0 max-w-[500px] w-full">
             <input
               type="search"
@@ -97,7 +97,7 @@ const ListOrganizationFilter = ({ applyFilters }) => {
               Rechercher
             </button>
           </div>
-          <div className="flex justify-between h-[55px] gap-6 w-full">
+          <div className="grid grid-cols-2 md:flex justify-between h-[55px] gap-6 w-full">
             <div className='w-full max-w-[200px]'>
                 <Select
                 placeholder="Pays"
