@@ -45,7 +45,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = n
       setLoaded(false);
     }
   };
-  
+
   const handleNextImage = () => {
     if (currentImageIndex < imageName.length - 1) {
       setCurrentImageIndex(currentImageIndex + 1);
@@ -71,7 +71,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = n
         } ${radius}`}
         onClick={openModal()}
       />
-      
+
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}

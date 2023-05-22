@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import '../sass/components/tabs.scss';
 import { Spinner } from 'react-spinners-css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { format, differenceInDays, set } from 'date-fns';
+import { format, differenceInDays } from 'date-fns';
 import { AiOutlineEye, AiOutlineArrowLeft } from 'react-icons/ai';
 import { TbClockHour3 } from 'react-icons/tb';
 import {
@@ -33,7 +33,6 @@ const ViewContest = () => {
   const passedContest = location.state && location.state.contest;
   const [contest, setContest] = useState(passedContest || []);
   const [loading, setLoading] = useState(true);
-  const [viewCount, setViewCount] = useState(0);
   const [uniquePhotographers, setTotalPhotographers] = useState(0);
   const formattedDate = format(new Date(contest.resultsDate), 'dd/MM/yyyy');
   const daysDifference = differenceInDays(
@@ -51,9 +50,9 @@ const ViewContest = () => {
       setContest(res.data);
       setLoading(false);
     };
-  
+
     fetchData();
-  }, [id]);  
+  }, [id]);
 
   useEffect(() => {
     if (contest.photos) {
@@ -78,14 +77,6 @@ const ViewContest = () => {
     setItemsPerPage(parseInt(event.target.value));
     setCurrentPage(0);
   };
-
-  const incrementViewCount = () => {
-    setViewCount(viewCount + 1);
-  };
-
-  useEffect(() => {
-    incrementViewCount();
-  }, []);
 
   const totalPages = Math.ceil(contest.photos.filter((photo) => photo.status === true).length / itemsPerPage);
 
@@ -212,7 +203,7 @@ const ViewContest = () => {
         {loading ? (
           <div className="flex justify-center items-center">
             <Spinner color="#000" />
-          </div>        
+          </div>
         ) : (
           <Tabs onSelect={handleTabChange} className={'mb-6'}>
             <TabList className={'mb-10'}>

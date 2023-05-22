@@ -15,7 +15,7 @@ const PhotoCard = (props) => {
   const updateViewCount = async () => {
     const newViewCount = viewCount + 1;
     await axios.patch(
-      `${process.env.REACT_APP_API_URL}/photos/${props.photo.id}`, 
+      `${process.env.REACT_APP_API_URL}/photos/${props.photo.id}`,
       { view: newViewCount },
       {
         headers: {
@@ -23,11 +23,11 @@ const PhotoCard = (props) => {
         },
       }
     );
-  
+
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/photos/${props.photo.id}`);
-    
+
     setViewCount(res.data.view);
-  };  
+  };
 
   return (
     <div className="mb-12 max-h-[330px] max-w-lg rounded-b-lg">
@@ -53,7 +53,15 @@ const PhotoCard = (props) => {
               <AiOutlineEye className="mr-2 text-base" /> {viewCount}
             </p>
             <p className="flex cursor-pointer items-end rounded-full bg-gray-400 px-2 py-2 text-xs uppercase text-white duration-300 ease-in-out hover:bg-gray-300">
-              <BiLike className="mr-2 text-base" /> Voter
+              {props.photo.voteCount === 0 ? (
+                <>
+                    <BiLike className="mr-2 text-base" /> Voter
+                </>
+              ) : (
+                <>
+                  <BiLike className="mr-2 text-base" /> {props.photo.voteCount}
+                </>
+              )}
             </p>
           </div>
         </div>

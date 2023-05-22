@@ -15,6 +15,10 @@ const ContestCard = (props) => {
     'dd/MM/yyyy'
   );
 
+  const totalVotes = props.contest.photos.reduce((total, photo) => {
+    return total + photo.voteCount;
+  }, 0);
+
   const handleClick = (contest) => {
     return async () => {
       const viewCount = contest.view ? contest.view + 1 : 1;
@@ -74,11 +78,9 @@ const ContestCard = (props) => {
                     <div className="flex gap-1">
                         <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><RiUserShared2Line /> 121</p>
                         <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><MdOutlineCameraAlt /> {props.contest.photos.filter((photo) => photo.status === true).length}</p>
-                        {props.contest.photos && props.contest.photos.length > 0 && (
-                          <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
-                            <BiLike /> {props.contest.photos[0].voteCount}
-                          </p>
-                        )}
+                        <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
+                          <BiLike /> {totalVotes}
+                        </p>
                     </div>
                     <div>
                         <p className="py-2 px-3 text-xs">Jusqu'au {formattedDate} <AiOutlineClockCircle /></p>
