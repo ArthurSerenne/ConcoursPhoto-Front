@@ -6,19 +6,38 @@ import { BiLike } from 'react-icons/bi';
 import { RiUserShared2Line } from 'react-icons/ri';
 import { MdOutlineCameraAlt } from 'react-icons/md';
 import ContestDateStatus from './ContestDateStatus';
+import axios from 'axios';
 
 const ContestCardList = (props) => {
   const navigate = useNavigate();
   const formattedDate = format(
     new Date(props.contest.resultsDate),
     'dd/MM/yyyy'
-  );
+    );
+
+    const totalVotes = props.contest.photos.reduce((total, photo) => {
+        return total + photo.voteCount;
+      }, 0);
 
     const handleClick = (contest) => {
-        return () => {
-            navigate(`/concours-photo/${contest.id}`, { state: { contest } });
-        };
+    return async () => {
+      const viewCount = contest.view ? contest.view + 1 : 1;
+
+      await axios.patch(
+        `${process.env.REACT_APP_API_URL}/contests/${contest.id}`,
+        { view: viewCount },
+        {
+          headers: {
+            'Content-Type': 'application/merge-patch+json',
+          },
+        }
+      );
+
+      navigate(`/concours-photo/${contest.id}`, { state: { contest: {...contest, view: viewCount } } });
     };
+  };
+
+    console.log(props.contest);
 
     return (
         <div className='grid grid-cols-3 w-full max-h-[440px] sm:max-h-[500px] rounded-b-lg shadow-xl mb-10 flex flex-col justify-between'>
@@ -69,11 +88,9 @@ const ContestCardList = (props) => {
                                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
                                         <MdOutlineCameraAlt /> {props.contest.photos.length}
                                     </p>
-                                    {props.contest.photos && props.contest.photos.length > 0 && (
                                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
-                                        <BiLike /> {props.contest.photos[0].voteCount}
+                                        <BiLike /> {totalVotes}
                                     </p>
-                                    )}
                                 </>
                             )
                             :
