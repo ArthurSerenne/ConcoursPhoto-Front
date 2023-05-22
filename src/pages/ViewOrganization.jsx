@@ -2,14 +2,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import '../sass/components/tabs.scss';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AiOutlineArrowLeft } from 'react-icons/ai';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useLocation, useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
 import { useParams } from 'react-router';
-import ImageDisplay from '../components/ImageDisplay';
 import Breadcrumb from '../components/Breadcrumb';
 import PresentationTab from '../components/organization/PresentationTab';
 import ActiveContestsTab from '../components/organization/ActiveContestsTab';
@@ -37,7 +34,7 @@ const ViewOrganization = () => {
             const sortedContests = contests
               .filter((contest) => contest.deletionDate === undefined && contest.status === true)
               .sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
-            setRecentContest(sortedContests[0]); // set the most recent contest
+            setRecentContest(sortedContests[0]);
           }
         });
     }, [id]);

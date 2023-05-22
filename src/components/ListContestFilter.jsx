@@ -113,7 +113,7 @@ const ThemeFilter = ({ applyFilters }) => {
             Rechercher
           </button>
         </div>
-        <div className="flex flex h-[55px] gap-6">
+        <div className="flex h-[55px] gap-6">
           <Select
             className="w-full bg-gray-100 p-2 gray-select"
             options={themes.map((theme) => ({
