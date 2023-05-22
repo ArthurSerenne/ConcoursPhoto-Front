@@ -31,7 +31,7 @@ const ContestCard = (props) => {
   
       navigate(`/concours-photo/${contest.id}`, { state: { contest: {...contest, view: viewCount } } });
     };
-  };   
+  };
 
     console.log(props.contest);
 
