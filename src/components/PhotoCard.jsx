@@ -4,9 +4,11 @@ import { RiUserShared2Line } from 'react-icons/ri';
 import { AiOutlineEye } from 'react-icons/ai';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useAuth } from  '../components/AuthContext';
 
 const PhotoCard = (props) => {
   const [viewCount, setViewCount] = useState(props.photo.view ? props.photo.view : 0);
+  const { user } = useAuth();
 
   useEffect(() => {
     setViewCount(props.photo.view ? props.photo.view : 0);
@@ -27,6 +29,43 @@ const PhotoCard = (props) => {
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/photos/${props.photo.id}`);
 
     setViewCount(res.data.view);
+  };
+
+  const handleVoteClick = async () => {
+    if (user) {
+      try {
+        const newVoteCount = props.photo.voteCount + 1;
+        await axios.patch(
+          `${process.env.REACT_APP_API_URL}/photos/${props.photo.id}`,
+          { voteCount: newVoteCount },
+          {
+            headers: {
+              'Content-Type': 'application/merge-patch+json',
+            },
+          }
+        );
+
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/votes`,
+          {
+            member_id: user.member.id,
+            photo_id: props.photo.id,
+            date_vote: new Date().toISOString(),
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        props.photo.voteCount = newVoteCount;
+      } catch (error) {
+        console.error('Erreur lors du vote:', error);
+      }
+    } else {
+      console.log('Vous devez être connecté pour voter.');
+    }
   };
 
   return (
@@ -52,7 +91,8 @@ const PhotoCard = (props) => {
             <p className="mr-4 flex items-end rounded-full bg-gray-100 px-2 py-2 text-xs uppercase">
               <AiOutlineEye className="mr-2 text-base" /> {viewCount}
             </p>
-            <p className="flex cursor-pointer items-end rounded-full bg-gray-400 px-2 py-2 text-xs uppercase text-white duration-300 ease-in-out hover:bg-gray-300">
+            <p
+              className="flex cursor-pointer items-end rounded-full bg-gray-400 px-2 py-2 text-xs uppercase text-white duration-300 ease-in-out hover:bg-gray-300" onClick={handleVoteClick}>
               {props.photo.voteCount === 0 ? (
                 <>
                     <BiLike className="mr-2 text-base" /> Voter
