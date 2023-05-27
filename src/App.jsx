@@ -23,9 +23,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/concours-photo" element={<ListContest />} />
           <Route path="/concours-photo/:id" element={<ViewContest />} />
-          <Route path='/organisateurs' element={<ListOrganization />} />
+          <Route path="/organisateurs" element={<ListOrganization />} />
           <Route path="/organisateurs/:id" element={<ViewOrganization />} />
-          <Route path="/register" element={<Register />} />
           <Route path="mon-compte" element={<Profil />} />
         </Routes>
         <Footer />
