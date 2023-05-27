@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { BiLike } from 'react-icons/bi';
+import { useAuth } from './AuthContext';
 import { RiUserShared2Line } from 'react-icons/ri';
 import { AiOutlineEye } from 'react-icons/ai';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
+import LikeModalButton from './LikeModalButton';
 
 const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = null, viewCount, onViewCountChange }) => {
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
@@ -15,6 +16,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = n
   const [loaded, setLoaded] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { user } = useAuth();
 
   const handleError = () => {
     setImageSrc(defaultImagePath);
@@ -113,16 +115,10 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = n
               <div className="flex">
                 <p
                   className="mr-4 flex items-end rounded-full bg-gray-100 px-2 py-2 text-xs uppercase"
-                  onClick={(e) => e.stopPropagation()}
                 >
                   <AiOutlineEye className="mr-2 text-base" /> {viewCount}
                 </p>
-                <p
-                  className="z-10 flex cursor-pointer items-end rounded-full bg-gray-400 px-2 py-2 text-xs uppercase text-white duration-300 ease-in-out hover:bg-gray-300"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <BiLike className="mr-2 text-base" /> Voter
-                </p>
+                <LikeModalButton user={user} photo={photo} />
               </div>
             </div>
           </div>

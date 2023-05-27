@@ -24,7 +24,7 @@ const App = () => {
           <Route path="/concours-photo" element={<ListContest />} />
           <Route path="/concours-photo/:id" element={<ViewContest />} />
           <Route path="/organisateurs" element={<ListOrganization />} />
-          <Route path="/organisateur/:id" element={<ViewOrganization />} />
+          <Route path="/organisateurs/:id" element={<ViewOrganization />} />
           <Route path="mon-compte" element={<Profil />} />
         </Routes>
         <Footer />
