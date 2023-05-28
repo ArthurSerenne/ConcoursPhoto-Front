@@ -15,12 +15,16 @@ const ContestCard = (props) => {
     'dd/MM/yyyy'
   );
 
+  const totalVotes = props.contest.photos.reduce((total, photo) => {
+    return total + photo.voteCount;
+  }, 0);
+
   const handleClick = (contest) => {
     return async () => {
       const viewCount = contest.view ? contest.view + 1 : 1;
-      
+
       await axios.patch(
-        `${process.env.REACT_APP_API_URL}/contests/${contest.id}`, 
+        `${process.env.REACT_APP_API_URL}/contests/${contest.id}`,
         { view: viewCount },
         {
           headers: {
@@ -28,12 +32,10 @@ const ContestCard = (props) => {
           },
         }
       );
-  
+
       navigate(`/concours-photo/${contest.id}`, { state: { contest: {...contest, view: viewCount } } });
     };
   };
-
-    console.log(props.contest);
 
     return (
         <div className='max-w-lg max-h-[465px] sm:max-h-[500px] rounded-b-lg shadow-xl hover:scale-105 ease-in-out duration-300 cursor-pointer' onClick={handleClick(props.contest)}>
@@ -74,7 +76,9 @@ const ContestCard = (props) => {
                     <div className="flex gap-1">
                         <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><RiUserShared2Line /> 121</p>
                         <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><MdOutlineCameraAlt /> {props.contest.photos.filter((photo) => photo.status === true).length}</p>
-                        <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><BiLike /> 458</p>
+                        <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
+                          <BiLike /> {totalVotes}
+                        </p>
                     </div>
                     <div>
                         <p className="py-2 px-3 text-xs">Jusqu'au {formattedDate} <AiOutlineClockCircle /></p>

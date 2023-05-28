@@ -54,16 +54,12 @@ const ListOrganizationFilter = ({ applyFilters }) => {
   
     const handleCityChange = (selectedCities) => {
       setSelectedCities(selectedCities || []);
-      if (searchButtonClicked) {
-        applyFilters(searchValue, selectedCities || [], selectedDepartment, checked);
-      }
+      applyFilters(searchValue, selectedCities || [], selectedDepartment, checked);
     };
   
     const handleDepartmentChange = (selectedDepartment) => {
       setSelectedDepartment(selectedDepartment || []);
-      if (searchButtonClicked) {
-        applyFilters(searchValue, selectedCities, selectedDepartment || [], checked);
-      }
+      applyFilters(searchValue, selectedCities, selectedDepartment || [], checked);
     };
   
     const handleInputChange = (event) => {

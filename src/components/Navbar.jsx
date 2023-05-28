@@ -181,7 +181,7 @@ const Navbar = () => {
               openLoginModal={openLoginModal}
             />
           </div>
-        </Modal>      
+        </Modal>
       )}
     </>
   );
