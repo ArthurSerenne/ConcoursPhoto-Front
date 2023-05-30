@@ -135,49 +135,48 @@ const MyOrganizationTab = () => {
       };
 
       const handleSubmit = async (values, { setSubmitting }) => {
-        const { entity1Data, entity2Data } = separateEntityData(values);
+        setSubmitting(true);
+        const updateProcess = async () => {
+          const { entity1Data, entity2Data } = separateEntityData(values);
 
-        if (imageRemoved) {
-            entity1Data.logo = null;
-        } else if (originalImage !== displayedImage) {
-            entity1Data.logo = displayedImage;
-        } else {
-            entity1Data.logo = user.member.logo;
-        }
+          if (imageRemoved) {
+              entity1Data.logo = null;
+          } else if (originalImage !== displayedImage) {
+              entity1Data.logo = displayedImage;
+          } else {
+              entity1Data.logo = user.member.logo;
+          }
 
-        const data = {
-            entity1Data,
-            entity2Data,
+          const data = {
+              entity1Data,
+              entity2Data,
+          };
+
+          const response = await axiosInstance.patch(
+            `${process.env.REACT_APP_API_URL}/organization_update`,
+            data,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (response.status === 200) {
+              console.log("Formulaire soumis avec succès");
+              setImageRemoved(false);
+              await reloadUser();
+          }
         };
 
-        console.log(data);
-
-          try {
-            const response = await axiosInstance.patch(
-              `${process.env.REACT_APP_API_URL}/organization_update`,
-              data,
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }
-            );
-
-            if (response.status === 200) {
-                console.log("Formulaire soumis avec succès");
-                setImageRemoved(false);
-                await reloadUser();
-                toast.success('Informations de l\'organisation mises à jour avec succès !');
-            } else {
-                console.error("Erreur lors de la soumission du formulaire");
-                toast.error('Erreur lors de la mise à jour des informations de l\'organisation. Veuillez réessayer.');
-            }
-          } catch (error) {
-              console.error("Erreur lors de la soumission du formulaire:", error);
-              toast.error('Erreur lors de la mise à jour des informations de l\'organisation. Veuillez réessayer.');
-        } finally {
-          setSubmitting(false);
-        }
+        toast.promise(
+          updateProcess(),
+          {
+            pending: 'Mise à jour des informations de l\'organisation...',
+            success: 'Informations de l\'organisation mises à jour avec succès !',
+            error: 'Erreur lors de la mise à jour des informations de l\'organisation. Veuillez réessayer.'
+          }
+        ).finally(() => setSubmitting(false));
       };
 
     return (

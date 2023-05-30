@@ -33,12 +33,11 @@ const RegisterForm = ({ closeModal }) => {
   const form = useRef();
   const { login } = useAuth();
   const navigate = useNavigate();
-  const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await axios.post(process.env.REACT_APP_API_URL + '/register', values);
-      console.log(response);
 
-      toast.success("Inscription réussie !");
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setSubmitting(true);
+    const registerProcess = async () => {
+      const response = await axios.post(process.env.REACT_APP_API_URL + '/register', values);
 
       const loginResponse = await axios.post(process.env.REACT_APP_API_URL + '/login_check', {
         username: values.email,
@@ -68,12 +67,16 @@ const RegisterForm = ({ closeModal }) => {
 
       closeModal();
       navigate('/');
-    } catch (error) {
-      console.log(error);
-      toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
-    } finally {
-      setSubmitting(false);
-    }
+    };
+
+    toast.promise(
+      registerProcess(),
+      {
+        pending: 'Inscription en cours...',
+        success: "Inscription réussie !",
+        error: "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
+      }
+    ).finally(() => setSubmitting(false));
   };
 
 

@@ -107,58 +107,66 @@ const MyProfilTab = () => {
       };
 
       const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
-        const { entity1Data, entity2Data, entity3Data } = separateEntityData(values);
+        setSubmitting(true);
+        const updateProcess = async () => {
+          const { entity1Data, entity2Data, entity3Data } = separateEntityData(values);
 
-        if (values.email !== user.email && !values.password) {
+          if (values.email !== user.email && !values.password) {
             setFieldError('password', 'Le mot de passe est requis lorsque vous changez votre email');
             setSubmitting(false);
-            return;
-        }
+            throw new Error('Missing password');
+          }
 
-        if (imageRemoved) {
+          if (imageRemoved) {
             entity1Data.photo = null;
-        } else if (originalImage !== displayedImage) {
+          } else if (originalImage !== displayedImage) {
             entity1Data.photo = displayedImage;
-        }
+          }
 
-        const data = {
+          const data = {
             entity1Data,
             entity2Data,
             entity3Data,
+          };
+
+          const response = await axiosInstance.patch(
+            `${process.env.REACT_APP_API_URL}/user_update`,
+            data,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (response.status === 200) {
+              console.log("Formulaire soumis avec succès");
+              setImageRemoved(false);
+              if (values.email !== user.email) {
+                  logout();
+                  throw new Error('EmailChanged');
+              } else {
+                  await reloadUser();
+              }
+          }
         };
 
-        try {
-            const response = await axiosInstance.patch(
-                `${process.env.REACT_APP_API_URL}/user_update`,
-                data,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-
-            if (response.status === 200) {
-                console.log("Formulaire soumis avec succès");
-                setImageRemoved(false);
-                if (values.email !== user.email) {
-                    logout();
-                    toast.info('Veuillez vous reconnecter avec votre nouvelle adresse e-mail.');
-                } else {
-                    await reloadUser();
-                    toast.success('Profil mis à jour avec succès !');
-                }
-            } else {
-                console.error("Erreur lors de la soumission du formulaire");
-                toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
+        toast.promise(
+          updateProcess(),
+          {
+            pending: 'Mise à jour du profil...',
+            success: 'Profil mis à jour avec succès !',
+            error: (err) => {
+              if (err.message === 'EmailChanged') {
+                return 'Veuillez vous reconnecter avec votre nouvelle adresse e-mail.';
+              } else {
+                return 'Erreur lors de la mise à jour du profil. Veuillez réessayer.';
+              }
             }
-        } catch (error) {
-            console.error("Erreur lors de la soumission du formulaire:", error);
-            toast.error('Erreur lors de la mise à jour du profil. Veuillez réessayer.');
-        } finally {
-            setSubmitting(false);
-        }
-    };
+          }
+        ).finally(() => setSubmitting(false));
+      };
+
 
     const validationSchema = Yup.object().shape({
         photo: Yup.string(),
@@ -172,17 +180,17 @@ const MyProfilTab = () => {
             if (user.email === value) {
                 return true;
             }
-    
+
             const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/users.json`, {
                 params: {
                     email: value
                 }
             });
-    
+
             if(response.data.find(user => user.email === value)) {
                 return false;
             }
-    
+
             return true;
         }),
         password: Yup.string()
@@ -196,7 +204,7 @@ const MyProfilTab = () => {
                         return this.createError({ message: 'Le mot de passe est requis' });
                     }
                 }
-    
+
                 return true;
             })
         }),

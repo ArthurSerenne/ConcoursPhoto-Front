@@ -37,38 +37,39 @@ const MyPreferencesTab = () => {
     };
 
     const handleSubmit = async (values, { setSubmitting }) => {
-        const { entity1Data } = separateEntityData(values);
+        setSubmitting(true);
+        const updateProcess = async () => {
+          const { entity1Data } = separateEntityData(values);
 
-        const data = {
-            entity1Data,
+          const data = {
+              entity1Data,
+          };
+
+          const response = await axiosInstance.patch(
+            `${process.env.REACT_APP_API_URL}/preferencies_update`,
+            data,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (response.status === 200) {
+              console.log("Formulaire soumis avec succès");
+              await reloadUser();
+          }
         };
 
-        try {
-            const response = await axiosInstance.patch(
-                `${process.env.REACT_APP_API_URL}/preferencies_update`,
-                data,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-
-            if (response.status === 200) {
-                console.log("Formulaire soumis avec succès");
-                await reloadUser();
-                toast.success('Préférences mises à jour avec succès !');
-            } else {
-                console.error("Erreur lors de la soumission du formulaire");
-                toast.error('Erreur lors de la mise à jour des préférences. Veuillez réessayer.');
-            }
-        } catch (error) {
-            console.error("Erreur lors de la soumission du formulaire:", error);
-            toast.error('Erreur lors de la mise à jour des préférences. Veuillez réessayer.');
-        } finally {
-            setSubmitting(false);
-        }
-    };
+        toast.promise(
+          updateProcess(),
+          {
+            pending: 'Mise à jour des préférences...',
+            success: 'Préférences mises à jour avec succès !',
+            error: 'Erreur lors de la mise à jour des préférences. Veuillez réessayer.'
+          }
+        ).finally(() => setSubmitting(false));
+      };
 
     return (
         <Formik
