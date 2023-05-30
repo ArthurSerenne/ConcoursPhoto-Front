@@ -240,18 +240,24 @@ const ViewContest = () => {
                           }}
                           onEditorChange={(content) => {
                             contest.description = content;
-                            axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
-                              description: content
-                            })
-                            .then(response => {
+                            const updateDescriptionProcess = async () => {
+                              const response = await axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
+                                description: content
+                              });
+                              if (response.status !== 200) {
+                                throw new Error('Error updating contest description');
+                              }
                               setContest(response.data);
-                              console.log(response);
-                              toast.success('La description du concours a bien été mise à jour !');
-                            })
-                            .catch(error => {
-                              console.log(error);
-                              toast.error('Une erreur est survenue lors de la mise à jour de la description du concours.');
-                            });
+                            };
+
+                            toast.promise(
+                              updateDescriptionProcess(),
+                              {
+                                pending: 'Mise à jour de la description du concours...',
+                                success: 'La description du concours a bien été mise à jour !',
+                                error: 'Une erreur est survenue lors de la mise à jour de la description du concours.'
+                              }
+                            );
                           }}
                         />
                       ) : (
@@ -292,18 +298,24 @@ const ViewContest = () => {
                         }}
                         onEditorChange={(content) => {
                           contest.rules = content;
-                          axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
-                            rules: content
-                          })
-                          .then(response => {
+                          const updateRulesProcess = async () => {
+                            const response = await axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
+                              rules: content
+                            });
+                            if (response.status !== 200) {
+                              throw new Error('Error updating contest rules');
+                            }
                             setContest(response.data);
-                            console.log(response);
-                            toast.success('Le règlement du concours a bien été mis à jour !');
-                          })
-                          .catch(error => {
-                            console.log(error);
-                            toast.error('Une erreur est survenue lors de la mise à jour du règlement du concours.');
-                          });
+                          };
+
+                          toast.promise(
+                            updateRulesProcess(),
+                            {
+                              pending: 'Mise à jour des règles du concours...',
+                              success: 'Le règlement du concours a bien été mis à jour !',
+                              error: 'Une erreur est survenue lors de la mise à jour du règlement du concours.'
+                            }
+                          );
                         }}
                       />
                       ) : (
@@ -339,20 +351,26 @@ const ViewContest = () => {
                           'removeformat | help',
                           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                         }}
-                          onEditorChange={(content) => {
-                            contest.prizes = content;
-                            axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
+                        onEditorChange={(content) => {
+                          contest.prizes = content;
+                          const updatePrizesProcess = async () => {
+                            const response = await axios.put(process.env.REACT_APP_API_URL + `/contests/${id}`, {
                               prizes: content
-                            })
-                            .then(response => {
-                              setContest(response.data);
-                              console.log(response);
-                              toast.success('La dotation du concours a bien été mise à jour !');
-                            })
-                            .catch(error => {
-                              console.log(error);
-                              toast.error('Une erreur est survenue lors de la mise à jour de la dotation du concours.');
                             });
+                            if (response.status !== 200) {
+                              throw new Error('Error updating contest prizes');
+                            }
+                            setContest(response.data);
+                          };
+
+                          toast.promise(
+                            updatePrizesProcess(),
+                            {
+                              pending: 'Mise à jour de la dotation du concours...',
+                              success: 'La dotation du concours a bien été mise à jour !',
+                              error: 'Une erreur est survenue lors de la mise à jour de la dotation du concours.'
+                            }
+                          );
                         }}
                       />
                       ) : (

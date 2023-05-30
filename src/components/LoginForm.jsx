@@ -20,8 +20,10 @@ const LoginSchema = Yup.object().shape({
 const LoginForm = ({ closeModal }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
+
   const handleSubmit = async (values, { setSubmitting }) => {
-    try {
+    setSubmitting(true);
+    const loginProcess = async () => {
       const response = await axios.post(
         process.env.REACT_APP_API_URL + '/login_check',
         {
@@ -51,18 +53,19 @@ const LoginForm = ({ closeModal }) => {
 
       localStorage.setItem('user', JSON.stringify(userData));
 
-      toast.success('Vous êtes connecté !');
-
       closeModal();
       navigate('/');
-    } catch (err) {
-      toast.error("Erreur d'authentification. Veuillez vérifier vos identifiants.");
-      console.log(err);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    };
 
+    toast.promise(
+      loginProcess(),
+      {
+        pending: 'Chargement...',
+        success: 'Vous êtes connecté !',
+        error: "Erreur d'authentification. Veuillez vérifier vos identifiants."
+      }
+    ).finally(() => setSubmitting(false));
+  };
 
   return (
     <Formik
