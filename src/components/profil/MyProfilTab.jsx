@@ -82,7 +82,6 @@ const MyProfilTab = () => {
             birthdate: values.birthdate,
             address: values.address,
             email: values.email,
-            password: values.password,
             city: values.city ? values.city.value : null,
         };
 
@@ -115,6 +114,14 @@ const MyProfilTab = () => {
             setFieldError('password', 'Le mot de passe est requis lorsque vous changez votre email');
             setSubmitting(false);
             throw new Error('Missing password');
+          }
+
+          if (values.email !== user.email && values.password) {
+            entity1Data.password = values.password;
+          }
+
+          if (values.password) {
+            entity1Data.password = values.password;
           }
 
           if (imageRemoved) {
