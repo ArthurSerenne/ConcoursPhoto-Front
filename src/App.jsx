@@ -13,6 +13,7 @@ import Profil from './pages/Profil';
 import './sass/components/select.scss';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ListOrganization from './pages/ListOrganization';
 
 const App = () => {
   return (
@@ -24,9 +25,10 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/concours-photo" element={<ListContest />} />
           <Route path="/concours-photo/:id" element={<ViewContest />} />
+          <Route path="/organisateurs" element={<ListOrganization />} />
           <Route path="/organisateurs/:id" element={<ViewOrganization />} />
-          <Route path="/mon-concours" element={<AddContest />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/mon-concours" element={<AddContest />} />
           <Route path="mon-compte" element={<Profil />} />
         </Routes>
         <Footer />

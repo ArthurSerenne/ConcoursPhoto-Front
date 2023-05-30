@@ -125,7 +125,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  to="/"
+                  to="/organisateurs"
                   className="flex items-center text-center text-sm font-bold not-italic text-black underline-offset-8 hover:text-white hover:underline"
                 >
                   Organisateurs
@@ -181,7 +181,7 @@ const Navbar = () => {
               openLoginModal={openLoginModal}
             />
           </div>
-        </Modal>      
+        </Modal>
       )}
     </>
   );
