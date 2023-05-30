@@ -78,18 +78,17 @@ const AddContest = () => {
                     <li>Entreprises privées</li>
                     <li>Associations, ONG</li>
                 </ul>
-                <p className='pt-4'>Si votre organisation ne figure pas dans cette liste, contactez-nous pour étudier votre demande.</p>
-                <p className='pt-4 pb-28'>Si vous avez déjà créé un compte membre, veuillez vous connecter pour saisir le formulaire de demande de création d'un concours.</p>
             </div>
             <div className="col-span-1">
                 <h3 className="font-bold">Combien ça coûte ?</h3><br/>
-                <p className='pb-2'>Le prix dépend de plusieurs critères :</p>
+                <p className='pb-2'>Le prix est établi pour chaque concours publié et il dépend de plusieurs critères :</p>
                 <ul className='list-disc pl-6'>
-                    <li>Nature de votre organisation</li>
-                    <li>Taille de votre organisation</li>
-                    <li>Nature du concours photo</li>
+                    <li>Nature de votre organisation (privée, publique, association/ONG)</li>
+                    <li>Taille de votre organisation (moyens budgétaires)</li>
+                    <li>Objet du concours photo, étendue, audience visée.</li>
                 </ul>
-                <p className='pt-24'>Pour recevoir un devis, vous devez au préalable renseigner et soumettre le formulaire de demande de création suivant :</p>
+                <p className='pt-4'>Pour recevoir un devis, veuillez renseigner le formulaire de demande de création suivant qui va créer automatiquement un compte membre et une fiche organisme associée. Votre demande sera étudiée et vous recevrez un devis. Après avoir encaissé le paiement, vous pourrez paramétrer et publier votre concours.</p>
+                <p>Si vous avez déjà créé un compte membre, veuillez vous connecter puis rendez-vous dans “Mon profil > Mes organisations > Concours”</p>
             </div>
         </div>
         
@@ -112,8 +111,9 @@ const AddContest = () => {
         className='z-100'
       >
         {({ isSubmitting }) => (
-          <Form>
+          <Form className="mt-16">
             <ErrorMessage name="form" component="div" />
+            <h3 className="font-bold">Vous êtes ?</h3><br/>
             <div className="grid grid-cols-2 gap-4">
                 <div>
                     <div>
@@ -231,7 +231,7 @@ const AddContest = () => {
               </Link>
 
               <button
-                className='bg-[#000000] rounded-[44px] mt-5 not-italic font-bold w-[250px] h-[59px] text-base leading-[19px] text-white'
+                className='bg-[#000000] rounded-[44px] not-italic font-bold w-[250px] h-[59px] text-base leading-[19px] text-white'
                 type="submit"
                 disabled={isSubmitting}
               >
