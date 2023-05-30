@@ -5,7 +5,9 @@ import Footer from './components/Footer';
 import { AuthProvider } from './components/AuthContext';
 import ViewContest from './pages/ViewContest';
 import ViewOrganization from './pages/ViewOrganization';
+import AddContest from './pages/AddContest';
 import ListContest from './pages/ListContest';
+import Register from './pages/Register';
 import Home from './pages/Home';
 import Profil from './pages/Profil';
 import './sass/components/select.scss';
@@ -25,6 +27,8 @@ const App = () => {
           <Route path="/concours-photo/:id" element={<ViewContest />} />
           <Route path="/organisateurs" element={<ListOrganization />} />
           <Route path="/organisateurs/:id" element={<ViewOrganization />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/mon-concours" element={<AddContest />} />
           <Route path="mon-compte" element={<Profil />} />
         </Routes>
         <Footer />
