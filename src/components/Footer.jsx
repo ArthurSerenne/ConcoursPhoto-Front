@@ -26,7 +26,7 @@ const Footer = () => {
                 <li className='not-italic font-normal text-sm flex items-center text-center text-black'>
                     <Link to="/">Mentions légales</Link>
                 </li>
-                <li>
+                <li className='not-italic font-normal text-sm flex items-center text-center text-black'>
                     <Link to="/">Données personnelles</Link>
                 </li>
                 <li className='not-italic font-normal text-sm flex items-center text-center text-black'>
