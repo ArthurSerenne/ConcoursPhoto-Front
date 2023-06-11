@@ -15,3 +15,22 @@
 .react-tabs__tab--selected {
   border-bottom: 3px solid #000000;
 }
+
+.tab-left {
+  display: inline-block;
+  border-left: 3px solid #d9d9d9;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 160%;
+}
+
+.tab-left.react-tabs__tab--selected {
+  border-left: 3px solid #000000;
+  border-bottom: none !important;
+}
