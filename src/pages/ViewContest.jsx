@@ -214,7 +214,6 @@ const ViewContest = () => {
               <Tab>Les photos</Tab>
               <Tab>Résultats</Tab>
             </TabList>
-
                   {!emptyContent(contest.description) && (
                     <TabPanel>
                       <DescriptionContestTab user={user} contest={contest} setContest={setContest} goBack={goBack} />
