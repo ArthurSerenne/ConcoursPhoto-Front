@@ -5,11 +5,55 @@ import axios from 'axios';
 import AsyncSelect from 'react-select/async';
 import OrganizationTypeEnum from '../../enums/OrganizationTypeEnum';
 import 'react-toastify/dist/ReactToastify.css';
+import * as Yup from 'yup';
+import { Formik, Form } from 'formik';
+import axiosInstance from '../../AxiosInstance';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../../AuthContext';
 
-const OrganizationTab = (organization) => {
+const validationSchema = Yup.object().shape({
+    logo: Yup.string()
+        .required('Ce champ est requis'),
+    name: Yup.string()
+        .required('Ce champ est requis'),
+    address: Yup.string()
+        .required('Ce champ est requis'),
+    type: Yup.string(),
+    email: Yup.string()
+        .email('Email invalide')
+        .required('Ce champ est requis'),
+    phone: Yup.string()
+        .required('Ce champ est requis'),
+    website: Yup.string()
+        .url('URL invalide'),
+    siret: Yup.string(),
+    vat: Yup.string(),
+    description: Yup.string(),
+    city: Yup.object()
+        .nullable()
+        .required('Ce champ est requis'),
+    zipcode: Yup.object()
+        .nullable()
+        .required('Ce champ est requis'),
+    facebook: Yup.string()
+        .url('URL invalide'),
+    youtube: Yup.string()
+        .url('URL invalide'),
+    linkedin: Yup.string()
+        .url('URL invalide'),
+    tiktok: Yup.string()
+        .url('URL invalide'),
+    instagram: Yup.string()
+        .url('URL invalide'),
+    twitter: Yup.string()
+        .url('URL invalide'),
+});
+
+const OrganizationTab = ({organization}) => {
+    const { user, reloadUser } = useAuth();
     const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
-    console.log(organization);
-    const imagePath = organization?.organization?.logo ? `${baseUrl}${organization.organization.logo}` : myImage;
+    const imagePath = organization?.logo ? `${baseUrl}${organization.logo}` : myImage;
     const [displayedImage, setDisplayedImage] = useState(imagePath);
     const [originalImage, setOriginalImage] = useState(imagePath);
     const [imageRemoved, setImageRemoved] = useState(false);
@@ -65,7 +109,117 @@ const OrganizationTab = (organization) => {
             }
         };
 
+        const separateEntityData = (values) => {
+            const entity1Data = {
+                name: values.name,
+                address: values.address,
+                type: values.type,
+                email: values.email,
+                phone: values.phone,
+                logo: values.logo,
+                website: values.website,
+                description: values.description,
+                siret: values.siret,
+                vat: values.vat,
+                city: values.city ? values.city.value : null,
+            };
+    
+            const entity2Data = {
+                facebook: values.facebook,
+                youtube: values.youtube,
+                instagram: values.instagram,
+                twitter: values.twitter,
+                linkedin: values.linkedin,
+                tiktok: values.tiktok,
+            };
+    
+            return { entity1Data, entity2Data };
+          };
+
+        const handleSubmit = async (values, { setSubmitting }) => {
+            setSubmitting(true);
+            const updateProcess = async () => {
+              const { entity1Data, entity2Data } = separateEntityData(values);
+    
+              if (imageRemoved) {
+                  entity1Data.logo = null;
+              } else if (originalImage !== displayedImage) {
+                  entity1Data.logo = displayedImage;
+              } else {
+                  entity1Data.logo = user.member.logo;
+              }
+    
+              const data = {
+                  entity1Data,
+                  entity2Data,
+              };
+    
+              let response = '';
+            if (organization.id) {
+                response = await axiosInstance.patch(
+                    `${process.env.REACT_APP_API_URL}/organization_update/${organization.id}`,
+                    data,
+                    {
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    }
+                  );  
+            } else {
+                response = await axiosInstance.post(
+                    `${process.env.REACT_APP_API_URL}/organization_new`,
+                    data,
+                    {
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    }
+                  );
+            }      
+    
+              if (response.status === 200) {
+                  console.log("Formulaire soumis avec succès");
+                  setImageRemoved(false);
+                  await reloadUser();
+              }
+            };
+    
+            toast.promise(
+              updateProcess(),
+              {
+                pending: 'Mise à jour des informations de l\'organisation...',
+                success: 'Informations de l\'organisation mises à jour avec succès !',
+                error: 'Erreur lors de la mise à jour des informations de l\'organisation. Veuillez réessayer.'
+              }
+            ).finally(() => setSubmitting(false));
+          };
+
     return (
+        <Formik
+                                onSubmit={handleSubmit}
+                                validationSchema={validationSchema}
+                                initialValues={{
+                                    logo: organization?.logo ?? myImage,
+                                    name: organization?.name ?? "",
+                                    address: organization?.address ?? "",
+                                    type: organization?.type ?? "",
+                                    description: organization?.description ?? "",
+                                    email: organization?.email ?? "",
+                                    phone: organization?.phone ?? "",
+                                    website: organization?.website ?? "",
+                                    siret: organization?.siret ?? "",
+                                    vat: organization?.vat ?? "",
+                                    city: organization?.city ? { value: `${process.env.REACT_APP_API_URL}/cities/${organization?.city.id}`, label: organization?.city.name } : "",
+                                    zipcode: organization?.city ? { value: organization?.city, label: organization?.city.zip_code } : null,
+                                    facebook: organization?.socialNetwork?.facebook ?? "",
+                                    youtube: organization?.socialNetwork?.youtube ?? "",
+                                    linkedin: organization?.socialNetwork?.linkedin ?? "",
+                                    tiktok: organization?.socialNetwork?.tiktok ?? "",
+                                    instagram: organization?.socialNetwork?.instagram ?? "",
+                                    twitter: organization?.socialNetwork?.twitter ?? "",
+                                }}
+                            >
+                                <Form>
         <div>
             <div className='flex flex-col lg:flex-row gap-6 items-center'>
                 <img src={displayedImage || myImage} className={`h-[112px] w-[112px] object-cover rounded-full`} />
@@ -236,6 +390,8 @@ const OrganizationTab = (organization) => {
             <button className='bg-black text-white font-semibold px-14 py-5 rounded-full mt-10 hover:bg-gray-500' type='submit'>Sauvergarder</button>
         </div>
     </div>
+    </Form>
+    </Formik>
     );
 }
 

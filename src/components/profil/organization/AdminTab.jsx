@@ -1,38 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table'
-import { format, parseISO } from "date-fns";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
-import axiosInstance from '../../AxiosInstance';
 
-const AdminTab = (organization) => {
-    const [adminData, setAdminData] = useState([]);
-
-    useEffect(() => {
-        const getAdminData = async () => {
-            try {
-                const response = await axiosInstance.get(
-                    `${process.env.REACT_APP_API_URL}/organizations/${organization.id}`
-                );
-                setAdminData(response.data);
-            } catch (error) {
-                console.error("Error fetching admin data:", error);
-            }
-        };
-
-        getAdminData();
-    }, [organization.id]);
-
+const AdminTab = ({organization, adminData}) => {
     const columns = React.useMemo(() => {
           return [
-            { Header: 'Nom', accessor: 'name' },
-            {
-              Header: 'Prénom',
-              accessor: 'resultsDate',
-              Cell: ({ value }) => {
-                const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
-                return <span>{formattedDate}</span>;
-              },
-            },
+            { Header: 'Nom', accessor: 'firstname' },
+            { Header: 'Prénom', accessor: 'lastname' },
             { 
               Header: 'Fonction/poste', 
               accessor: 'status',

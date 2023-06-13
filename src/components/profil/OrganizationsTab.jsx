@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTable, useSortBy, usePagination } from 'react-table'
 import { useAuth } from '../AuthContext';
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
+import OrganizationTypeEnum from '../enums/OrganizationTypeEnum';
 
-const OrganizationsTab = ({ setSelectedOrganization }) => {
+const OrganizationsTab = ({ setSelectedOrganization, setIsNew }) => {
     const { isAuthenticated, user } = useAuth();
+    const [organization, setOrganization] = useState(null);
+    const [newOrganization, setNewOrganization] = useState(null);
+
+    const handleButtonClick = () => {
+      const newOrganization = {};
+      setOrganization(newOrganization);
+      setSelectedOrganization(newOrganization);
+      setNewOrganization(true);
+  };  
 
   const columns = React.useMemo(
     () => [
@@ -12,12 +22,13 @@ const OrganizationsTab = ({ setSelectedOrganization }) => {
       {
         Header: 'Type',
         accessor: 'type',
-      },
+        Cell: ({value}) => OrganizationTypeEnum[value] || value
+      },      
       { 
         Header: 'Concours', 
         accessor: 'contests.length',
       },
-      { Header: 'Administrateurs', accessor: 'status' },
+      { Header: 'Administrateurs', accessor: 'users.length' },
     ],
     []
   );
@@ -45,8 +56,6 @@ const OrganizationsTab = ({ setSelectedOrganization }) => {
       sortTypes,
       initialState: {
         disableSortRemove: true,
-        pageIndex: 0,
-        pageSize: 3,
       },
     },
     useSortBy,
@@ -55,6 +64,7 @@ const OrganizationsTab = ({ setSelectedOrganization }) => {
 
   const handleOrganizationClick = (organization) => {
     setSelectedOrganization(organization);
+    setNewOrganization(false);
   };
 
     return (
@@ -115,7 +125,14 @@ const OrganizationsTab = ({ setSelectedOrganization }) => {
                     </tbody>
                 </table>
             </div>
-            <button className='bg-gray-100 font-semibold px-14 py-5 rounded-full mt-10 hover:bg-gray-200'>Ajouter une organisation</button>
+            <div>
+                <button
+                    onClick={handleButtonClick}
+                    className='bg-gray-100 font-semibold px-14 py-5 rounded-full mt-10 hover:bg-gray-200'
+                >
+                    Ajouter une organisation
+                </button>
+            </div>
         </div>
     );
 }

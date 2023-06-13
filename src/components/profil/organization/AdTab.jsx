@@ -2,40 +2,40 @@ import React from 'react'
 import { useTable, useSortBy, usePagination } from 'react-table'
 import { format, parseISO } from "date-fns";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
+import AdSpaceDateStatus from '../../AdSpaceDateStatus';
 
-const AdTab = (organization) => {
-    const columns = React.useMemo(() => {
-          return [
-            { Header: 'Nom de l’emplacement de la publicité', accessor: 'name' },
-            {
-              Header: 'Début',
-              accessor: 'creationDate',
-              Cell: ({ value }) => {
+const AdTab = ({organization, adSpacesData}) => {
+  const columns = React.useMemo(() => {
+    return [
+        { Header: 'Nom de l’emplacement de la publicité', accessor: 'adSpace.name' },
+        {
+            Header: 'Début',
+            accessor: 'start_date',
+            Cell: ({ value }) => {
                 const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
                 return <span>{formattedDate}</span>;
-              },
             },
-            {
-              Header: 'Fin',
-              accessor: 'resultsDate',
-              Cell: ({ value }) => {
+        },
+        {
+            Header: 'Fin',
+            accessor: 'end_date',
+            Cell: ({ value }) => {
                 const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
                 return <span>{formattedDate}</span>;
-              },
             },
-            { 
-              Header: 'Statut', 
-              accessor: 'status',
-              Cell: ({value}) => {
-                return <span>{value === true ? 'Actif' : 'Inactif'}</span>
-              }
-            },
-            { Header: 'Affichages', accessor: 'id' },
-            { Header: 'Clics', accessor: 'view' },
-          ];
-      }, [organization.contests]);  
+        },
+        { 
+            Header: 'Statut', 
+            Cell: ({row}) => {
+                return <AdSpaceDateStatus adSpacesData={row.original} />
+            }
+        },
+        { Header: 'Affichages', accessor: 'test' },
+        { Header: 'Clics', accessor: 'click_count' },
+    ];
+}, [organization.contests]);
     
-      const data = React.useMemo(() => organization.organization.contests || [], organization.organization.contests);
+      const data = React.useMemo(() => adSpacesData || [], adSpacesData);
     
       const sortTypes = {
         datetime: (rowA, rowB, columnId) => {

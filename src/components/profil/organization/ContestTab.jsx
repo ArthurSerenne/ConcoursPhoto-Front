@@ -2,8 +2,9 @@ import React from 'react'
 import { useTable, useSortBy, usePagination } from 'react-table'
 import { format, parseISO } from "date-fns";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
+import ContestDateStatus from '../../ContestDateStatus';
 
-const ContestTab = (organization) => {
+const ContestTab = ({organization}) => {
     const columns = React.useMemo(() => {
           return [
             { Header: 'Nom du concours', accessor: 'name' },
@@ -25,15 +26,14 @@ const ContestTab = (organization) => {
             },
             { 
               Header: 'Statut', 
-              accessor: 'status',
-              Cell: ({value}) => {
-                return <span>{value === true ? 'Actif' : 'Inactif'}</span>
+              Cell: ({row}) => {
+                  return <ContestDateStatus contest={row.original} />
               }
             },
           ];
       }, [organization.contests]);  
     
-      const data = React.useMemo(() => organization.organization.contests || [], organization.organization.contests);
+      const data = React.useMemo(() => organization.contests || [], organization.contests);
     
       const sortTypes = {
         datetime: (rowA, rowB, columnId) => {
