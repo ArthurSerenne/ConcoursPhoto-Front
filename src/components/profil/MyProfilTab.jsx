@@ -305,7 +305,8 @@ const MyProfilTab = () => {
                         />
                         Femme
                     </label>
-                    <label htmlFor="other">
+
+                </div><label htmlFor="other">
                         <Field
                             type="radio"
                             className='mr-3 scale-150'
@@ -315,7 +316,6 @@ const MyProfilTab = () => {
                         />
                         Non binaire
                     </label>
-                </div>
                 <div className='grid grid-cols-1 mt-6 md:grid-cols-2 md:gap-16'>
                     <div>
                         <label>
