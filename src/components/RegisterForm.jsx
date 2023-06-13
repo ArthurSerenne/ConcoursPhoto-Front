@@ -8,7 +8,7 @@ import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PasswordChecklist from "react-password-checklist";
-import SituationEnum from './profil/enums/SituationEnum';
+import SituationEnum from './enums/SituationEnum';
 
 const RegisterSchema = Yup.object().shape({
   gender: Yup.string().required('Le genre est requis'),

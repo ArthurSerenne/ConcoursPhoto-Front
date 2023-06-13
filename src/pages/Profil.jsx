@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useAuth } from '../components/AuthContext';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import MyProfilTab from '../components/profil/MyProfilTab';
@@ -5,11 +6,15 @@ import MyPreferencesTab from '../components/profil/MyPreferencesTab';
 import MyOrganizationTab from '../components/profil/MyOrganizationTab';
 import ContestOrganizationTab from '../components/profil/ContestOrganizationTab';
 import ContestParticipationTab from '../components/profil/ContestParticipationTab';
-import AdTab from '../components/profil/AdTab';
 import '../sass/components/tabs.scss';
+import OrganizationsTab from '../components/profil/OrganizationsTab';
 
 const Profil = () => {
   const { isAuthenticated, isLoading } = useAuth();
+  const [selectedOrganization, setSelectedOrganization] = useState(null);
+  const deselectOrganization = () => {
+    setSelectedOrganization(null);
+  };  
 
   if (isLoading) {
     return (
@@ -36,15 +41,14 @@ const Profil = () => {
       <div className="mx-auto mt-8 mb-6 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <p className="text-4xl font-bold not-italic leading-[160%] text-black leading-tight">Mon compte</p>
       </div>
-      <div className="mx-auto mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
+      <div className="mx-auto mb-12 justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <Tabs>
             <TabList className={'mb-10 flex flex-col lg:flex-row'}>
                 <Tab>Mon profil</Tab>
                 <Tab>Mes préférences</Tab>
-                <Tab>Mon organisation</Tab>
+                <Tab>Mes organisations</Tab>
                 <Tab>Concours crées par mon organisation</Tab>
                 <Tab>Concours auxquels j'ai participé</Tab>
-                <Tab>Mes publicités</Tab>
             </TabList>
 
             <TabPanel>
@@ -54,16 +58,17 @@ const Profil = () => {
                 <MyPreferencesTab />
             </TabPanel>
             <TabPanel>
-                <MyOrganizationTab />
+              {selectedOrganization ? (
+                <MyOrganizationTab organization={selectedOrganization} deselectOrganization={deselectOrganization} />
+              ) : (
+                <OrganizationsTab setSelectedOrganization={setSelectedOrganization} />
+              )}
             </TabPanel>
             <TabPanel>
                 <ContestOrganizationTab />
             </TabPanel>
             <TabPanel>
                 <ContestParticipationTab />
-            </TabPanel>
-            <TabPanel>
-                <AdTab />
             </TabPanel>
         </Tabs>
       </div>
