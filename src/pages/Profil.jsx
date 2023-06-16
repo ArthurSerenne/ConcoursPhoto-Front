@@ -47,7 +47,7 @@ const Profil = () => {
                 <Tab>Mon profil</Tab>
                 <Tab>Mes préférences</Tab>
                 <Tab>Mes organisations</Tab>
-                <Tab>Concours crées par mon organisation</Tab>
+                <Tab>Concours que j’administre</Tab>
                 <Tab>Concours auxquels j'ai participé</Tab>
             </TabList>
 
