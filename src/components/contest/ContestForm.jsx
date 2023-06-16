@@ -5,9 +5,14 @@ import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 import {format, parseISO} from 'date-fns';
-import {toast} from "react-toastify";
+import {Editor} from '@tinymce/tinymce-react';
 
 const ContestForm = ({contest, updateContest}) => {
+    const [TempDescription, setTempDescription] = useState(contest.description);
+
+    const handleEditorChange = (content) => {
+        setTempDescription(content);
+    };
 
     const ageOptions = Array.from({length: 101}, (_, i) => ({value: i, label: `${i}`}));
 
@@ -136,10 +141,10 @@ const ContestForm = ({contest, updateContest}) => {
             onSubmit=""
         >
             {({isSubmitting, setFieldValue}) => (
-                <Form className="flex flex-col md:flex-row">
-                    <div className="w-full md:w-9/12">
+                <Form className="grid grid-cols-7 gap-10 mt-2">
+                    <div className="col-span-5">
                         <div className="flex flex-col mb-4">
-                            <label htmlFor="name">Nom du concours *</label>
+                            <label htmlFor="name" className='text-sm'>Nom du concours *</label>
                             <Field
                                 name="name"
                                 type="text"
@@ -151,10 +156,10 @@ const ContestForm = ({contest, updateContest}) => {
                                 className="text-red-500"
                             />
                         </div>
-                        <div className="flex flex-row flex-wrap">
-                            <div className="w-full md:w-1/3 mb-4 md:mb-0 md:pr-4">
+                        <div className="grid grid-cols-3 gap-3">
+                            <div className='space-y-3'>
                                 <div className="flex flex-col">
-                                    <label htmlFor="theme">Thème du concours*</label>
+                                    <label htmlFor="theme" className='text-sm'>Thème du concours*</label>
                                     <Field name="theme">
                                         {({field, form}) => (
                                             <AsyncSelect
@@ -174,7 +179,7 @@ const ContestForm = ({contest, updateContest}) => {
                                     />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="ageMin">
+                                    <label htmlFor="ageMin" className='text-sm'>
                                         Âge minimum requis pour participer*
                                     </label>
                                     <Field name="ageMin">
@@ -196,7 +201,7 @@ const ContestForm = ({contest, updateContest}) => {
                                     />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="country">Pays</label>
+                                    <label htmlFor="country" className='text-sm'>Pays</label>
                                     <Field name="country">
                                         {({field, form}) => (
                                             <Select
@@ -212,9 +217,9 @@ const ContestForm = ({contest, updateContest}) => {
                                     </Field>
                                 </div>
                             </div>
-                            <div className="w-full md:w-1/3 mb-4 md:mb-0 md:pr-4">
+                            <div className='space-y-3'>
                                 <div className="flex flex-col">
-                                    <label htmlFor="category">Catégorie*</label>
+                                    <label htmlFor="category" className='text-sm'>Catégorie*</label>
                                     <Field name="category">
                                         {({field, form}) => (
                                             <AsyncSelect
@@ -234,7 +239,7 @@ const ContestForm = ({contest, updateContest}) => {
                                     />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="ageMax">
+                                    <label htmlFor="ageMax" className='text-sm'>
                                         Âge maximum requis pour participer*
                                     </label>
                                     <Field name="ageMax">
@@ -256,7 +261,7 @@ const ContestForm = ({contest, updateContest}) => {
                                     />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="region">Région</label>
+                                    <label htmlFor="region" className='text-sm'>Région</label>
                                     <Field name="region">
                                         {({field, form}) => (
                                             <AsyncSelect
@@ -276,9 +281,9 @@ const ContestForm = ({contest, updateContest}) => {
                                     />
                                 </div>
                             </div>
-                            <div className="w-full md:w-1/3">
+                            <div className='space-y-3'>
                                 <div className="flex flex-col">
-                                    <label htmlFor="dotation">Dotation*</label>
+                                    <label htmlFor="dotation" className='text-sm'>Dotation*</label>
                                     <Field name="dotation">
                                         {({field, form}) => (
                                             <Select
@@ -294,7 +299,7 @@ const ContestForm = ({contest, updateContest}) => {
                                     </Field>
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="prizesCount">Nombre de prix*</label>
+                                    <label htmlFor="prizesCount" className='text-sm'>Nombre de prix*</label>
                                     <Field
                                         name="prizesCount"
                                         type="text"
@@ -307,7 +312,7 @@ const ContestForm = ({contest, updateContest}) => {
                                     />
                                 </div>
                                 <div className="flex flex-col">
-                                    <label htmlFor="department">Département</label>
+                                    <label htmlFor="department" className='text-sm'>Département</label>
                                     <Field name="department">
                                         {({field, form}) => (
                                             <AsyncSelect
@@ -328,116 +333,158 @@ const ContestForm = ({contest, updateContest}) => {
                                 </div>
                             </div>
                         </div>
+                        <h2 className="not-italic font-normal text-sm leading-[17px] flex items-center text-black mt-4 mb-1">Présentation
+                                du concours*
+                            </h2>
+                        <Editor
+                                apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
+                                value={TempDescription}
+                                init={{
+                                    height: 500,
+                                    menubar: false,
+                                    plugins: [
+                                        'advlist autolink lists link image charmap print preview anchor',
+                                        'searchreplace visualblocks code fullscreen',
+                                        'insertdatetime media table paste code help wordcount'
+                                    ],
+                                    toolbar: 'undo redo | formatselect | ' +
+                                        'bold italic backcolor | alignleft aligncenter ' +
+                                        'alignright alignjustify | bullist numlist outdent indent | ' +
+                                        'removeformat | help',
+                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                                }}
+                                onEditorChange={handleEditorChange}
+                            />
                     </div>
-                    <div className="w-full md:w-3/12">
-                        <div className="flex flex-col">
-                            <Field type="radio" name="status" value="published"/>
-                            <label htmlFor="status">Publié</label>
-                            <Field type="radio" name="status" value="hidden"/>
-                            <label htmlFor="status">Caché</label>
+                    <div className="col-span-2">
+                        <div className="grid grid-cols-3 mb-10 mt-7">
+                            <div>
+                                <label htmlFor="status" className='text-sm'>
+                                    <Field
+                                        type="radio"
+                                        className='mr-3 scale-150 bg-black'
+                                        name='status'
+                                        value={'1'}
+                                    />
+                                    Publié
+                                </label>
+                            </div>
+                            <div>
+                                <label htmlFor="status" className='text-sm'>
+                                    <Field
+                                        type="radio"
+                                        className='mr-3 scale-150 bg-black'
+                                        name='status'
+                                        value={'0'}
+                                    />
+                                    Caché
+                                </label>
+                            </div>
                             <ErrorMessage
                                 name="status"
                                 component="div"
                                 className="text-red-500"
                             />
                         </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="activationDate">Date d'activation</label>
-                            <Field
-                                name="activationDate"
-                                type="date"
-                                className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
-                                disabled
-                            />
-                            <ErrorMessage
-                                name="activationDate"
-                                component="div"
-                                className="text-red-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="publicationDate">Date de publication</label>
-                            <Field
-                                name="publicationDate"
-                                type="date"
-                                className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
-                            />
-                            <ErrorMessage
-                                name="publicationDate"
-                                component="div"
-                                className="text-red-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="submissionStartDate">
-                                Date de début des soumissions
-                            </label>
-                            <Field
-                                name="submissionStartDate"
-                                type="date"
-                                className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
-                            />
-                            <ErrorMessage
-                                name="submissionStartDate"
-                                component="div"
-                                className="text-red-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="submissionEndDate">
-                                Date de fin des soumissions
-                            </label>
-                            <Field
-                                name="submissionEndDate"
-                                type="date"
-                                className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
-                            />
-                            <ErrorMessage
-                                name="submissionEndDate"
-                                component="div"
-                                className="text-red-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="votingStartDate">Date de début des votes</label>
-                            <Field
-                                name="votingStartDate"
-                                type="date"
-                                className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
-                            />
-                            <ErrorMessage
-                                name="votingStartDate"
-                                component="div"
-                                className="text-red-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="votingEndDate">Date de fin des votes</label>
-                            <Field
-                                name="votingEndDate"
-                                type="date"
-                                className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
-                            />
-                            <ErrorMessage
-                                name="votingEndDate"
-                                component="div"
-                                className="text-red-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label htmlFor="resultsDate">
-                                Date de publication des résultats
-                            </label>
-                            <Field
-                                name="resultsDate"
-                                type="date"
-                                className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
-                            />
-                            <ErrorMessage
-                                name="resultsDate"
-                                component="div"
-                                className="text-red-500"
-                            />
+                        <div className='space-y-4'>
+                            <div className="flex flex-col">
+                                <label htmlFor="activationDate" className='text-sm'>Date d'activation</label>
+                                <Field
+                                    name="activationDate"
+                                    type="date"
+                                    className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
+                                    disabled
+                                />
+                                <ErrorMessage
+                                    name="activationDate"
+                                    component="div"
+                                    className="text-red-500"
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label htmlFor="publicationDate" className='text-sm'>Date de publication</label>
+                                <Field
+                                    name="publicationDate"
+                                    type="date"
+                                    className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
+                                />
+                                <ErrorMessage
+                                    name="publicationDate"
+                                    component="div"
+                                    className="text-red-500"
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label htmlFor="submissionStartDate" className='text-sm'>
+                                    Date de début des soumissions
+                                </label>
+                                <Field
+                                    name="submissionStartDate"
+                                    type="date"
+                                    className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
+                                />
+                                <ErrorMessage
+                                    name="submissionStartDate"
+                                    component="div"
+                                    className="text-red-500"
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label htmlFor="submissionEndDate" className='text-sm'>
+                                    Date de fin des soumissions
+                                </label>
+                                <Field
+                                    name="submissionEndDate"
+                                    type="date"
+                                    className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
+                                />
+                                <ErrorMessage
+                                    name="submissionEndDate"
+                                    component="div"
+                                    className="text-red-500"
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label htmlFor="votingStartDate" className='text-sm'>Date de début des votes</label>
+                                <Field
+                                    name="votingStartDate"
+                                    type="date"
+                                    className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
+                                />
+                                <ErrorMessage
+                                    name="votingStartDate"
+                                    component="div"
+                                    className="text-red-500"
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label htmlFor="votingEndDate" className='text-sm'>Date de fin des votes</label>
+                                <Field
+                                    name="votingEndDate"
+                                    type="date"
+                                    className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
+                                />
+                                <ErrorMessage
+                                    name="votingEndDate"
+                                    component="div"
+                                    className="text-red-500"
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <label htmlFor="resultsDate" className='text-sm'>
+                                    Date de publication des résultats
+                                </label>
+                                <Field
+                                    name="resultsDate"
+                                    type="date"
+                                    className="mt-1 h-[43px] w-full rounded-md bg-gray-100 px-4 py-2"
+                                />
+                                <ErrorMessage
+                                    name="resultsDate"
+                                    component="div"
+                                    className="text-red-500"
+                                />
+                            </div>
                         </div>
                     </div>
                 </Form>

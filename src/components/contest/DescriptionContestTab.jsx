@@ -62,6 +62,11 @@ const DescriptionContestTab = ({user, contest, setContest, goBack}) => {
         }
     };
 
+    const closeModalWhenClickedOutside = (e) => {
+        if (e.target.classList.contains('fixed')) {
+            handleCancelClick();
+        }
+    };
 
     return (
         <>
@@ -81,41 +86,32 @@ const DescriptionContestTab = ({user, contest, setContest, goBack}) => {
                         onRequestClose={handleCancelClick}
                         contentLabel="Edit Description Modal"
                         overlayClassName=""
-                        className=""
+                        className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-80 p-4"
+                        overlayRef={overlay => {
+                            if (overlay) {
+                                overlay.addEventListener('click', closeModalWhenClickedOutside);
+                            }
+                        }}
                     >
-                        <button onClick={handleCancelClick} className="absolute right-2.5 top-2.5">
-                            <RiCloseLine/>
-                        </button>
-                        <ContestForm contest={contest} updateContest={updateContest}/>
-                        <h2 className="not-italic font-normal text-sm leading-[17px] flex items-center text-black">Description
-                            du concours*</h2>
-                        <Editor
-                            apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
-                            value={TempDescription}
-                            init={{
-                                height: 500,
-                                menubar: false,
-                                plugins: [
-                                    'advlist autolink lists link image charmap print preview anchor',
-                                    'searchreplace visualblocks code fullscreen',
-                                    'insertdatetime media table paste code help wordcount'
-                                ],
-                                toolbar: 'undo redo | formatselect | ' +
-                                    'bold italic backcolor | alignleft aligncenter ' +
-                                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                                    'removeformat | help',
-                                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                            }}
-                            onEditorChange={handleEditorChange}
-                        />
-                        <button
-                            className="gap-5 rounded-[44px] bg-regal-grey px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                            onClick={handleCancelClick}>Annuler
-                        </button>
-                        <button
-                            className="gap-5 rounded-[44px] bg-black px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                            onClick={saveAndUpdate}>Sauvegarder
-                        </button>
+                        <div className='bg-white p-7 rounded-lg max-w-[1172px] max-h-[750px] overflow-auto'>
+                            <div className='flex justify-between'>
+                                <h1 className='font-bold text-xl mb-2'>Concours {'>'} onglet “Présentation” : édition</h1>
+                                <button onClick={handleCancelClick}>
+                                    <RiCloseLine/>
+                                </button>
+                            </div>
+                            <ContestForm contest={contest} updateContest={updateContest}/>
+                            <div className='mt-4'>
+                                <button
+                                    className="gap-5 mr-4 rounded-[44px] bg-regal-grey px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                                    onClick={handleCancelClick}>Annuler
+                                </button>
+                                <button
+                                    className="gap-5 rounded-[44px] bg-black px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                                    onClick={saveAndUpdate}>Sauvegarder
+                                </button>
+                            </div>
+                        </div>
                     </Modal>
                 </>
             ) : (
