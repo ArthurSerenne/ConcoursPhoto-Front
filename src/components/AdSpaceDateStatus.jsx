@@ -17,7 +17,7 @@ const AdSpaceDateStatus = ({adSpacesData}) => {
         color = 'uppercase text-xs font-bold text-white bg-green-400 px-3 py-2 rounded-full w-fit';
     } else {
         text = 'Terminé';
-        color = 'uppercase text-xs font-bold text-white bg-blue-500 px-3 py-2 rounded-full';
+        color = 'uppercase text-xs font-bold text-white bg-blue-500 px-3 py-2 rounded-full w-fit';
     }
 
     return (

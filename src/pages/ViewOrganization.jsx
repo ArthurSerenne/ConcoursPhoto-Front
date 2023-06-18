@@ -36,6 +36,7 @@ const ViewOrganization = () => {
               .sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
             setRecentContest(sortedContests[0]);
           }
+          setLoading(false); // Nous avons terminé le chargement ici.
         });
     }, [id]);
   
@@ -81,22 +82,30 @@ const ViewOrganization = () => {
           <Tabs onSelect={handleTabChange} className={'mb-6'}>
             <TabList className={'mb-10'}>
               <Tab>Présentation</Tab>
-              <Tab>Concours photos en cours</Tab>
-              <Tab>Concours photos à venir</Tab>
-              <Tab>Concours photos terminés</Tab>
+              {!loading && organization.contests && organization.contests.length > 0 && (
+              <>
+                <Tab>Concours photos en cours</Tab>
+                <Tab>Concours photos à venir</Tab>
+                <Tab>Concours photos terminés</Tab>
+              </>
+            )}
             </TabList>
             <TabPanel>
                 <PresentationTab />
             </TabPanel>
-            <TabPanel>
-              <ActiveContestsTab />
-            </TabPanel>
-            <TabPanel>
-              <UpcomingContestsTab />
-            </TabPanel>
-            <TabPanel>
-              <FinishedContestsTab />
-            </TabPanel>
+            {!loading && organization.contests && organization.contests.length > 0 && (
+              <>
+                <TabPanel>
+                  <ActiveContestsTab />
+                </TabPanel>
+                <TabPanel>
+                  <UpcomingContestsTab />
+                </TabPanel>
+                <TabPanel>
+                  <FinishedContestsTab />
+                </TabPanel>
+              </>
+              )}
           </Tabs>
         </div>
       </div>

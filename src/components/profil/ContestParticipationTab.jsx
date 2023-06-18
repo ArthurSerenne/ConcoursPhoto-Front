@@ -8,25 +8,11 @@ import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 const ContestParticipationTab = () => {
   const { isAuthenticated, user } = useAuth();
 
+  console.log(user.member);
+
   const columns = React.useMemo(
     () => [
       { Header: 'Nom du concours', accessor: 'contest.name' },
-      {
-        Header: 'Date de début du concours',
-        accessor: 'contest.creationDate',
-        Cell: ({ value }) => {
-          const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
-          return <span>{formattedDate}</span>;
-        },
-      },
-      {
-        Header: 'Date de fin du concours',
-        accessor: 'contest.resultsDate',
-        Cell: ({ value }) => {
-          const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
-          return <span>{formattedDate}</span>;
-        },
-      },
       { 
         Header: 'Statut', 
         accessor: 'contest.status',
