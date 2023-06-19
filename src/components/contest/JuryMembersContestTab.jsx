@@ -31,6 +31,12 @@ const JuryMembersContestTab = ({ user, contest, setContest, goBack }) => {
     setModalOpen(false);
   };
 
+  const closeModalWhenClickedOutside = (e) => {
+    if (e.target.classList.contains('fixed')) {
+      handleCancelClick();
+    }
+  };
+
   const handleEmailInputChange = (event) => {
     setEmailInput(event.target.value);
   };
@@ -132,13 +138,23 @@ const JuryMembersContestTab = ({ user, contest, setContest, goBack }) => {
             contentLabel="Edit Jury Members Modal"
             overlayClassName=""
             className=""
+            overlayRef={(overlay) => {
+              if (overlay) {
+                overlay.addEventListener('click', closeModalWhenClickedOutside);
+              }
+            }}
           >
-            <button
-              onClick={handleCancelClick}
-              className="absolute right-2.5 top-2.5"
-            >
-              <RiCloseLine />
-            </button>
+            <div className="flex justify-between">
+              <h1 className="mb-2 text-xl font-bold">
+                Concours {'>'} onglet “Membres du jury” : édition
+              </h1>
+              <button
+                onClick={handleCancelClick}
+                className="absolute right-2.5 top-2.5"
+              >
+                <RiCloseLine />
+              </button>
+            </div>
             <p className="flex items-center text-sm font-bold not-italic leading-[17px] text-black">
               Vous pouvez inviter un ou plusieurs membres du jury mais ils
               doivent être inscrits/membres de la plateforme au préalable.
@@ -226,18 +242,20 @@ const JuryMembersContestTab = ({ user, contest, setContest, goBack }) => {
               <p key={index}>{email}</p>
             ))}
             <br />
-            <button
-              className="gap-5 rounded-[44px] bg-regal-grey px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-              onClick={handleCancelClick}
-            >
-              Annuler
-            </button>
-            <button
-              className="gap-5 rounded-[44px] bg-black px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-              onClick={saveAndUpdate}
-            >
-              Sauvegarder
-            </button>
+            <div className="mt-4">
+              <button
+                className="mr-4 gap-5 rounded-[44px] bg-regal-grey px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                onClick={handleCancelClick}
+              >
+                Annuler
+              </button>
+              <button
+                className="gap-5 rounded-[44px] bg-black px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                onClick={saveAndUpdate}
+              >
+                Sauvegarder
+              </button>
+            </div>
           </Modal>
         </>
       ) : (
