@@ -24,6 +24,8 @@ import PrizesContestTab from "../components/contest/PrizesContestTab";
 import JuryMembersContestTab from "../components/contest/JuryMembersContestTab";
 import PhotosContestTab from "../components/contest/PhotosContestTab";
 import ResultsContestTab from "../components/contest/ResultsContestTab";
+import Modal from 'react-modal';
+import {RiCloseLine, RiUpload2Line} from 'react-icons/ri';
 
 const ViewContest = () => {
   const { user } = useAuth();
@@ -42,6 +44,63 @@ const ViewContest = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(9);
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [newVisual, setNewVisual] = useState(null);
+
+  const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
+  //const imagePath = `${baseUrl}${imageName}`;
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  function handleFileChange(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      axios.post(`${process.env.REACT_APP_IMAGE_BASE_URL}`, formData)
+        .then(response => {
+          // Mettre à jour le visuel dans l'état local
+          console.log(response.data);
+          setContest({ ...contest, visual: response.data.filename });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    } else {
+      console.error('Aucun fichier sélectionné');
+    }
+  }
+
+  function handleDelete() {
+    axios.delete(`${process.env.REACT_APP_IMAGE_BASE_URL}/${contest.visual}`)
+      .then(response => {
+        // Mettre à jour le visuel dans l'état local
+        setContest({ ...contest, visual: null });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  function handleSave() {
+    axios.put(`${process.env.REACT_APP_API_URL}/contests/${id}`, { visual: contest.visual })
+      .then(response => {
+        console.log(response.data);
+        console.log('Visuel enregistré dans la base de données');
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -164,7 +223,39 @@ const ViewContest = () => {
         </div>
         <div className="mx-auto mt-10 mb-10 grid grid-cols-1 md:grid-cols-3 md:gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           <div className="col-span-2 max-h-[38rem]">
-            <ImageDisplay imageName={contest.visual ? contest.visual : 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg'} radius="rounded-xl object-cover h-[38rem] w-full cursor-default" />
+          <div className="relative h-[38rem]">
+          <ImageDisplay
+                imageName={contest.visual ? contest.visual : 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg'}
+                radius="rounded-xl object-cover h-full w-full cursor-default"
+            />
+            <button
+                className="absolute bottom-0 right-0 gap-2.5 rounded-[30px] bg-black px-[15px] py-[5px] text-center text-[8px] font-bold uppercase not-italic leading-[10px] text-white"
+                onClick={openModal}
+            >
+                Éditer
+            </button>
+          </div>
+            <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
+            <button className="absolute right-2.5 top-2.5">
+                            <RiCloseLine/>
+                        </button>
+            <h2 className="font-bold">Visuel principal de présentation du concours</h2>
+            <p>Formats supportés : JPG, PNG, GIF | Taille : 420x250 pixels minimum | Poids : 1 Mo max</p>
+            <input className="gap-5 rounded-[44px] bg-black px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                style={{ display: 'none' }}
+                id="fileUpload"
+                type="file"
+                onChange={handleFileChange}
+            />
+            <label htmlFor="fileUpload" className="gap-5 rounded-[44px] bg-[#D9D9D9] px-[30px] py-3.5 text-sm font-bold not-italic cursor-pointer leading-[17px] text-[#333333]">
+                Télécharger  <RiUpload2Line/>
+            </label>
+            <button className="gap-5 rounded-[44px] bg-[#F1F1F1] px-[30px] py-3.5 text-sm font-bold not-italic leading-[17px] text-[#333333]" onClick={handleDelete}>Supprimer</button>
+            <p className="not-italic text-sm font-bold leading-[17px] flex items-center text-[#666666]">Nom du fichier actuel:  <span className="font-normal">{contest.visual}</span></p>
+            <img src={contest.visual ? baseUrl + contest.visual : 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg'} alt="Visuel du concours actuel" />
+            <button className="gap-5 rounded-[44px] bg-regal-grey px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white" onClick={closeModal}>Annuler</button>
+            <button className="gap-5 rounded-[44px] bg-black px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white" onClick={handleSave}>Sauvegarder</button>
+          </Modal>
           </div>
           <div className="grid grid-cols-2 gap-4 mt-4 md:flex md:flex-col md:space-y-7 md:mt-0">
             <div className="flex flex-grow justify-center max-h-[18rem]">
@@ -210,7 +301,7 @@ const ViewContest = () => {
             {!emptyContent(contest.description) && <Tab>Le concours</Tab>}
             {!emptyContent(contest.rules) && <Tab>Réglement</Tab>}
             {!emptyContent(contest.prizes) && <Tab>Prix à gagner</Tab>}
-              <Tab>Membres du Jury</Tab>
+            {!emptyContent(contest.juryMembers) && <Tab>Membres du Jury</Tab>}
               <Tab>Les photos</Tab>
               <Tab>Résultats</Tab>
             </TabList>
@@ -229,9 +320,11 @@ const ViewContest = () => {
                       <PrizesContestTab user={user} contest={contest} setContest={setContest} goBack={goBack} />
                     </TabPanel>
                   )}
-            <TabPanel>
-              <JuryMembersContestTab contest={contest} goBack={goBack} />
-            </TabPanel>
+                  {!emptyContent(contest.juryMembers) && (
+                    <TabPanel>
+                      <JuryMembersContestTab user={user} contest={contest} setContest={setContest} goBack={goBack} />
+                    </TabPanel>
+                  )}
             <TabPanel>
               <PhotosContestTab contest={contest} uniquePhotographers={uniquePhotographers} goBack={goBack} />
             </TabPanel>
