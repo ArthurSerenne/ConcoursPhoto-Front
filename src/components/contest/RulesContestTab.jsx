@@ -55,7 +55,7 @@ const RulesContestTab = ({user, contest, setContest, goBack}) => {
         if (e.target.classList.contains('fixed')) {
             handleCancelClick();
         }
-    };    
+    };
 
     return (
         <>
@@ -64,7 +64,7 @@ const RulesContestTab = ({user, contest, setContest, goBack}) => {
                 {user && user.organizations && contest.organization && user.organizations.some(org => org.id === contest.organization.id) && (
                     <button
                         className="gap-2.5 rounded-[30px] bg-black px-[15px] py-[5px] text-center text-[8px] font-bold uppercase not-italic leading-[10px] text-white"
-                        onClick={handleEditClick}>éditer</button>
+                        onClick={handleEditClick}>Éditer</button>
                 )}
             </div>
             <p dangerouslySetInnerHTML={{__html: contest.rules}}></p>
