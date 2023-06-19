@@ -300,7 +300,7 @@ const ViewContest = () => {
             >
               <div className="flex justify-between">
                 <h1 className="mb-2 text-xl font-bold">
-                  Concours {'>'} onglet “visuel principal” : édition
+                  Concours {'>'} onglet visuel principal : édition
                 </h1>
                 <button className="absolute right-2.5 top-2.5">
                   <RiCloseLine />
