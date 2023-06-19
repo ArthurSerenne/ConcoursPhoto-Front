@@ -386,15 +386,15 @@ const ViewContest = () => {
                 modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper h-full w-full"
               >
-                {contest.photos
-                  .filter((photo) => photo.status === true)
-                  .map((photo) => (
-                    <SwiperSlide key={photo.id}>
-                      <ImageDisplay
-                        key={photo.id}
-                        imageName={photo.file}
-                        radius="rounded-xl cursor-default"
-                      />
+                {contest.sponsors.map((sponsor) => (
+                    <SwiperSlide key={sponsor.id}>
+                      <a href={sponsor.url} target="_blank" rel="noopener noreferrer" style={{ cursor: 'grab' }}>
+                        <ImageDisplay
+                          key={sponsor.id}
+                          imageName={sponsor.logo}
+                          radius="rounded-xl cursor-default"
+                        />
+                      </a>
                     </SwiperSlide>
                   ))}
               </Swiper>
