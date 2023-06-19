@@ -387,16 +387,21 @@ const ViewContest = () => {
                 className="mySwiper h-full w-full"
               >
                 {contest.sponsors.map((sponsor) => (
-                    <SwiperSlide key={sponsor.id}>
-                      <a href={sponsor.url} target="_blank" rel="noopener noreferrer" style={{ cursor: 'grab' }}>
-                        <ImageDisplay
-                          key={sponsor.id}
-                          imageName={sponsor.logo}
-                          radius="rounded-xl cursor-default"
-                        />
-                      </a>
-                    </SwiperSlide>
-                  ))}
+                  <SwiperSlide key={sponsor.id}>
+                    <a
+                      href={sponsor.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ cursor: 'grab' }}
+                    >
+                      <ImageDisplay
+                        key={sponsor.id}
+                        imageName={sponsor.logo}
+                        radius="rounded-xl cursor-default"
+                      />
+                    </a>
+                  </SwiperSlide>
+                ))}
               </Swiper>
             </div>
           </div>
@@ -426,8 +431,8 @@ const ViewContest = () => {
                   {!emptyContent(contest.juryMembers) && (
                     <Tab>Membres du Jury</Tab>
                   )}
-                  <Tab>Les photos</Tab>
-                  <Tab>Résultats</Tab>
+                  {!emptyContent(contest.photos) && <Tab>Les photos</Tab>}
+                  {!emptyContent(contest.wins) && <Tab>Résultats</Tab>}
                 </TabList>
                 {!emptyContent(contest.description) && (
                   <TabPanel>
@@ -469,16 +474,27 @@ const ViewContest = () => {
                     />
                   </TabPanel>
                 )}
-                <TabPanel>
-                  <PhotosContestTab
-                    contest={contest}
-                    uniquePhotographers={uniquePhotographers}
-                    goBack={goBack}
-                  />
-                </TabPanel>
-                <TabPanel>
-                  <ResultsContestTab contest={contest} goBack={goBack} />
-                </TabPanel>
+                {!emptyContent(contest.photos) && (
+                  <TabPanel>
+                    <PhotosContestTab
+                      user={user}
+                      contest={contest}
+                      setContest={setContest}
+                      uniquePhotographers={uniquePhotographers}
+                      goBack={goBack}
+                    />
+                  </TabPanel>
+                )}
+                {!emptyContent(contest.wins) && (
+                  <TabPanel>
+                    <ResultsContestTab
+                      user={user}
+                      contest={contest}
+                      setContest={setContest}
+                      goBack={goBack}
+                    />
+                  </TabPanel>
+                )}
               </Tabs>
             )}
           </div>

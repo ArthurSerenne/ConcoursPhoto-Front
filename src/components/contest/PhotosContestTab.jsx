@@ -5,7 +5,7 @@ import ReactPaginate from 'react-paginate';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 import PhotoCard from '../PhotoCard';
 
-const PhotosContestTab = ({ contest, uniquePhotographers, goBack }) => {
+const PhotosContestTab = ({ user, contest, setContest, uniquePhotographers, goBack }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(3);
 
