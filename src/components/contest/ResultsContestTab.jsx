@@ -91,6 +91,17 @@ const ResultsContestTab = ({ user, contest, setContest, goBack }) => {
           {win.photo.member.user.firstname} {win.photo.member.user.lastname}
         </p>
       ))}
+      <br />
+      <p>
+        <b>PRIX SPÉCIAUX</b>
+      </p>
+      <br />
+      <p>
+        <b>Le prix spécial du jury</b> a été décerné à Julien PILLON
+      </p>
+      <p>
+        <b>Le prix spécial des membres</b> a été décerné à Christine CHEVRON
+      </p>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={handleCancelClick}
