@@ -68,7 +68,7 @@ const ResultsContestTab = ({ user, contest, setContest, goBack }) => {
     <>
       <div className="flex items-center justify-start space-x-8">
         <h2 className="text-2xl font-normal not-italic">
-          Résultats du concours
+          Résultats du concours photo
         </h2>
         {user &&
           user.organizations &&
@@ -113,7 +113,7 @@ const ResultsContestTab = ({ user, contest, setContest, goBack }) => {
             </button>
           </div>
           <h2 className="mb-1 flex items-center text-sm font-normal not-italic leading-[17px] text-black">
-            Résultats du concours*
+            Lauréats du concours*
           </h2>
           <Editor
             apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
