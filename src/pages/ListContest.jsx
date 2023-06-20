@@ -14,8 +14,10 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
 import { useNavigate } from 'react-router-dom';
+import ResizeObserverCorrection from '../components/ResizeObserverCorrection';
 
 const ListContest = () => {
+  ResizeObserverCorrection();
   const [contests, setContests] = useState([]);
   const [filteredContests, setFilteredContests] = useState([]);
   const [filterValues, setFilterValues] = useState({

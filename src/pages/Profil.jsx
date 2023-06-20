@@ -10,17 +10,14 @@ import '../sass/components/tabs.scss';
 import OrganizationsTab from '../components/profil/OrganizationsTab';
 
 const Profil = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const deselectOrganization = () => {
     setSelectedOrganization(null);
-  };  
+  };
 
   if (isLoading) {
-    return (
-      <>
-      </>
-    );
+    return <></>;
   }
 
   if (!isAuthenticated) {
@@ -30,6 +27,8 @@ const Profil = () => {
       </div>
     );
   }
+
+  const totalContests = user.organizations.reduce((acc, organization) => acc + (organization.contests ? organization.contests.length : 0), 0);
 
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
 
@@ -47,7 +46,7 @@ const Profil = () => {
                 <Tab>Mon profil</Tab>
                 <Tab>Mes préférences</Tab>
                 <Tab>Mes organisations</Tab>
-                <Tab>Concours que j’administre</Tab>
+                {totalContests > 0 ? (<Tab>Concours que j’administre</Tab>) : ''}
                 <Tab>Concours auxquels j'ai participé</Tab>
             </TabList>
 
@@ -64,9 +63,10 @@ const Profil = () => {
                 <OrganizationsTab setSelectedOrganization={setSelectedOrganization} />
               )}
             </TabPanel>
+            {totalContests > 0 ? (
             <TabPanel>
                 <ContestOrganizationTab />
-            </TabPanel>
+            </TabPanel>) : ''}
             <TabPanel>
                 <ContestParticipationTab />
             </TabPanel>

@@ -13,7 +13,6 @@ const AddContest = () => {
   const { organization } = useParams();
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    // Envoyer les données à votre backend Symfony
     axios
       .post('/mon-concours', values)
       .then(response => {
@@ -88,7 +87,7 @@ const AddContest = () => {
                     <li>Objet du concours photo, étendue, audience visée.</li>
                 </ul>
                 <p className='pt-4'>Pour recevoir un devis, veuillez renseigner le formulaire de demande de création suivant qui va créer automatiquement un compte membre et une fiche organisme associée. Votre demande sera étudiée et vous recevrez un devis. Après avoir encaissé le paiement, vous pourrez paramétrer et publier votre concours.</p>
-                <p>Si vous avez déjà créé un compte membre, veuillez vous connecter puis rendez-vous dans “Mon profil > Mes organisations > Concours”</p>
+                <p>Si vous avez déjà créé un compte membre, veuillez vous connecter puis rendez-vous dans “Mon profil {'>'} Mes organisations {'>'} Concours”</p>
             </div>
         </div>
         

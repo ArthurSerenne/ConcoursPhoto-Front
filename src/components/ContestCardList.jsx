@@ -16,7 +16,11 @@ const ContestCardList = (props) => {
     );
 
     const totalVotes = props.contest.photos.reduce((total, photo) => {
-        return total + photo.voteCount;
+        if (photo.status) {
+          return total + photo.voteCount;
+        } else {
+          return total + 0;
+        }
       }, 0);
 
     const handleClick = (contest) => {
@@ -36,8 +40,6 @@ const ContestCardList = (props) => {
       navigate(`/concours-photo/${contest.id}`, { state: { contest: {...contest, view: viewCount } } });
     };
   };
-
-    console.log(props.contest);
 
     return (
         <div className='grid grid-cols-3 w-full max-h-[440px] sm:max-h-[500px] rounded-b-lg shadow-xl mb-10 flex flex-col justify-between'>
@@ -86,7 +88,7 @@ const ContestCardList = (props) => {
                                         <RiUserShared2Line /> 121
                                     </p>
                                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
-                                        <MdOutlineCameraAlt /> {props.contest.photos.length}
+                                        <MdOutlineCameraAlt /> {props.contest.photos.filter((photo) => photo.status === true).length}
                                     </p>
                                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
                                         <BiLike /> {totalVotes}

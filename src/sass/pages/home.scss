@@ -24,3 +24,7 @@
   height: 100%;
   object-fit: cover;
 }
+
+.hide-resize-observer {
+  display: none !important;
+}

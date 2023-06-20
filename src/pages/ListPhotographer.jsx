@@ -11,14 +11,14 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
 import { useNavigate } from 'react-router-dom';
-import OrganizationCard from '../components/OrganizationCard';
-import OrganizationCardList from '../components/OrganizationCardList';
-import ListOrganizationFilter from '../components/ListOrganizationFilter';
+import ListPhotographerFilter from '../components/ListPhotographerFilter';
+import PhotographerCard from '../components/PhotographerCard';
+import PhotographerCardList from '../components/PhotographerCardList';
 import ResizeObserverCorrection from '../components/ResizeObserverCorrection';
 
-const ListOrganization = () => {
+const ListPhotographer = () => {
     ResizeObserverCorrection();
-    const [organizations, setOrganizations] = useState([]);
+    const [photographers, setPhotographers] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
     const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ const ListOrganization = () => {
         department: [],
         checked: false,
       });      
-    const [filteredOrganization, setFilteredOrganization] = useState([]);
+    const [filteredPhotographers, setFilteredPhotographers] = useState([]);
   
     const handleItemsPerPageChange = (event) => {
       setItemsPerPage(parseInt(event.target.value));
@@ -40,70 +40,47 @@ const ListOrganization = () => {
       setCurrentPage(selectedPage.selected);
     };
   
-    const handleClick = (organization) => {
-        navigate(`/organisateurs/${organization.id}`);
+    const handleClick = (photographer) => {
+        navigate(`/photographes/${photographer.id}`);
     };
   
     useEffect(() => {
       const fetchData = async () => {
         const response = await axios.get(
-          process.env.REACT_APP_API_URL + '/organizations.json'
+          process.env.REACT_APP_API_URL + '/users.json'
         );
-        setOrganizations(response.data);
+        const photos = response.data.filter((user) => user.member?.photos?.length > 0);
+        setPhotographers(photos);
         setLoading(false);
       };
       fetchData();
     }, []);
   
-    useEffect(() => {
-        const today = new Date();
-      
-        const filtered = organizations.filter((organization) => {
-          const searchMatch =
-            filterValues.search.trim() === '' ||
-            organization.name
-              .toLowerCase()
-              .includes(filterValues.search.trim().toLowerCase());
-      
-              const cityMatch =
-                filterValues.city.length === 0 ||
-                (organization.city && filterValues.city.some((city) => organization.city.id === city.value));
-
-            const departmentMatch =
-                filterValues.department.length === 0 ||
-                (organization.zipCode && filterValues.department.some((department) => organization.zipCode.id === department.value));     
-      
-                const contestsMatch =
-                !filterValues.checked ||
-                organization.contests?.some((contest) => {
-                  const publicationDate = new Date(contest.publicationDate);
-                  const votingEndDate = new Date(contest.votingEndDate);
-                  return today >= publicationDate && today <= votingEndDate;
-                });
-              
-              if (!contestsMatch) {
-                return false;
-              }
+    useEffect(() => {      
+        const filtered = photographers.filter((photographer) => {
+            const searchMatch = 
+                filterValues.search.trim() === '' ||
+                (photographer.member?.username && photographer.member?.username.toLowerCase().includes(filterValues.search.trim().toLowerCase())) ||
+                (photographer.lastname && photographer.lastname.toLowerCase().includes(filterValues.search.trim().toLowerCase())) ||
+                (photographer.firstname && photographer.firstname.toLowerCase().includes(filterValues.search.trim().toLowerCase()));               
               
               return (
-                organization.status === true &&
-                organization.deletionDate === undefined &&
-                searchMatch &&
-                cityMatch &&
-                departmentMatch
+                photographer.status === true &&
+                photographer.deletionDate === undefined &&
+                searchMatch
               );
         });
       
-        setFilteredOrganization(filtered);
-      }, [organizations, filterValues]);
+        setFilteredPhotographers(filtered);
+      }, [photographers, filterValues]);
       
       const applyFilters = (search, city, department, checked) => {
         setFilterValues({ search, city, department, checked });
       };      
   
-    const totalPages = Math.ceil(filteredOrganization.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredPhotographers.length / itemsPerPage);
 
-    console.log(filteredOrganization);
+    console.log(filteredPhotographers);
   
     const [isGridMode, setIsGridMode] = useState(true);
     const [isMap, setIsMap] = useState(false);
@@ -113,16 +90,16 @@ const ListOrganization = () => {
       <div className="mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <div>
           <p className="text-4xl font-bold not-italic leading-[160%] text-black">
-            Rechercher un organisateur de concours
+            Rechercher un photographe
           </p>
         </div>
       </div>
-      <ListOrganizationFilter applyFilters={applyFilters} className="z-10" />
+      <ListPhotographerFilter applyFilters={applyFilters} className="z-10" />
       <div>
       </div>
       <div className="mx-auto mt-12 mb-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">    
         <div className="flex justify-between items-center">
-        <p className='text-3xl mb-8'>{filteredOrganization.length} résultats</p>
+        <p className='text-3xl mb-8'>{filteredPhotographers.length} résultats</p>
           <div className="flex gap-4">
           <button
               onClick={() => {
@@ -159,13 +136,13 @@ const ListOrganization = () => {
                   ? Array.from({ length: itemsPerPage }, (_, i) => (
                         <ContestCardSkeleton key={i} />
                     ))
-                  : filteredOrganization
+                  : filteredPhotographers
                       .slice(currentPage * itemsPerPage, (currentPage * itemsPerPage) + itemsPerPage)
-                      .map((organization) => (
+                      .map((photographer) => (
                         isGridMode ? (
-                          <OrganizationCard organization={organization} key={organization.id} />
+                          <PhotographerCard photographer={photographer} key={photographer.id} />
                         ) : (
-                          <OrganizationCardList organization={organization} key={organization.id} />
+                          <PhotographerCardList photographer={photographer} key={photographer.id} />
                         )
                     ))}
           </div>
@@ -223,13 +200,13 @@ const ListOrganization = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
         
-                {filteredOrganization.map((organization, index1) => {
+                {filteredPhotographers.map((photographer, index1) => {
                     return (
-                        <Marker key={`${index1}`} position={[organization.city.gps_lat, organization.city.gps_lng]}>
+                        <Marker key={`${index1}`} position={[photographer.city.gps_lat, photographer.city.gps_lng]}>
                             <Popup>
                                 <div>
-                                    <p>Organisateur : {organization.name}</p>
-                                    <p>Ville : {organization.city.name} - {organization.city.zip_code} <span onClick={() => handleClick(organization)} className='ml-2 bg-gray-200 py-2 px-3 rounded-full hover:bg-gray-100 hover:cursor-pointer'>Voir</span></p>
+                                    <p>Photographe : {photographer.member.username}</p>
+                                    <p>Ville : {photographer.city.name} - {photographer.city.zip_code} <span onClick={() => handleClick(photographer)} className='ml-2 bg-gray-200 py-2 px-3 rounded-full hover:bg-gray-100 hover:cursor-pointer'>Voir</span></p>
                                 </div>
                             </Popup>
                         </Marker>
@@ -243,4 +220,4 @@ const ListOrganization = () => {
     );
 }
 
-export default ListOrganization;
+export default ListPhotographer;

@@ -9,7 +9,7 @@ const ContestOrganizationTab = () => {
   const { isAuthenticated, user } = useAuth();
 
   const columns = React.useMemo(() => {
-    if (user.organizations[0]) {
+    if (user && user.organizations && user.organizations[0]) {
       return [
         { Header: 'Nom du concours', accessor: 'name' },
         {
@@ -35,8 +35,14 @@ const ContestOrganizationTab = () => {
             return <span>{value === true ? 'Actif' : 'Inactif'}</span>
           }
         },
-        { Header: 'Participants', accessor: 'contest.trend' },
-        { Header: 'Photos', accessor: 'photos.length' },
+        { Header: 'Participants', accessor: 'trend' },
+        { 
+          Header: 'Photos', 
+          accessor: 'photos',
+          Cell: ({value}) => {
+            return <span>{value ? value.length : '0'}</span>
+          },
+        },
       ];
     } else {
       return [
@@ -48,9 +54,14 @@ const ContestOrganizationTab = () => {
         { Header: 'Photos' },
       ];
     }
-  }, [user.organizations]);  
+  }, [user]);
 
-  const data = React.useMemo(() => isAuthenticated && user.organizations[0]?.contests || [], [isAuthenticated, user.organizations[0]?.contests]);
+  const data = React.useMemo(() => {
+    if (isAuthenticated && user && user.organizations) {
+      return user.organizations.flatMap(organization => organization.contests);
+    }
+    return [];
+  }, [isAuthenticated, user]);
 
   const sortTypes = {
     datetime: (rowA, rowB, columnId) => {
@@ -177,7 +188,7 @@ const ContestOrganizationTab = () => {
           {Array.from({ length: pageCount }, (_, index) => {
             const but = index + 1;
             return (
-              <button key={but} onClick={() => gotoPage(but - 1)} className='px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-100'>
+              <button key={but} onClick={() => gotoPage(but - 1)} className='px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-100 focus:bg-gray-300'>
                 {but}
               </button>
             );
