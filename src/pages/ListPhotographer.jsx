@@ -14,8 +14,10 @@ import { useNavigate } from 'react-router-dom';
 import ListPhotographerFilter from '../components/ListPhotographerFilter';
 import PhotographerCard from '../components/PhotographerCard';
 import PhotographerCardList from '../components/PhotographerCardList';
+import ResizeObserverCorrection from '../components/ResizeObserverCorrection';
 
 const ListPhotographer = () => {
+    ResizeObserverCorrection();
     const [photographers, setPhotographers] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);
@@ -47,49 +49,25 @@ const ListPhotographer = () => {
         const response = await axios.get(
           process.env.REACT_APP_API_URL + '/users.json'
         );
-        const photos = response.data.filter((user) => user.member.photos.length > 0);
+        const photos = response.data.filter((user) => user.member?.photos?.length > 0);
         setPhotographers(photos);
         setLoading(false);
       };
       fetchData();
     }, []);
   
-    useEffect(() => {
-        const today = new Date();
-      
+    useEffect(() => {      
         const filtered = photographers.filter((photographer) => {
             const searchMatch = 
                 filterValues.search.trim() === '' ||
-                (photographer.member.username && photographer.member.username.toLowerCase().includes(filterValues.search.trim().toLowerCase())) ||
+                (photographer.member?.username && photographer.member?.username.toLowerCase().includes(filterValues.search.trim().toLowerCase())) ||
                 (photographer.lastname && photographer.lastname.toLowerCase().includes(filterValues.search.trim().toLowerCase())) ||
                 (photographer.firstname && photographer.firstname.toLowerCase().includes(filterValues.search.trim().toLowerCase()));               
-      
-              const cityMatch =
-                filterValues.city.length === 0 ||
-                (photographer.city && filterValues.city.some((city) => photographer.city.id === city.value));
-
-            const departmentMatch =
-                filterValues.department.length === 0 ||
-                (photographer.zipCode && filterValues.department.some((department) => photographer.zipCode.id === department.value));     
-      
-                const contestsMatch =
-                !filterValues.checked ||
-                photographer.contests?.some((contest) => {
-                  const publicationDate = new Date(contest.publicationDate);
-                  const votingEndDate = new Date(contest.votingEndDate);
-                  return today >= publicationDate && today <= votingEndDate;
-                });
-              
-              if (!contestsMatch) {
-                return false;
-              }
               
               return (
                 photographer.status === true &&
                 photographer.deletionDate === undefined &&
-                searchMatch &&
-                cityMatch &&
-                departmentMatch
+                searchMatch
               );
         });
       

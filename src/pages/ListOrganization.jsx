@@ -14,8 +14,10 @@ import { useNavigate } from 'react-router-dom';
 import OrganizationCard from '../components/OrganizationCard';
 import OrganizationCardList from '../components/OrganizationCardList';
 import ListOrganizationFilter from '../components/ListOrganizationFilter';
+import ResizeObserverCorrection from '../components/ResizeObserverCorrection';
 
 const ListOrganization = () => {
+    ResizeObserverCorrection();
     const [organizations, setOrganizations] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(9);

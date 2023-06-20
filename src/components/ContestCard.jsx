@@ -16,8 +16,17 @@ const ContestCard = (props) => {
   );
 
   const totalVotes = props.contest.photos.reduce((total, photo) => {
-    return total + photo.voteCount;
+    if (photo.status) {
+      return total + photo.voteCount;
+    } else {
+      return total + 0;
+    }
   }, 0);
+
+      const uniquePhotographers = props.contest.photos.filter((photo) => photo.status === true).reduce((acc, photo) => {
+        acc.add(photo.member);
+        return acc;
+      }, new Set());
 
   const handleClick = (contest) => {
     return async () => {
@@ -74,7 +83,7 @@ const ContestCard = (props) => {
                 </div>
                 <div className="flex flex-wrap gap-1 mt-6 justify-between">
                     <div className="flex gap-1">
-                        <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><RiUserShared2Line /> 121</p>
+                        <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><RiUserShared2Line /> {uniquePhotographers.size}</p>
                         <p className="bg-gray-100 rounded-full py-2 px-3 text-xs"><MdOutlineCameraAlt /> {props.contest.photos.filter((photo) => photo.status === true).length}</p>
                         <p className="bg-gray-100 rounded-full py-2 px-3 text-xs">
                           <BiLike /> {totalVotes}

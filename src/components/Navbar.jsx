@@ -42,9 +42,9 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="left-0 top-0 w-full bg-[#A8A8A8] xl:px-24">
+            <nav className="left-0 top-0 w-full bg-[#A8A8A8] xl:px-20">
                 <div
-                    className="mx-6 flex flex-wrap items-center justify-between py-6 sm:max-w-screen-sm md:mx-24 md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+                    className="mx-6 flex flex-wrap items-center justify-between py-6 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
                     <a
                         href="/"
                         className="flex items-center rounded bg-white px-8 py-4 font-bold"

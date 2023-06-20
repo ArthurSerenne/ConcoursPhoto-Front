@@ -1,21 +1,30 @@
 import { useNavigate } from 'react-router-dom';
-import ImageDisplay from '../components/ImageDisplay';
 import { RiCameraLensLine } from 'react-icons/ri';
 import SituationEnum from './enums/SituationEnum';
 import CategoryEnum from './enums/CategoryEnum';
+import { useState } from 'react';
 
 const PhotographerCard = (props) => {
   const navigate = useNavigate();
+  const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
+  const imagePath = `${baseUrl}${props.photographer.member?.photo}`;
+  const defaultImagePath =
+    'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg';
+  const [imageSrc, setImageSrc] = useState(imagePath);
 
   const handleClick = () => {
     navigate(`/photographes/${props.photographer.id}`);
   };
 
+  const handleError = () => {
+    setImageSrc(defaultImagePath);
+  };
+
     return (
         <div className='p-5 max-w-lg max-h-[465px] sm:max-h-[500px] rounded-b-lg shadow-xl hover:scale-105 ease-in-out duration-300 cursor-pointer' onClick={handleClick}>
             <div className='grid grid-cols-5'>
-                <ImageDisplay imageName={props.photographer.member.photo} radius='rounded-full w-24 h-24' />
-                <div className='h-12 text-center'>
+                <img src={imageSrc} onError={handleError} className='rounded-full w-24 h-20' />
+                <div className='h-12 ml-2 col-span-3'>
                     <p className='text-lg font-bold not-italic leading-[160%] text-black overflow-hidden w-full' style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }}>{props.photographer.member.username}</p>
                 </div>
             </div>
