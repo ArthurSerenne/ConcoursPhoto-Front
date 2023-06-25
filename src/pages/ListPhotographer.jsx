@@ -15,6 +15,7 @@ import ListPhotographerFilter from '../components/ListPhotographerFilter';
 import PhotographerCard from '../components/PhotographerCard';
 import PhotographerCardList from '../components/PhotographerCardList';
 import ResizeObserverCorrection from '../components/ResizeObserverCorrection';
+import CategoryEnum from '../components/enums/CategoryEnum';
 
 const ListPhotographer = () => {
     ResizeObserverCorrection();
@@ -206,7 +207,7 @@ const ListPhotographer = () => {
                             <Popup>
                                 <div>
                                     <p>Photographe : {photographer.member.username}</p>
-                                    <p>Ville : {photographer.city.name} - {photographer.city.zip_code} <span onClick={() => handleClick(photographer)} className='ml-2 bg-gray-200 py-2 px-3 rounded-full hover:bg-gray-100 hover:cursor-pointer'>Voir</span></p>
+                                    <p>Catégorie : {CategoryEnum[photographer.member.category]} <span onClick={() => handleClick(photographer)} className='ml-2 bg-gray-200 py-2 px-3 rounded-full hover:bg-gray-100 hover:cursor-pointer'>Voir</span></p>
                                 </div>
                             </Popup>
                         </Marker>

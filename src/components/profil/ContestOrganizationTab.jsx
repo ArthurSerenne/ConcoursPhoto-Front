@@ -4,6 +4,8 @@ import { useAuth } from '../AuthContext';
 import { format, parseISO } from "date-fns";
 import { RiSortAsc, RiSortDesc, RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const ContestOrganizationTab = () => { 
   const { isAuthenticated, user } = useAuth();
@@ -107,6 +109,30 @@ const ContestOrganizationTab = () => {
     useSortBy,
     usePagination
   );
+
+  const navigate = useNavigate();
+
+  const handleRowClick = async (contest) => {
+    const viewCount = contest.view ? contest.view + 1 : 1;
+
+    console.log(viewCount);
+
+    try {
+        await axios.patch(
+            `${process.env.REACT_APP_API_URL}/contests/${contest.id}`,
+            { view: viewCount },
+            {
+                headers: {
+                    'Content-Type': 'application/merge-patch+json',
+                },
+            }
+        );
+
+        navigate(`/concours-photo/${contest.id}`, { state: { contest: {...contest, view: viewCount } } });
+    } catch (error) {
+        console.error("Failed to update view count: ", error);
+    }
+};
   
     return (
       <div>
@@ -146,7 +172,7 @@ const ContestOrganizationTab = () => {
           {page.map((row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} onClick={() => handleRowClick(row.original)} className='hover:bg-gray-100 cursor-pointer'>
                 {row.cells.map((cell) => {
                   return (
                     <td

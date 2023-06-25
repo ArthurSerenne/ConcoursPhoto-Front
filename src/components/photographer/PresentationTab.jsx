@@ -33,7 +33,6 @@ const PresentationTab = () => {
                     setLoading(false);
                 })
                 .catch((error) => {
-                    // Handle the error here
                 });
         } else {
             const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
@@ -49,8 +48,8 @@ const PresentationTab = () => {
     };
   
     return (
-        <div className='grid grid-cols-2'>
-            <div className='flex flex-col justify-center md:flex-row gap-24 md:justify-start'>
+        <div className='grid md:grid-cols-2'>
+            <div className='flex justify-center flex-row gap-6 mb-10 md:gap-24 md:justify-start'>
                 <div className='space-y-2'>
                     <p className='font-bold text-xl'>{photographer?.lastname} {photographer?.firstname}</p>
                     <p>Situation : {SituationEnum[photographer?.member?.situation]}</p>

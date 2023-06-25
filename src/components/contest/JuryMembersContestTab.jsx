@@ -136,14 +136,15 @@ const JuryMembersContestTab = ({ user, contest, setContest, goBack }) => {
             isOpen={isModalOpen}
             onRequestClose={handleCancelClick}
             contentLabel="Edit Jury Members Modal"
-            overlayClassName=""
-            className=""
+            overlayClassName="fixed inset-0"
+            className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-80 p-4"
             overlayRef={(overlay) => {
               if (overlay) {
                 overlay.addEventListener('click', closeModalWhenClickedOutside);
               }
             }}
           >
+            <div className='bg-white p-7 rounded-lg max-w-[1172px] max-h-[750px] overflow-auto'>
             <div className="flex justify-between">
               <h1 className="mb-2 text-xl font-bold">
                 Concours {'>'} onglet “Membres du jury” : édition
@@ -226,18 +227,20 @@ const JuryMembersContestTab = ({ user, contest, setContest, goBack }) => {
               Vous devez saisir l’email utilisé par le membre ou saisir son
               nom/prénom si vous ne le connaissez pas.
             </p>
-            <input
-              type="email"
-              value={emailInput}
-              className="rounded-[5px] bg-[#F1F1F1]"
-              onChange={handleEmailInputChange}
-            />
-            <button
-              className="ml-10 gap-5 rounded-[44px] bg-[#d9d9d9] px-[30px] py-3.5 text-center text-sm font-bold not-italic leading-[17px] text-[#333333]"
-              onClick={handleAddMember}
-            >
-              Ajouter un membre du jury
-            </button>
+            <div className='grid md:grid-cols-10 gap-5 mt-3'>
+              <input
+                type="email"
+                value={emailInput}
+                className="rounded-[5px] bg-[#F1F1F1] col-span-7"
+                onChange={handleEmailInputChange}
+              />
+              <button
+                className="col-span-3 rounded-[44px] bg-[#d9d9d9] px-[30px] py-3.5 text-center text-sm font-bold not-italic leading-[17px] text-[#333333]"
+                onClick={handleAddMember}
+              >
+                Ajouter un membre du jury
+              </button>
+            </div>
             {emailList.map((email, index) => (
               <p key={index}>{email}</p>
             ))}
@@ -255,6 +258,7 @@ const JuryMembersContestTab = ({ user, contest, setContest, goBack }) => {
               >
                 Sauvegarder
               </button>
+            </div>
             </div>
           </Modal>
         </>

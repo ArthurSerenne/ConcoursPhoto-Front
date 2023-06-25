@@ -35,18 +35,9 @@ const ViewContest = () => {
   const [contest, setContest] = useState(passedContest || []);
   const [loading, setLoading] = useState(true);
   const [uniquePhotographers, setTotalPhotographers] = useState(0);
-  const formattedDate = format(new Date(contest.resultsDate), 'dd/MM/yyyy');
-  const daysDifference = differenceInDays(
-    new Date(contest.resultsDate),
-    new Date()
-  );
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(9);
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [newVisual, setNewVisual] = useState(null);
 
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
 
@@ -135,20 +126,6 @@ const ViewContest = () => {
     setActiveTab(index);
   };
 
-  const handleItemsPerPageChange = (event) => {
-    setItemsPerPage(parseInt(event.target.value));
-    setCurrentPage(0);
-  };
-
-  const totalPages = Math.ceil(
-    contest.photos.filter((photo) => photo.status === true).length /
-      itemsPerPage
-  );
-
-  const handlePageClick = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
-  };
-
   const emptyContent = (content) => {
     return !content || /^\s*$/.test(content);
   };
@@ -158,6 +135,14 @@ const ViewContest = () => {
       openModal();
     }
   };
+
+  console.log(contest);
+
+  const formattedDate = format(new Date(contest?.resultsDate), 'dd/MM/yyyy');
+  const daysDifference = differenceInDays(
+    new Date(contest?.resultsDate),
+    new Date()
+  );
 
   return (
     <div className="mx-6 md:mx-24">
@@ -197,7 +182,7 @@ const ViewContest = () => {
               THEME(S) :{' '}
               {contest.themes &&
                 contest.themes
-                  .map((theme) => theme.name)
+                  ?.map((theme) => theme.name)
                   .join(', ')
                   .split(', ')
                   .map((themeName, index) => (
@@ -252,12 +237,12 @@ const ViewContest = () => {
             </p>
             <p className="max-w-fit rounded-full bg-gray-100 px-4 py-1">
               <MdOutlineCameraAlt />{' '}
-              {contest.photos.filter((photo) => photo.status === true).length}
+              {contest.photos?.filter((photo) => photo.status === true).length}
             </p>
             <p className="max-w-fit rounded-full bg-gray-100 px-4 py-1">
               <BiLike />{' '}
               {contest.photos
-                .filter((photo) => photo.status === true)
+                ?.filter((photo) => photo.status === true)
                 .reduce((total, photo) => total + photo.voteCount, 0)}
             </p>
             <p className="max-w-fit rounded-full bg-gray-100 px-4 py-1">
@@ -386,7 +371,7 @@ const ViewContest = () => {
                 modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper h-full w-full"
               >
-                {contest.sponsors.map((sponsor) => (
+                {contest.sponsors?.map((sponsor) => (
                     <SwiperSlide key={sponsor.id}>
                       <a href={sponsor.url} target="_blank" rel="noopener noreferrer" style={{ cursor: 'grab' }}>
                         <ImageDisplay

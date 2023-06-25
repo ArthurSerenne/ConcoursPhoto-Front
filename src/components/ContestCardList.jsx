@@ -67,8 +67,8 @@ const ContestCardList = (props) => {
                     </p>
                     : ''}
                     <p className="bg-gray-100 rounded-full py-2 px-3 text-xs uppercase">
-                        {props.contest.themes
-                        .map((theme) => theme.name)
+                        {props.contest?.themes
+                        ?.map((theme) => theme.name)
                         .join(", ")
                         .split(", ")
                         .slice(0,1)
