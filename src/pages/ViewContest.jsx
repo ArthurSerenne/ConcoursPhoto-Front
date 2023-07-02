@@ -502,16 +502,13 @@ const ViewContest = () => {
             ) : (
               <Tabs onSelect={handleTabChange} className={'mb-6'}>
                 <TabList className={'mb-10'}>
-                  {!emptyContent(contest.description) && <Tab>Le concours</Tab>}
-                  {!emptyContent(contest.rules) && <Tab>Réglement</Tab>}
-                  {!emptyContent(contest.prizes) && <Tab>Prix à gagner</Tab>}
-                  {!emptyContent(contest.juryMembers) && (
-                    <Tab>Membres du Jury</Tab>
-                  )}
-                  {!emptyContent(contest.photos) && <Tab>Les photos</Tab>}
-                  {!emptyContent(contest.wins) && <Tab>Résultats</Tab>}
+                  <Tab>Le concours</Tab>
+                  <Tab>Réglement</Tab>
+                  <Tab>Prix à gagner</Tab>
+                  <Tab>Membres du Jury</Tab>
+                  <Tab>Les photos</Tab>
+                  <Tab>Résultats</Tab>
                 </TabList>
-                {!emptyContent(contest.description) && (
                   <TabPanel>
                     <DescriptionContestTab
                       user={user}
@@ -520,8 +517,6 @@ const ViewContest = () => {
                       goBack={goBack}
                     />
                   </TabPanel>
-                )}
-                {!emptyContent(contest.rules) && (
                   <TabPanel>
                     <RulesContestTab
                       user={user}
@@ -530,8 +525,6 @@ const ViewContest = () => {
                       goBack={goBack}
                     />
                   </TabPanel>
-                )}
-                {!emptyContent(contest.prizes) && (
                   <TabPanel>
                     <PrizesContestTab
                       user={user}
@@ -540,8 +533,6 @@ const ViewContest = () => {
                       goBack={goBack}
                     />
                   </TabPanel>
-                )}
-                {!emptyContent(contest.juryMembers) && (
                   <TabPanel>
                     <JuryMembersContestTab
                       user={user}
@@ -550,8 +541,6 @@ const ViewContest = () => {
                       goBack={goBack}
                     />
                   </TabPanel>
-                )}
-                {!emptyContent(contest.photos) && (
                   <TabPanel>
                     <PhotosContestTab
                       user={user}
@@ -561,8 +550,6 @@ const ViewContest = () => {
                       goBack={goBack}
                     />
                   </TabPanel>
-                )}
-                {!emptyContent(contest.wins) && (
                   <TabPanel>
                     <ResultsContestTab
                       user={user}
@@ -571,7 +558,6 @@ const ViewContest = () => {
                       goBack={goBack}
                     />
                   </TabPanel>
-                )}
               </Tabs>
             )}
           </div>

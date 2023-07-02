@@ -173,7 +173,7 @@ const Home = () => {
                 ))}
         </Swiper>
         </div>
-        <div className="col-span-1 flex h-full flex-row space-x-8 md:flex-col md:space-x-0">
+        <div className="col-span-1 flex h-full flex-row space-y-8 md:flex-col md:space-x-0">
           <div className="flex max-h-[18rem] flex-grow items-center justify-center">
             <div className="flex h-full w-full flex-col items-center justify-center bg-gray-200">
               {/* <img src='https://www.photo-paysage.com/albums/userpics/10001/Cascade_-17.JPG' alt='' className="w-full h-full object-cover" /> */}
