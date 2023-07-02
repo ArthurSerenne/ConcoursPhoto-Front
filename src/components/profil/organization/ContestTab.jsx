@@ -1,12 +1,38 @@
-import React from 'react'
 import { useTable, useSortBy, usePagination } from 'react-table'
 import { format, parseISO } from "date-fns";
-import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import ContestDateStatus from '../../ContestDateStatus';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import React, { useState } from 'react';
+import Modal from 'react-modal';
+import { RiCloseLine, RiSortAsc, RiSortDesc } from "react-icons/ri";
+import {Formik, Form, Field, ErrorMessage} from 'formik';
+import axiosInstance from '../../AxiosInstance';
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+import { useAuth } from '../../AuthContext';
+
+const validationSchema = Yup.object().shape({
+  prices: Yup.string()
+      .required('Ce champ est requis'),
+  sponsors: Yup.string()
+      .required('Ce champ est requis'),
+  total: Yup.string()
+      .required('Ce champ est requis'),
+  theme: Yup.string()
+      .required('Ce champ est requis'),
+});
 
 const ContestTab = ({organization}) => {
+  const { reloadUser } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rowData, setRowData] = useState(null);
+
+  const zoneMapping = {
+    departement: 'Département',
+    regional: 'Régional',
+  };
+
     const columns = React.useMemo(() => {
           return [
             { Header: 'Nom du concours', accessor: 'name' },
@@ -73,10 +99,32 @@ const ContestTab = ({organization}) => {
 
       const navigate = useNavigate();
 
+      const openModal = (data) => {
+        if (data) {
+            setRowData(data);
+        } else {
+            setRowData({});
+        }
+        setIsModalOpen(true);
+    };
+    
+      const closeModal = () => {
+        setIsModalOpen(false);
+        setRowData(null);
+      }
+
+      const handleCancelClick = () => {
+        setIsModalOpen(false);
+      };
+    
+      const closeModalWhenClickedOutside = (e) => {
+        if (e.target.classList.contains('fixed')) {
+          handleCancelClick();
+        }
+      };
+
       const handleRowClick = async (contest) => {
         const viewCount = contest.view ? contest.view + 1 : 1;
-
-        console.log(viewCount);
 
         try {
             await axios.patch(
@@ -93,6 +141,64 @@ const ContestTab = ({organization}) => {
         } catch (error) {
             console.error("Failed to update view count: ", error);
         }
+    };
+
+  const separateEntityData = (values) => {
+    const entity1Data = {
+        zone: zoneMapping[values.zone],
+        prices: values.prices,
+        sponsors: values.sponsors,
+        total: values.total,
+        theme: values.theme,
+        organization: organization.name,
+      };
+
+      return { entity1Data };
+    };
+
+    const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
+      setSubmitting(true);
+      const updateProcess = async () => {
+        const { entity1Data } = separateEntityData(values);
+
+        const data = {
+          entity1Data,
+        };
+
+        console.log(entity1Data);
+
+        const response = await axiosInstance.post(
+              `${process.env.REACT_APP_API_URL}/contest_request`,
+              data,
+              {
+                  headers: {
+                  'Content-Type': 'application/json',
+                  },
+              }
+          ); 
+
+        if (response.status === 200 || response.status === 201) {
+            console.log("Formulaire soumis avec succès");
+              await reloadUser();
+        } else {
+          console.log(response.status);
+        }
+      };
+
+        toast.promise(
+          updateProcess(),
+          {
+            pending: 'Demande de création d\'un concours en cours',
+            success: 'Demande de création d\'un concours  envoyé avec succès !',
+            error: (err) => {
+              if (err.message === 'EmailChanged') {
+                return 'Veuillez vous reconnecter avec votre nouvelle adresse e-mail.';
+              } else {
+                return 'Erreur lors de la mise à jour du profil. Veuillez réessayer.';
+              }
+            }
+          }
+        ).finally(() => setSubmitting(false));
     };
 
     return (
@@ -148,8 +254,105 @@ const ContestTab = ({organization}) => {
                     );
                 })}
                 </tbody>
+                <Modal
+                    isOpen={isModalOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Ligne sélectionnée"
+                    overlayClassName="fixed inset-0"
+                    className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-80 p-4"
+                    overlayRef={(overlay) => {
+                        if (overlay) {
+                          overlay.addEventListener('click', closeModalWhenClickedOutside);
+                        }
+                      }}
+                >
+                    <div className='bg-white px-10 space-y-2 py-7 relative rounded-lg max-w-[530px] max-h-[863px] overflow-auto'>
+                      <button className='absolute top-1 right-2' onClick={closeModal}><RiCloseLine className='scale-150' /></button>
+                      <p className="text-xl font-bold">Nouveau concours</p>
+                      <p className="text-sm">Ce formulaire vous permet de soumettre une demande de création d’un nouveau concours photo. Un devis vous sera envoyé par email qui tiendra compte de la nature de votre organisation et du concours que vous souhaitez publier.</p>
+                        <div className='grid grid-cols-1'>
+                            <Formik
+                                initialValues={{
+                                  zone: '',
+                                  prices: '',
+                                  sponsors: '',
+                                  total: '',
+                                  theme: '',
+                                }}
+                                onSubmit={handleSubmit}
+                                validateOnBlur={true}
+                                validateOnChange={true}
+                                validationSchema={validationSchema}
+                            >
+                                {({ isSubmitting }) => (
+                                <Form className='grid grid-cols-1 my-2'>
+                                    <div className='space-y-3'>
+                                        <div>
+                                            <label htmlFor="zone" className='text-sm'>Quelle est l’étendue/zone de visibilité du concours ?</label>
+                                            <Field as="select" name="zone" className="gray-select mt-1 h-[43px] w-full rounded-md bg-gray-100 pl-3">
+                                                <option value="departement">Département</option>
+                                                <option value="regional">Régional</option>
+                                            </Field>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="prices" className='text-sm'>Combien y-a-t-il de prix à gagner ?*</label>
+                                            <Field
+                                            name="prices"
+                                            type="text"
+                                            className="gray-select mt-1 h-[43px] w-full rounded-md bg-gray-100 pl-3"
+                                            />
+                                            <ErrorMessage name="prices" component="div" className='text-red-500' />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="sponsors" className='text-sm'>Combien y-a-t-il de sponsors ?*</label>
+                                            <Field
+                                            name="sponsors"
+                                            type="text"
+                                            className="gray-select mt-1 h-[43px] w-full rounded-md bg-gray-100 pl-3"
+                                            />
+                                            <ErrorMessage name="sponsors" component="div" className='text-red-500' />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="total" className='text-sm'>Quelle est la valeur totale des dotations/prix à gagner ?*</label>
+                                            <Field
+                                            name="total"
+                                            type="text"
+                                            className="gray-select mt-1 h-[43px] w-full rounded-md bg-gray-100 pl-3"
+                                            />
+                                            <ErrorMessage name="total" component="div" className='text-red-500' />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="theme" className='text-sm'>Quel est le thème et la nature du concours ?*</label>
+                                            <Field
+                                                as='textarea'
+                                                name='theme'
+                                                className='bg-gray-100 w-full mt-3 rounded-md px-4 pt-4 w-[432px] h-[241px] text-sm mb-4'
+                                                placeholder='Présentez brièvement l’objet et la finalité du concours, sa portée, les sponsors, les lots mis en jeu...'
+                                            />
+                                            <ErrorMessage name="theme" component="div" className='text-red-500' />
+                                        </div>
+                                        <div className='flex flex-row items-baseline'>
+                                            <Field
+                                                className='mr-3 scale-150'
+                                                type="checkbox"
+                                                name="check"
+                                            />
+                                            <label htmlFor="check" className='text-xs'>
+                                              Je déclare exercer un mandat ou une fonction qui m’octroie le droit de publier des jeux concours au nom de l’organisation que je représente
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-center">
+                                        <button className='bg-black text-white font-semibold px-14 py-5 w-[245px] rounded-full mt-10 hover:bg-gray-500' type='submit'>Valider</button>
+                                    </div>
+                                </Form>
+                                )}
+                            </Formik>
+                         </div>
+                    </div>
+                </Modal>
             </table>
-            <button className='bg-gray-100 font-semibold px-14 py-5 rounded-full mt-10 hover:bg-gray-200'>Nouveau concours</button>
+            <button className='bg-gray-100 font-semibold px-14 py-5 rounded-full mt-10 hover:bg-gray-200' onClick={() => openModal()}>Nouveau concours</button>
         </div>
     );
 }
