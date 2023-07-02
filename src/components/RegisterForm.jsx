@@ -101,15 +101,15 @@ const RegisterForm = ({ closeModal }) => {
         <Form ref={form}>
           <div className='flex gap-4 mb-4'>
             <div className='flex gap-2'>
-              <Field type="radio" name="gender" value="homme" required className="scale-150" />
+              <Field type="radio" name="gender" value="male" required className="scale-150" />
               <label>Homme</label>
             </div>
             <div className='flex gap-2'>
-              <Field type="radio" name="gender" value="femme" required className="scale-150" />
+              <Field type="radio" name="gender" value="female" required className="scale-150" />
               <label>Femme</label>
             </div>
             <div className='flex gap-2'>
-              <Field type="radio" name="gender" value="non-binaire" required className="scale-150" />
+              <Field type="radio" name="gender" value="other" required className="scale-150" />
               <label>Non binaire</label>
             </div>
           </div>

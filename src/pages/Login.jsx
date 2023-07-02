@@ -3,7 +3,7 @@ import LoginForm from '../components/LoginForm';
 
 const Login = ({ closeModal, openRegisterModal }) => {
   return (
-    <div className="text-center mx-12 pt-4">
+    <div className="mx-12 pt-4 text-center">
       <div className="mb-5">
         <h1 className="mb-5 flex items-center text-text-2xl font-bold not-italic leading-[29px] text-black">
           Connexion
@@ -28,7 +28,9 @@ const Login = ({ closeModal, openRegisterModal }) => {
         </p>
       </div>
       <LoginForm closeModal={closeModal} />
-      <p className='not-italic font-normal text-sm mt-5 leading-[17px] text-black'>Vous avez oublié votre mot de passe ? Cliquez ici</p>
+      <p className="mt-5 text-sm font-normal not-italic leading-[17px] text-black">
+        Vous avez oublié votre mot de passe ? Cliquez ici
+      </p>
     </div>
   );
 };

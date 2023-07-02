@@ -25,6 +25,7 @@ import JuryMembersContestTab from '../components/contest/JuryMembersContestTab';
 import PhotosContestTab from '../components/contest/PhotosContestTab';
 import ResultsContestTab from '../components/contest/ResultsContestTab';
 import Modal from 'react-modal';
+import { toast } from 'react-toastify';
 import { RiCloseLine, RiUpload2Line } from 'react-icons/ri';
 
 const ViewContest = () => {
@@ -44,6 +45,9 @@ const ViewContest = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(9);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [uploadedImageName, setUploadedImageName] = useState('');
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newVisual, setNewVisual] = useState(null);
@@ -58,48 +62,118 @@ const ViewContest = () => {
     setModalIsOpen(false);
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      axios
-        .post(`${process.env.REACT_APP_IMAGE_BASE_URL}`, formData)
-        .then((response) => {
-          console.log(response.data);
-          setContest({ ...contest, visual: response.data.filename });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      console.error('Aucun fichier sélectionné');
+  const handleEditClick = () => {
+    setModalOpen(true);
+  };
+
+  const closeModalWhenClickedOutside = (e) => {
+    if (e.target.classList.contains('fixed')) {
+      handleCancelClick();
     }
   };
 
-  const handleDelete = () => {
-    axios
-      .delete(`${process.env.REACT_APP_IMAGE_BASE_URL}/${contest.visual}`)
+  const handleCancelClick = () => {
+    setModalOpen(false);
+    setUploadedImage(null);
+    setUploadedImageName('');
+  };
+
+  const handleUploadProcess = (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return axios
+      .post(`${process.env.REACT_APP_IMAGE_BASE_URL}`, formData)
       .then((response) => {
-        setContest({ ...contest, visual: null });
-      })
-      .catch((error) => {
-        console.error(error);
+        setUploadedImage(response.data.newFilename);
+        setUploadedImageName(file.name);
       });
   };
 
-  const handleSave = () => {
-    axios
+  const handleUploadClick = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Vérifier l'extension du fichier
+      const validExtensions = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!validExtensions.includes(file.type)) {
+        alert(
+          'Format de fichier non supporté. Seuls les formats JPG, PNG, et GIF sont autorisés.'
+        );
+        return;
+      }
+
+      // Vérifier la taille du fichier (1 Mo max)
+      const maxSizeInBytes = 1048576;
+      if (file.size > maxSizeInBytes) {
+        alert('La taille du visuel dépasse la limite autorisée de 1 Mo.');
+        return;
+      }
+
+      // Vérifier la résolution minimale (420x250 pixels)
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          if (img.width < 420 || img.height < 250) {
+            alert(
+              "La résolution de l'image doit être de 420x250 pixels minimum."
+            );
+            return;
+          }
+
+          // Continuer le processus d'upload si toutes les conditions sont remplies
+          toast.promise(handleUploadProcess(file), {
+            pending: 'Téléchargement du visuel...',
+            success: 'Visuel téléchargé avec succès !',
+            error: 'Une erreur est survenue lors du téléchargement du visuel.',
+          });
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDeleteProcess = () => {
+    const deleteUrl = `${process.env.REACT_APP_IMAGE_BASE_URL}`;
+    const params = { filename: uploadedImage };
+
+    return axios.delete(deleteUrl, { data: params }).then((response) => {
+      // par défaut on affiche le visuel du concours
+      setUploadedImage(contest.visual);
+      setUploadedImageName(contest.visual);
+    });
+  };
+
+  const handleDeleteClick = () => {
+    if (uploadedImage) {
+      // Utilisation de toasts
+      toast.promise(handleDeleteProcess(), {
+        pending: 'Suppression du visuel...',
+        success: 'Visuel supprimé avec succès !',
+        error: 'Une erreur est survenue lors de la suppression du visuel.',
+      });
+    }
+  };
+
+  const saveAndUpdateProcess = () => {
+    return axios
       .put(`${process.env.REACT_APP_API_URL}/contests/${id}`, {
-        visual: contest.visual,
+        visual: uploadedImage,
       })
       .then((response) => {
-        console.log(response.data);
-        console.log('Visuel enregistré dans la base de données');
-      })
-      .catch((error) => {
-        console.error(error);
+        setModalOpen(false);
+        // Handle success
       });
+  };
+
+  const saveAndUpdate = () => {
+    // Utilisation de toasts
+    toast.promise(saveAndUpdateProcess(), {
+      pending: 'Enregistrement du visuel...',
+      success: 'Visuel enregistré avec succès !',
+      error: "Une erreur est survenue lors de l'enregistrement du visuel.",
+    });
   };
 
   useEffect(() => {
@@ -151,12 +225,6 @@ const ViewContest = () => {
 
   const emptyContent = (content) => {
     return !content || /^\s*$/.test(content);
-  };
-
-  const closeModalWhenClickedOutside = (e) => {
-    if (e.target.classList.contains('fixed')) {
-      openModal();
-    }
   };
 
   return (
@@ -276,16 +344,21 @@ const ViewContest = () => {
                 }
                 radius="rounded-xl object-cover h-full w-full cursor-default"
               />
-              <button
-                className="absolute bottom-0 right-0 gap-2.5 rounded-[30px] bg-black px-[15px] py-[5px] text-center text-[8px] font-bold uppercase not-italic leading-[10px] text-white"
-                onClick={openModal}
-              >
-                Éditer
-              </button>
+              {user &&
+ user.organizations &&
+ contest.organization &&
+ user.organizations.some((org) => org.id === contest.organization.id) && (
+  <button
+    className="absolute bottom-0 right-0 gap-2.5 rounded-[30px] bg-black px-[15px] py-[5px] text-center text-[8px] font-bold uppercase not-italic leading-[10px] text-white"
+    onClick={handleEditClick}
+  >
+    Éditer
+  </button>
+)}
             </div>
             <Modal
-              isOpen={modalIsOpen}
-              onRequestClose={closeModal}
+              isOpen={isModalOpen}
+              onRequestClose={handleCancelClick}
               contentLabel="Edit Visual Modal"
               overlayClassName=""
               className=""
@@ -302,7 +375,10 @@ const ViewContest = () => {
                 <h1 className="mb-2 text-xl font-bold">
                   Concours {'>'} onglet visuel principal : édition
                 </h1>
-                <button className="absolute right-2.5 top-2.5">
+                <button
+                  onClick={handleCancelClick}
+                  className="absolute right-2.5 top-2.5"
+                >
                   <RiCloseLine />
                 </button>
               </div>
@@ -313,47 +389,59 @@ const ViewContest = () => {
                 Formats supportés : JPG, PNG, GIF | Taille : 420x250 pixels
                 minimum | Poids : 1 Mo max
               </p>
+              <div className="mt-4">
+                {uploadedImage ? (
+                  <>
+                    <img
+                      src={`${baseUrl}/${uploadedImage}`}
+                      alt={uploadedImageName}
+                    />
+                    <p>Fichier actuel: {uploadedImageName}</p>
+                  </>
+                ) : (
+                  <>
+                    {contest.visual && (
+                      <>
+                        <img
+                          src={`${baseUrl}/${contest.visual}`}
+                          alt="Current visual"
+                        />
+                        <p>Fichier actuel: {contest.visual}</p>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
               <input
                 className="gap-5 rounded-[44px] bg-black px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
                 style={{ display: 'none' }}
-                id="fileUpload"
+                id="visual-upload"
+                name="visual-upload"
                 type="file"
-                onChange={handleFileChange}
+                onChange={handleUploadClick}
               />
               <label
-                htmlFor="fileUpload"
-                className="cursor-pointer gap-5 rounded-[44px] bg-[#D9D9D9] px-[30px] py-3.5 text-sm font-bold not-italic leading-[17px] text-[#333333]"
+                htmlFor="visual-upload"
+                className="mr-4 cursor-pointer gap-5 rounded-[44px] bg-[#D9D9D9] px-[30px] py-3.5 text-sm font-bold not-italic leading-[17px] text-[#333333]"
               >
                 Télécharger <RiUpload2Line />
               </label>
               <button
                 className="gap-5 rounded-[44px] bg-[#F1F1F1] px-[30px] py-3.5 text-sm font-bold not-italic leading-[17px] text-[#333333]"
-                onClick={handleDelete}
+                onClick={handleDeleteClick}
               >
                 Supprimer
               </button>
-              <p className="flex items-center text-sm font-bold not-italic leading-[17px] text-[#666666]">
-                Nom du fichier actuel:{' '}
-                <span className="font-normal">{contest.visual}</span>
-              </p>
-              <img
-                src={
-                  contest.visual
-                    ? baseUrl + contest.visual
-                    : 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive.jpg'
-                }
-                alt="Visuel du concours actuel"
-              />
               <div className="mt-4">
                 <button
-                  className="gap-5 rounded-[44px] bg-regal-grey px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                  onClick={closeModal}
+                  className="mr-4 gap-5 rounded-[44px] bg-regal-grey px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                  onClick={handleCancelClick}
                 >
                   Annuler
                 </button>
                 <button
-                  className="gap-5 rounded-[44px] bg-black px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                  onClick={handleSave}
+                  className="gap-5 rounded-[44px] bg-black px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                  onClick={saveAndUpdate}
                 >
                   Sauvegarder
                 </button>
