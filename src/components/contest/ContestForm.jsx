@@ -141,7 +141,7 @@ const ContestForm = ({contest, updateContest}) => {
             onSubmit=""
         >
             {({isSubmitting, setFieldValue}) => (
-                <Form className="grid grid-cols-7 gap-10 mt-2">
+                <Form className="grid grid-cols-1 md:grid-cols-7 gap-10 mt-2">
                     <div className="col-span-5">
                         <div className="flex flex-col mb-4">
                             <label htmlFor="name" className='text-sm'>Nom du concours *</label>
@@ -156,7 +156,7 @@ const ContestForm = ({contest, updateContest}) => {
                                 className="text-red-500"
                             />
                         </div>
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid md:grid-cols-3 gap-3">
                             <div className='space-y-3'>
                                 <div className="flex flex-col">
                                     <label htmlFor="theme" className='text-sm'>Thème du concours*</label>

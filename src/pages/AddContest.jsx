@@ -61,7 +61,7 @@ const AddContest = () => {
     <div className='mx-6 md:mx-24'>
         <div className="mx-auto mt-10 mb-10 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
         <h1 className="font-bold text-3xl pb-10">Créez votre concours</h1>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
             <div className="col-span-1">
                 <h3 className="font-bold">Qui peut créer un concours photo ?</h3><br/>
                 <p className='pb-2'>La création de concours photo est ouvert aux organisations suivantes : </p>
@@ -113,7 +113,7 @@ const AddContest = () => {
           <Form className="mt-16">
             <ErrorMessage name="form" component="div" />
             <h3 className="font-bold">Vous êtes ?</h3><br/>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
                 <div>
                     <div>
                     <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2' htmlFor="organizationName">Nom de l'organisation*</label>
@@ -186,7 +186,7 @@ const AddContest = () => {
 
             <div>
             <p className='font-bold mt-28'>A propos du concours que vous souhaitez créer</p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2 pt-6' htmlFor="info1">Quelle est l'étendue/zone de visibilité du concours ? *</label>
                 <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="text" id="info1" name="info1" />

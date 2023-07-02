@@ -31,8 +31,8 @@ const PhotographerCardList = (props) => {
                             (photo) => photo.status === true
                         ).length > 1 ? 's' : ''}</span>
                         </p>
-                        <p className='bg-gray-100 px-3 py-2 rounded-full'>{SituationEnum[props.photographer.member.situation]}</p>
-                        <p className='bg-gray-100 px-3 py-2 rounded-full'>{CategoryEnum[props.photographer.member.category]}</p>
+                        <p className='bg-gray-100 px-3 py-2 rounded-full hidden md:block'>{SituationEnum[props.photographer.member.situation]}</p>
+                        <p className='bg-gray-100 px-3 py-2 rounded-full hidden md:block'>{CategoryEnum[props.photographer.member.category]}</p>
                     </div>
                     <a className="bg-gray-400 rounded-full text-white py-2 px-3 text-xs flex items-center gap-1 md:text-base md:px-9 py-2 md:py-5 hover:cursor-pointer hover:bg-gray-300 absolute bottom-5 right-5" onClick={handleClick}>Voir <span className='hidden md:inline'>le photographe</span></a>
                 </div>
