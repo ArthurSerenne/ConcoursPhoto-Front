@@ -8,13 +8,11 @@ import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
     .email('Adresse e-mail invalide')
     .required("L'adresse e-mail est requise"),
-  password: Yup.string()
-    .required('Le mot de passe est requis'),
+  password: Yup.string().required('Le mot de passe est requis'),
 });
 
 const LoginForm = ({ closeModal }) => {
@@ -57,14 +55,13 @@ const LoginForm = ({ closeModal }) => {
       navigate('/');
     };
 
-    toast.promise(
-      loginProcess(),
-      {
+    toast
+      .promise(loginProcess(), {
         pending: 'Chargement...',
         success: 'Vous êtes connecté !',
-        error: "Erreur d'authentification. Veuillez vérifier vos identifiants."
-      }
-    ).finally(() => setSubmitting(false));
+        error: "Erreur d'authentification. Veuillez vérifier vos identifiants.",
+      })
+      .finally(() => setSubmitting(false));
   };
 
   return (
@@ -72,25 +69,55 @@ const LoginForm = ({ closeModal }) => {
       initialValues={{ email: '', password: '' }}
       validationSchema={LoginSchema}
       onSubmit={handleSubmit}
-      className='z-100'
+      className="z-100"
     >
       {({ isSubmitting }) => (
         <Form>
           <ErrorMessage name="form" />
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2' htmlFor="email">Email ou pseudo*</label>
-            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="email" name="email" />
+            <label
+              className="mb-2 flex items-center text-sm font-normal not-italic leading-[17px] text-black"
+              htmlFor="email"
+            >
+              Email ou pseudo*
+            </label>
+            <Field
+              className="h-[43px] w-[432px] rounded-[5px] bg-[#f1f1f1] pl-3"
+              type="email"
+              name="email"
+            />
             <br />
-            <ErrorMessage name="email" component="div" className='text-red-500' />
+            <ErrorMessage
+              name="email"
+              component="div"
+              className="text-red-500"
+            />
           </div>
           <br />
           <div>
-            <label className='not-italic font-normal text-sm leading-[17px] flex items-center text-black mb-2' htmlFor="password">Mot de passe*</label>
-            <Field className='bg-[#f1f1f1] rounded-[5px] w-[432px] h-[43px] pl-3' type="password" name="password" />
+            <label
+              className="mb-2 flex items-center text-sm font-normal not-italic leading-[17px] text-black"
+              htmlFor="password"
+            >
+              Mot de passe*
+            </label>
+            <Field
+              className="h-[43px] w-[432px] rounded-[5px] bg-[#f1f1f1] pl-3"
+              type="password"
+              name="password"
+            />
             <br />
-            <ErrorMessage name="password" component="div" className='text-red-500' />
+            <ErrorMessage
+              name="password"
+              component="div"
+              className="text-red-500"
+            />
           </div>
-          <button className='bg-[#000000] rounded-[44px] mt-5 not-italic font-bold w-[200px] h-[59px] text-base leading-[19px] text-white' type="submit" disabled={isSubmitting}>
+          <button
+            className="mt-5 h-[59px] w-[200px] rounded-[44px] bg-[#000000] text-base font-bold not-italic leading-[19px] text-white"
+            type="submit"
+            disabled={isSubmitting}
+          >
             Se connecter
           </button>
         </Form>

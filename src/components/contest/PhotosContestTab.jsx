@@ -207,79 +207,79 @@ const PhotosContestTab = ({
               }
             }}
           >
-            <div className='bg-white p-7 rounded-lg max-w-[1172px] max-h-[750px] overflow-auto'>
-            <div className="flex justify-between">
-              <h1 className="mb-2 text-xl font-bold">Soumettre une photo</h1>
-              <button
-                onClick={handleCancelClick}
-                className="absolute right-2.5 top-2.5"
-              >
-                <RiCloseLine />
-              </button>
-            </div>
-            <p className="flex items-center text-sm font-bold not-italic leading-[17px] text-black">
-              Vous pouvez importer une photo ou plusieurs selon le règlement du
-              concours, voici les critères à respecter :
-            </p>
-            <p className="flex items-center text-sm font-normal not-italic leading-[17px] text-black">
-              Formats supportés : JPG, PNG | Poids : 1 Mo max par photo (la
-              photo peut être en mode portrait, carré ou paysage)
-            </p>
-            <div className="border border-solid border-[#d9d9d9]">
-              {uploadedImage && uploadedImageName ? (
-                <div>
-                  <img
-                    src={`${process.env.REACT_APP_IMAGE_BASE_URL}/${uploadedImage}`}
-                    alt={uploadedImageName}
-                    style={{ maxWidth: '100%' }}
-                  />
-                  <span>Fichier actuel : {uploadedImageName}</span>
-                </div>
-              ) : (
-                <div>
-                  <img
-                    src="https://placehold.co/200"
-                    alt="Placeholder"
-                    style={{ maxWidth: '100%' }}
-                  />
-                  <span>Fichier actuel : placeholder.jpg</span>
-                </div>
-              )}
-              <input
-                className="gap-5 rounded-[44px] bg-black px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                style={{ display: 'none' }}
-                id="photo-upload"
-                name="photo-upload"
-                type="file"
-                onChange={handleUploadClick}
-              />
-              <label
-                htmlFor="photo-upload"
-                className="mr-4 cursor-pointer gap-5 rounded-[44px] bg-[#D9D9D9] px-[30px] py-3.5 text-sm font-bold not-italic leading-[17px] text-[#333333]"
-              >
-                Télécharger <RiUpload2Line />
-              </label>
-              <button
-                className="gap-5 rounded-[44px] bg-[#F1F1F1] px-[30px] py-3.5 text-sm font-bold not-italic leading-[17px] text-[#333333]"
-                onClick={handleDeleteClick}
-              >
-                Supprimer
-              </button>
-            </div>
-            <div className="mt-4">
-              <button
-                className="mr-4 gap-5 rounded-[44px] bg-regal-grey px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                onClick={handleCancelClick}
-              >
-                Annuler
-              </button>
-              <button
-                className="gap-5 rounded-[44px] bg-black px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                onClick={saveAndUpdate}
-              >
-                Importer
-              </button>
-            </div>
+            <div className="max-h-[750px] max-w-[1172px] overflow-auto rounded-lg bg-white p-7">
+              <div className="flex justify-between">
+                <h1 className="mb-2 text-xl font-bold">Soumettre une photo</h1>
+                <button
+                  onClick={handleCancelClick}
+                  className="absolute right-2.5 top-2.5"
+                >
+                  <RiCloseLine />
+                </button>
+              </div>
+              <p className="flex items-center text-sm font-bold not-italic leading-[17px] text-black">
+                Vous pouvez importer une photo ou plusieurs selon le règlement
+                du concours, voici les critères à respecter :
+              </p>
+              <p className="flex items-center text-sm font-normal not-italic leading-[17px] text-black">
+                Formats supportés : JPG, PNG | Poids : 1 Mo max par photo (la
+                photo peut être en mode portrait, carré ou paysage)
+              </p>
+              <div className="border border-solid border-[#d9d9d9]">
+                {uploadedImage && uploadedImageName ? (
+                  <div>
+                    <img
+                      src={`${process.env.REACT_APP_IMAGE_BASE_URL}/${uploadedImage}`}
+                      alt={uploadedImageName}
+                      style={{ maxWidth: '100%' }}
+                    />
+                    <span>Fichier actuel : {uploadedImageName}</span>
+                  </div>
+                ) : (
+                  <div>
+                    <img
+                      src="https://placehold.co/200"
+                      alt="Placeholder"
+                      style={{ maxWidth: '100%' }}
+                    />
+                    <span>Fichier actuel : placeholder.jpg</span>
+                  </div>
+                )}
+                <input
+                  className="gap-5 rounded-[44px] bg-black px-[30px] py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                  style={{ display: 'none' }}
+                  id="photo-upload"
+                  name="photo-upload"
+                  type="file"
+                  onChange={handleUploadClick}
+                />
+                <label
+                  htmlFor="photo-upload"
+                  className="mr-4 cursor-pointer gap-5 rounded-[44px] bg-[#D9D9D9] px-[30px] py-3.5 text-sm font-bold not-italic leading-[17px] text-[#333333]"
+                >
+                  Télécharger <RiUpload2Line />
+                </label>
+                <button
+                  className="gap-5 rounded-[44px] bg-[#F1F1F1] px-[30px] py-3.5 text-sm font-bold not-italic leading-[17px] text-[#333333]"
+                  onClick={handleDeleteClick}
+                >
+                  Supprimer
+                </button>
+              </div>
+              <div className="mt-4">
+                <button
+                  className="mr-4 gap-5 rounded-[44px] bg-regal-grey px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                  onClick={handleCancelClick}
+                >
+                  Annuler
+                </button>
+                <button
+                  className="gap-5 rounded-[44px] bg-black px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                  onClick={saveAndUpdate}
+                >
+                  Importer
+                </button>
+              </div>
             </div>
           </Modal>
         </>

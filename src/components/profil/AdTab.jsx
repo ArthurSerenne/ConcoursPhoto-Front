@@ -1,9 +1,14 @@
-import React from 'react'
-import { useTable, useSortBy, usePagination } from 'react-table'
+import React from 'react';
+import { useTable, useSortBy, usePagination } from 'react-table';
 import { useAuth } from '../AuthContext';
-import { format, parseISO } from "date-fns";
-import { RiSortAsc, RiSortDesc, RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
-import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
+import { format, parseISO } from 'date-fns';
+import {
+  RiSortAsc,
+  RiSortDesc,
+  RiArrowRightSLine,
+  RiArrowLeftSLine,
+} from 'react-icons/ri';
+import { RxDoubleArrowLeft, RxDoubleArrowRight } from 'react-icons/rx';
 
 const AdTab = () => {
   const { isAuthenticated, user } = useAuth();
@@ -27,12 +32,12 @@ const AdTab = () => {
           return <span>{formattedDate}</span>;
         },
       },
-      { 
-        Header: 'Statut', 
+      {
+        Header: 'Statut',
         accessor: 'sponsor_rank',
-        Cell: ({value}) => {
-          return <span>{value === true ? 'Actif' : 'Inactif'}</span>
-        }
+        Cell: ({ value }) => {
+          return <span>{value === true ? 'Actif' : 'Inactif'}</span>;
+        },
       },
       { Header: 'Affichages', accessor: 'logo' },
       { Header: 'Clics', accessor: 'amount' },
@@ -40,7 +45,10 @@ const AdTab = () => {
     []
   );
 
-  const data = React.useMemo(() => isAuthenticated && user.organizations[0]?.sponsors || [], [isAuthenticated, user.organizations[0]?.sponsors]);
+  const data = React.useMemo(
+    () => (isAuthenticated && user.organizations[0]?.sponsors) || [],
+    [isAuthenticated, user.organizations[0]?.sponsors]
+  );
 
   const sortTypes = {
     datetime: (rowA, rowB, columnId) => {
@@ -86,23 +94,23 @@ const AdTab = () => {
     useSortBy,
     usePagination
   );
-  
+
   return (
     <div>
-      <p className="font-bold mb-4">{data.length} publicités</p>
+      <p className="mb-4 font-bold">{data.length} publicités</p>
       <table {...getTableProps()} className="w-full table-auto">
         <thead className="table-header">
           {headerGroups.map((headerGroup) => (
             <tr
               {...headerGroup.getHeaderGroupProps()}
-              className="space-x-1 gap-12 divide-x-2 divide-white border-t-gray-200 border-t-4"
+              className="gap-12 space-x-1 divide-x-2 divide-white border-t-4 border-t-gray-200"
             >
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="min-w-[120px] max-w-[347px] pl-4 pr-12 py-4 bg-gray-100 font-normal"
+                  className="min-w-[120px] max-w-[347px] bg-gray-100 py-4 pl-4 pr-12 font-normal"
                 >
-                  {column.render("Header")}
+                  {column.render('Header')}
                   {column.isSorted ? (
                     column.isSortedDesc ? (
                       <span className="ml-2">
@@ -114,7 +122,7 @@ const AdTab = () => {
                       </span>
                     )
                   ) : (
-                    ""
+                    ''
                   )}
                 </th>
               ))}
@@ -130,9 +138,9 @@ const AdTab = () => {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      className={`min-w-[120px] max-w-[347px] pl-4 pr-12 py-4 border-b-[1px] border-b-gray-300 mr-1`}
+                      className={`mr-1 min-w-[120px] max-w-[347px] border-b-[1px] border-b-gray-300 py-4 pl-4 pr-12`}
                     >
-                      {cell.render("Cell")}
+                      {cell.render('Cell')}
                     </td>
                   );
                 })}
@@ -141,9 +149,9 @@ const AdTab = () => {
           })}
         </tbody>
       </table>
-      <div className="pagination flex justify-between gap-6 mt-4">
+      <div className="pagination mt-4 flex justify-between gap-6">
         <div>
-        Afficher par :
+          Afficher par :
           <select
             value={pageSize}
             onChange={(e) => {
@@ -157,39 +165,46 @@ const AdTab = () => {
             ))}
           </select>
         </div>
-        <div className='flex gap-4 align-middle'>
+        <div className="flex gap-4 align-middle">
           <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            <RxDoubleArrowLeft className='scale-150' />
+            <RxDoubleArrowLeft className="scale-150" />
           </button>
           <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-            <RiArrowLeftSLine className='scale-150' />
+            <RiArrowLeftSLine className="scale-150" />
           </button>
           {Array.from({ length: pageCount }, (_, index) => {
             const but = index + 1;
             return (
-              <button key={but} onClick={() => gotoPage(but - 1)} className='px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-100'>
+              <button
+                key={but}
+                onClick={() => gotoPage(but - 1)}
+                className="rounded-full bg-gray-200 px-4 py-2 hover:bg-gray-100"
+              >
                 {but}
               </button>
             );
           })}
           <button onClick={() => nextPage()} disabled={!canNextPage}>
-            <RiArrowRightSLine className='scale-150' />
+            <RiArrowRightSLine className="scale-150" />
           </button>
-          <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-            <RxDoubleArrowRight className='scale-150' />
+          <button
+            onClick={() => gotoPage(pageCount - 1)}
+            disabled={!canNextPage}
+          >
+            <RxDoubleArrowRight className="scale-150" />
           </button>
         </div>
         <div>
           <span>
-            Page{" "}
+            Page{' '}
             <strong>
               {pageIndex + 1} sur {pageOptions.length}
-            </strong>{" "}
+            </strong>{' '}
           </span>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default AdTab;

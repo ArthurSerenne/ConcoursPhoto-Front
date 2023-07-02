@@ -40,24 +40,31 @@ export const AuthProvider = ({ children }) => {
 
   const reloadUser = async () => {
     try {
-      const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/user_data`);
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_API_URL}/user_data`
+      );
       if (response.status === 200) {
         const updatedUser = response.data;
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
       } else {
-        console.error("Erreur lors de la récupération des données utilisateur");
+        console.error('Erreur lors de la récupération des données utilisateur');
       }
     } catch (error) {
-      console.error("Erreur lors de la récupération des données utilisateur:", error);
+      console.error(
+        'Erreur lors de la récupération des données utilisateur:',
+        error
+      );
     }
   };
 
   return (
-  <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout, reloadUser }}>
-    {children}
-  </AuthContext.Provider>
-);
+    <AuthContext.Provider
+      value={{ isAuthenticated, user, isLoading, login, logout, reloadUser }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthContext;

@@ -6,7 +6,15 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 import LikeModalButton from './LikeModalButton';
 
-const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = null, viewCount, onViewCountChange }) => {
+const ImageDisplay = ({
+  imageName,
+  name,
+  radius,
+  modalEnabled = false,
+  photo = null,
+  viewCount,
+  onViewCountChange,
+}) => {
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
   const imagePath = `${baseUrl}${imageName}`;
   const defaultImagePath =
@@ -78,20 +86,22 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = n
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-80 p-4"
-        overlayClassName="fixed inset-0">
+        overlayClassName="fixed inset-0"
+      >
         <button
-          className="top-1/2 transform -translate-y-1/2 bg-white opacity-30 py-2 px-3"
+          className="top-1/2 -translate-y-1/2 transform bg-white px-3 py-2 opacity-30"
           onClick={(e) => {
             handlePrevImage();
             e.stopPropagation();
           }}
           disabled={currentImageIndex === 0}
         >
-          <RiArrowLeftSLine className="text-gray-500 text-lg" />
+          <RiArrowLeftSLine className="text-lg text-gray-500" />
         </button>
         <div
           className="relative max-h-[1200px] max-w-[1024px]"
-          onClick={closeModal}>
+          onClick={closeModal}
+        >
           <img
             src={imageSrc}
             alt={`Image ${imageName}`}
@@ -113,9 +123,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = n
                 <RiUserShared2Line className="mr-2 text-base" /> {name}
               </p>
               <div className="flex">
-                <p
-                  className="mr-4 flex items-end rounded-full bg-gray-100 px-2 py-2 text-xs uppercase"
-                >
+                <p className="mr-4 flex items-end rounded-full bg-gray-100 px-2 py-2 text-xs uppercase">
                   <AiOutlineEye className="mr-2 text-base" /> {viewCount}
                 </p>
                 <LikeModalButton user={user} photo={photo} />
@@ -124,14 +132,14 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = n
           </div>
         </div>
         <button
-          className="top-1/2 transform -translate-y-1/2 bg-white opacity-30 py-2 px-3"
+          className="top-1/2 -translate-y-1/2 transform bg-white px-3 py-2 opacity-30"
           onClick={(e) => {
             handleNextImage();
             e.stopPropagation();
           }}
           disabled={currentImageIndex === imageName?.length - 1}
         >
-          <RiArrowRightSLine className="text-gray-500 text-lg" />
+          <RiArrowRightSLine className="text-lg text-gray-500" />
         </button>
       </Modal>
     </div>

@@ -5,47 +5,54 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router';
 import ContestCardList from '../ContestCardList';
 
-
 const ActiveContestsTab = () => {
-    const { id } = useParams();
-    const location = useLocation();
-    const [viewCount, setViewCount] = useState(0);
-    const navigate = useNavigate();
-    const passedOrganization = location.state && location.state.contest;
-    const [organization, setOrganization] = useState(passedOrganization || []);
-    const [sortedContests, setSortedContests] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const today = new Date();
-  
-    useEffect(() => {
+  const { id } = useParams();
+  const location = useLocation();
+  const [viewCount, setViewCount] = useState(0);
+  const navigate = useNavigate();
+  const passedOrganization = location.state && location.state.contest;
+  const [organization, setOrganization] = useState(passedOrganization || []);
+  const [sortedContests, setSortedContests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const today = new Date();
+
+  useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_API_URL + `/organizations/${id}`)
+      .then((res) => {
+        setOrganization(res.data);
+        const contests = res.data.contests;
+        if (contests && contests.length > 0) {
+          const activeContests = contests
+            .filter(
+              (contest) =>
+                contest.deletionDate === undefined &&
+                contest.status === true &&
+                new Date(contest.submissionStartDate) <= today &&
+                today <= new Date(contest.votingEndDate)
+            )
+            .sort(
+              (a, b) => new Date(b.creationDate) - new Date(a.creationDate)
+            );
+          setSortedContests(activeContests);
+        }
+      });
+  }, [id]);
+
+  useEffect(() => {
+    if (!passedOrganization) {
       axios
         .get(process.env.REACT_APP_API_URL + `/organizations/${id}`)
         .then((res) => {
           setOrganization(res.data);
-          const contests = res.data.contests;
-          if (contests && contests.length > 0) {
-            const activeContests = contests
-              .filter((contest) => contest.deletionDate === undefined && contest.status === true && new Date(contest.submissionStartDate) <= today && today <= new Date(contest.votingEndDate))
-              .sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
-            setSortedContests(activeContests);
-          }
+          setLoading(false);
         });
-    }, [id]);
-  
-    useEffect(() => {
-      if (!passedOrganization) {
-        axios
-          .get(process.env.REACT_APP_API_URL + `/organizations/${id}`)
-          .then((res) => {
-            setOrganization(res.data);
-            setLoading(false);
-          });
-      } else {
-        setLoading(false);
-      }
-    }, [id, !passedOrganization]);
-  
-    console.log(organization);
+    } else {
+      setLoading(false);
+    }
+  }, [id, !passedOrganization]);
+
+  console.log(organization);
 
   const goBack = () => {
     navigate(-1);
@@ -59,21 +66,27 @@ const ActiveContestsTab = () => {
     incrementViewCount();
   }, []);
 
-    return (
-        <div>
-            <div className="mx-auto mt-10 mb-10 grid grid-cols-1 md:gap-6 items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-                <p className='text-2xl'>{sortedContests.length} concours actif{sortedContests.length > 1 ? 's' : ''}</p>
-                {loading ? 
-                    <div> 
-                        <div className='h-[300px] animate-pulse rounded-b-lg bg-gray-200 p-3 shadow-xl w-full mb-10'></div>
-                        <div className='h-[300px] animate-pulse rounded-b-lg bg-gray-200 p-3 shadow-xl w-full mb-10'></div>
-                        <div className='h-[300px] animate-pulse rounded-b-lg bg-gray-200 p-3 shadow-xl w-full mb-10'></div>
-                    </div> :
-                    (sortedContests ? sortedContests.map((contest) => <ContestCardList contest={contest} />) : '')
-                }
-            </div>
-        </div>
-    );
-}
+  return (
+    <div>
+      <div className="mx-auto mb-10 mt-10 grid grid-cols-1 items-center sm:max-w-screen-sm md:max-w-screen-md md:gap-6 lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+        <p className="text-2xl">
+          {sortedContests.length} concours actif
+          {sortedContests.length > 1 ? 's' : ''}
+        </p>
+        {loading ? (
+          <div>
+            <div className="mb-10 h-[300px] w-full animate-pulse rounded-b-lg bg-gray-200 p-3 shadow-xl"></div>
+            <div className="mb-10 h-[300px] w-full animate-pulse rounded-b-lg bg-gray-200 p-3 shadow-xl"></div>
+            <div className="mb-10 h-[300px] w-full animate-pulse rounded-b-lg bg-gray-200 p-3 shadow-xl"></div>
+          </div>
+        ) : sortedContests ? (
+          sortedContests.map((contest) => <ContestCardList contest={contest} />)
+        ) : (
+          ''
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default ActiveContestsTab;

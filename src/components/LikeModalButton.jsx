@@ -22,32 +22,36 @@ const LikeModalButton = ({ user, photo }) => {
       try {
         const now = new Date();
         const dateVote = now.toISOString().split('.')[0];
-  
+
         if (voted) {
           setVoted(false);
-          const voteResponse = await axios.get(`${process.env.REACT_APP_API_URL}/votes`, {
-            params: {
-              member: `${process.env.REACT_APP_API_URL}/members/${user.member.id}`,
-              photo: `${process.env.REACT_APP_API_URL}/photos/${photo.id}`,
-            },
-          });
-          
+          const voteResponse = await axios.get(
+            `${process.env.REACT_APP_API_URL}/votes`,
+            {
+              params: {
+                member: `${process.env.REACT_APP_API_URL}/members/${user.member.id}`,
+                photo: `${process.env.REACT_APP_API_URL}/photos/${photo.id}`,
+              },
+            }
+          );
+
           const votes = voteResponse.data['hydra:member'];
           const voteIndexToDelete = votes.findIndex((vote) => {
             return (
               vote.member.id === user.member.id && vote.photo.id === photo.id
             );
           });
-  
+
           if (voteIndexToDelete !== -1) {
             const voteToDelete = votes[voteIndexToDelete];
-            await axios.delete(`${process.env.REACT_APP_API_URL}/votes/${voteToDelete.id}`);
+            await axios.delete(
+              `${process.env.REACT_APP_API_URL}/votes/${voteToDelete.id}`
+            );
           }
-  
         } else {
           const newVoteCount = photo.voteCount + 1;
           setVoted(true);
-  
+
           await axios.patch(
             `${process.env.REACT_APP_API_URL}/photos/${photo.id}`,
             { voteCount: newVoteCount, lastVoteDate: dateVote },
@@ -57,7 +61,7 @@ const LikeModalButton = ({ user, photo }) => {
               },
             }
           );
-  
+
           if (dateVote) {
             await axios.post(
               `${process.env.REACT_APP_API_URL}/votes`,
@@ -72,7 +76,6 @@ const LikeModalButton = ({ user, photo }) => {
                 },
               }
             );
-  
           } else {
             console.log('La date du vote est nulle.');
           }
@@ -83,24 +86,28 @@ const LikeModalButton = ({ user, photo }) => {
     } else {
       console.log('Vous devez être connecté pour voter.');
     }
-  };  
-  
+  };
+
   const checkIfVoted = async () => {
     if (user) {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/votes`, {
-          params: {
-            member: `${process.env.REACT_APP_API_URL}/members/${user.member.id}`,
-            photo: `${process.env.REACT_APP_API_URL}/photos/${photo.id}`,
-          },
-        });
-  
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/votes`,
+          {
+            params: {
+              member: `${process.env.REACT_APP_API_URL}/members/${user.member.id}`,
+              photo: `${process.env.REACT_APP_API_URL}/photos/${photo.id}`,
+            },
+          }
+        );
+
         const votes = response.data['hydra:member'];
         const voted = votes.some((vote) => {
-          const voteMatch = vote.member.id === user.member.id && vote.photo.id === photo.id;
+          const voteMatch =
+            vote.member.id === user.member.id && vote.photo.id === photo.id;
           return voteMatch;
         });
-  
+
         setVoted(voted);
         setLoading(false);
       } catch (error) {
@@ -116,7 +123,9 @@ const LikeModalButton = ({ user, photo }) => {
 
   return (
     <p
-      className={`z-10 flex cursor-pointer items-end rounded-full bg-gray-400 px-2 py-2 text-xs uppercase text-white duration-300 ease-in-out hover:bg-gray-300 ${voted ? 'bg-green-500' : ''}`}
+      className={`z-10 flex cursor-pointer items-end rounded-full bg-gray-400 px-2 py-2 text-xs uppercase text-white duration-300 ease-in-out hover:bg-gray-300 ${
+        voted ? 'bg-green-500' : ''
+      }`}
       onClick={handleVoteClick}
     >
       {!loading && voted ? (
