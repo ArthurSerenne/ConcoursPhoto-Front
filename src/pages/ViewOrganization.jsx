@@ -36,6 +36,7 @@ const ViewOrganization = () => {
               .sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
             setRecentContest(sortedContests[0]);
           }
+          setLoading(false);
         });
     }, [id]);
   
@@ -75,28 +76,36 @@ const ViewOrganization = () => {
         <div className="mx-auto mt-10 mb-10 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
           <Breadcrumb contest={organization} />
         </div>
-        <div className={`mx-auto mt-10 mb-10 grid grid-cols-1 md:gap-12 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm`}>
+        <div className={`mx-auto mt-10 mb-10 grid grid-cols-1 md:gap-6 items-stretch 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm`}>
             <p className="text-4xl font-bold not-italic leading-[160%] text-black leading-tight">{organization.name}</p>
         <div className={`col-span-2 h-full relative ${activeTab === 4 ? 'col-span-3' : 'col-span-2'}`}>
           <Tabs onSelect={handleTabChange} className={'mb-6'}>
             <TabList className={'mb-10'}>
               <Tab>Présentation</Tab>
-              <Tab>Concours photos en cours</Tab>
-              <Tab>Concours photos à venir</Tab>
-              <Tab>Concours photos terminés</Tab>
+              {!loading && organization.contests && organization.contests.length > 0 && (
+              <>
+                <Tab>Concours photos en cours</Tab>
+                <Tab>Concours photos à venir</Tab>
+                <Tab>Concours photos terminés</Tab>
+              </>
+            )}
             </TabList>
             <TabPanel>
                 <PresentationTab />
             </TabPanel>
-            <TabPanel>
-              <ActiveContestsTab />
-            </TabPanel>
-            <TabPanel>
-              <UpcomingContestsTab />
-            </TabPanel>
-            <TabPanel>
-              <FinishedContestsTab />
-            </TabPanel>
+            {!loading && organization.contests && organization.contests.length > 0 && (
+              <>
+                <TabPanel>
+                  <ActiveContestsTab />
+                </TabPanel>
+                <TabPanel>
+                  <UpcomingContestsTab />
+                </TabPanel>
+                <TabPanel>
+                  <FinishedContestsTab />
+                </TabPanel>
+              </>
+              )}
           </Tabs>
         </div>
       </div>

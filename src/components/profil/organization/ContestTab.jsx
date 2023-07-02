@@ -3,6 +3,8 @@ import { useTable, useSortBy, usePagination } from 'react-table'
 import { format, parseISO } from "date-fns";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import ContestDateStatus from '../../ContestDateStatus';
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const ContestTab = ({organization}) => {
     const columns = React.useMemo(() => {
@@ -69,6 +71,30 @@ const ContestTab = ({organization}) => {
         usePagination
       );
 
+      const navigate = useNavigate();
+
+      const handleRowClick = async (contest) => {
+        const viewCount = contest.view ? contest.view + 1 : 1;
+
+        console.log(viewCount);
+
+        try {
+            await axios.patch(
+                `${process.env.REACT_APP_API_URL}/contests/${contest.id}`,
+                { view: viewCount },
+                {
+                    headers: {
+                        'Content-Type': 'application/merge-patch+json',
+                    },
+                }
+            );
+
+            navigate(`/concours-photo/${contest.id}`, { state: { contest: {...contest, view: viewCount } } });
+        } catch (error) {
+            console.error("Failed to update view count: ", error);
+        }
+    };
+
     return (
         <div className='w-full'>
             <p className="font-bold mb-4">{data.length} concours</p>
@@ -107,7 +133,7 @@ const ContestTab = ({organization}) => {
                 {page.map((row) => {
                     prepareRow(row);
                     return (
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} onClick={() => handleRowClick(row.original)} className='hover:bg-gray-100 cursor-pointer'>
                         {row.cells.map((cell) => {
                         return (
                             <td

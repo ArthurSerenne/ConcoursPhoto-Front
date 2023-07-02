@@ -4,12 +4,14 @@ import { useAuth } from '../AuthContext';
 import { format, parseISO } from "date-fns";
 import { RiSortAsc, RiSortDesc, RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const ContestOrganizationTab = () => { 
   const { isAuthenticated, user } = useAuth();
 
   const columns = React.useMemo(() => {
-    if (user.organizations[0]) {
+    if (user && user.organizations && user.organizations[0]) {
       return [
         { Header: 'Nom du concours', accessor: 'name' },
         {
@@ -35,8 +37,14 @@ const ContestOrganizationTab = () => {
             return <span>{value === true ? 'Actif' : 'Inactif'}</span>
           }
         },
-        { Header: 'Participants', accessor: 'contest.trend' },
-        { Header: 'Photos', accessor: 'photos.length' },
+        { Header: 'Participants', accessor: 'trend' },
+        { 
+          Header: 'Photos', 
+          accessor: 'photos',
+          Cell: ({value}) => {
+            return <span>{value ? value.length : '0'}</span>
+          },
+        },
       ];
     } else {
       return [
@@ -48,9 +56,14 @@ const ContestOrganizationTab = () => {
         { Header: 'Photos' },
       ];
     }
-  }, [user.organizations]);  
+  }, [user]);
 
-  const data = React.useMemo(() => isAuthenticated && user.organizations[0]?.contests || [], [isAuthenticated, user.organizations[0]?.contests]);
+  const data = React.useMemo(() => {
+    if (isAuthenticated && user && user.organizations) {
+      return user.organizations.flatMap(organization => organization.contests);
+    }
+    return [];
+  }, [isAuthenticated, user]);
 
   const sortTypes = {
     datetime: (rowA, rowB, columnId) => {
@@ -96,6 +109,30 @@ const ContestOrganizationTab = () => {
     useSortBy,
     usePagination
   );
+
+  const navigate = useNavigate();
+
+  const handleRowClick = async (contest) => {
+    const viewCount = contest.view ? contest.view + 1 : 1;
+
+    console.log(viewCount);
+
+    try {
+        await axios.patch(
+            `${process.env.REACT_APP_API_URL}/contests/${contest.id}`,
+            { view: viewCount },
+            {
+                headers: {
+                    'Content-Type': 'application/merge-patch+json',
+                },
+            }
+        );
+
+        navigate(`/concours-photo/${contest.id}`, { state: { contest: {...contest, view: viewCount } } });
+    } catch (error) {
+        console.error("Failed to update view count: ", error);
+    }
+};
   
     return (
       <div>
@@ -135,7 +172,7 @@ const ContestOrganizationTab = () => {
           {page.map((row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} onClick={() => handleRowClick(row.original)} className='hover:bg-gray-100 cursor-pointer'>
                 {row.cells.map((cell) => {
                   return (
                     <td
@@ -177,7 +214,7 @@ const ContestOrganizationTab = () => {
           {Array.from({ length: pageCount }, (_, index) => {
             const but = index + 1;
             return (
-              <button key={but} onClick={() => gotoPage(but - 1)} className='px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-100'>
+              <button key={but} onClick={() => gotoPage(but - 1)} className='px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-100 focus:bg-gray-300'>
                 {but}
               </button>
             );

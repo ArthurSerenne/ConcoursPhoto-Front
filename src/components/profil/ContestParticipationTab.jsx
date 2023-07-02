@@ -1,32 +1,19 @@
 import React from 'react'
 import { useTable, useSortBy, usePagination } from 'react-table'
 import { useAuth } from '../AuthContext';
-import { format, parseISO } from "date-fns";
 import { RiSortAsc, RiSortDesc, RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const ContestParticipationTab = () => {
   const { isAuthenticated, user } = useAuth();
 
+  console.log(user.member);
+
   const columns = React.useMemo(
     () => [
       { Header: 'Nom du concours', accessor: 'contest.name' },
-      {
-        Header: 'Date de début du concours',
-        accessor: 'contest.creationDate',
-        Cell: ({ value }) => {
-          const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
-          return <span>{formattedDate}</span>;
-        },
-      },
-      {
-        Header: 'Date de fin du concours',
-        accessor: 'contest.resultsDate',
-        Cell: ({ value }) => {
-          const formattedDate = format(parseISO(value), 'dd/MM/yyyy');
-          return <span>{formattedDate}</span>;
-        },
-      },
       { 
         Header: 'Statut', 
         accessor: 'contest.status',
@@ -86,6 +73,30 @@ const ContestParticipationTab = () => {
     useSortBy,
     usePagination
   );
+
+  const navigate = useNavigate();
+
+  const handleRowClick = async (photo) => {
+    const viewCount = photo.contest.view ? photo.contest.view + 1 : 1;
+
+    console.log(viewCount);
+
+    try {
+        await axios.patch(
+            `${process.env.REACT_APP_API_URL}/contests/${photo.contest.id}`,
+            { view: viewCount },
+            {
+                headers: {
+                    'Content-Type': 'application/merge-patch+json',
+                },
+            }
+        );
+
+        navigate(`/concours-photo/${photo.contest.id}`, { state: { contest: {...photo.contest, view: viewCount } } });
+    } catch (error) {
+        console.error("Failed to update view count: ", error);
+    }
+};
   
   return (
     <div>
@@ -125,7 +136,7 @@ const ContestParticipationTab = () => {
           {page.map((row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} onClick={() => handleRowClick(row.original)} className='hover:bg-gray-100 cursor-pointer'>
                 {row.cells.map((cell) => {
                   return (
                     <td

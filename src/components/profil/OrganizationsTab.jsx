@@ -108,7 +108,7 @@ const OrganizationsTab = ({ setSelectedOrganization, setIsNew }) => {
                     {page.map((row) => {
                         prepareRow(row);
                         return (
-                        <tr {...row.getRowProps()} className='hover:cursor-pointer' onClick={() => handleOrganizationClick(row.original)}>
+                        <tr {...row.getRowProps()} className='hover:bg-gray-100 cursor-pointer' onClick={() => handleOrganizationClick(row.original)}>
                             {row.cells.map((cell) => {
                             return (
                                 <td

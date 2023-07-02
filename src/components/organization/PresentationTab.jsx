@@ -53,7 +53,7 @@ const PresentationTab = () => {
       }
     }, [id, !passedOrganization]);
   
-    console.log(organization);
+    console.log(recentContest);
 
   const goBack = () => {
     navigate(-1);
@@ -146,7 +146,7 @@ const PresentationTab = () => {
                             </div>
                         : ''}
                     </div>
-                    <a className='text-white bg-gray-400 px-9 py-5 rounded-full' href={organization.website ? organization.website : ''} target='_blank'>Site Web</a>
+                    <a className='text-white bg-gray-400 px-9 py-5 rounded-full hover:bg-gray-300' href={organization.website ? organization.website : ''} target='_blank'>Site Web</a>
                 </div>
               </div>
             </div>

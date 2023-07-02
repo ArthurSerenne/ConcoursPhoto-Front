@@ -129,7 +129,7 @@ const ImageDisplay = ({ imageName, name, radius, modalEnabled = false, photo = n
             handleNextImage();
             e.stopPropagation();
           }}
-          disabled={currentImageIndex === imageName.length - 1}
+          disabled={currentImageIndex === imageName?.length - 1}
         >
           <RiArrowRightSLine className="text-gray-500 text-lg" />
         </button>

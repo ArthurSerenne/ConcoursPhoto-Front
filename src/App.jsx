@@ -14,6 +14,8 @@ import './sass/components/select.scss';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ListOrganization from './pages/ListOrganization';
+import ListPhotographer from './pages/ListPhotographer';
+import ViewPhotographer from './pages/ViewPhotographer';
 
 const App = () => {
   return (
@@ -27,6 +29,8 @@ const App = () => {
           <Route path="/concours-photo/:id" element={<ViewContest />} />
           <Route path="/organisateurs" element={<ListOrganization />} />
           <Route path="/organisateurs/:id" element={<ViewOrganization />} />
+          <Route path="/photographes" element={<ListPhotographer />} />
+          <Route path="/photographes/:id" element={<ViewPhotographer />} />
           <Route path="/register" element={<Register />} />
           <Route path="/mon-concours" element={<AddContest />} />
           <Route path="mon-compte" element={<Profil />} />
