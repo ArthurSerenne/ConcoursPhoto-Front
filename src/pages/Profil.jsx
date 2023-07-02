@@ -32,6 +32,8 @@ const Profil = () => {
 
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
 
+  console.log(user.member.photos);
+
   return (
     <div className='mx-6 md:mx-24'>
       <div className="mx-auto mt-10 mb-8 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
@@ -47,7 +49,7 @@ const Profil = () => {
                 <Tab>Mes préférences</Tab>
                 <Tab>Mes organisations</Tab>
                 {totalContests > 0 ? (<Tab>Concours que j’administre</Tab>) : ''}
-                <Tab>Concours auxquels j'ai participé</Tab>
+                {user.member.photos.length > 0 ? <Tab>Concours auxquels j'ai participé</Tab> : ''}
             </TabList>
 
             <TabPanel>
