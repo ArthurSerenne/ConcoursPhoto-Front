@@ -41,6 +41,7 @@ const ViewContest = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [uploadedImageName, setUploadedImageName] = useState('');
+  const [imageKey, setImageKey] = useState(Date.now());
 
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
 
@@ -145,7 +146,17 @@ const ViewContest = () => {
       })
       .then((response) => {
         setModalOpen(false);
-        // Handle success
+
+        // Mettre à jour l'état du concours avec la nouvelle image
+        setContest((prevContest) => ({
+          ...prevContest,
+          visual: uploadedImage,
+        }));
+
+        // Changez la clé de l'image pour forcer la mise à jour du composant
+        setImageKey(Date.now());
+
+        // Gestion de succès - optionnel
       });
   };
 
@@ -311,6 +322,7 @@ const ViewContest = () => {
           <div className="col-span-2 max-h-[38rem]">
             <div className="relative h-[38rem]">
               <ImageDisplay
+                key={imageKey}
                 imageName={
                   contest.visual
                     ? contest.visual
@@ -318,6 +330,7 @@ const ViewContest = () => {
                 }
                 radius="rounded-xl object-cover h-full w-full cursor-default"
               />
+
               {user &&
                 user.organizations &&
                 contest.organization &&
