@@ -200,13 +200,14 @@ const PhotosContestTab = ({
             onRequestClose={handleCancelClick}
             contentLabel="Add Photo Modal"
             overlayClassName=""
-            className=""
+            className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-80 p-4"
             overlayRef={(overlay) => {
               if (overlay) {
                 overlay.addEventListener('click', closeModalWhenClickedOutside);
               }
             }}
           >
+            <div className='bg-white p-7 rounded-lg max-w-[1172px] max-h-[750px] overflow-auto'>
             <div className="flex justify-between">
               <h1 className="mb-2 text-xl font-bold">Soumettre une photo</h1>
               <button
@@ -278,6 +279,7 @@ const PhotosContestTab = ({
               >
                 Importer
               </button>
+            </div>
             </div>
           </Modal>
         </>

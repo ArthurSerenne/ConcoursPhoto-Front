@@ -10,7 +10,17 @@ import Select from 'react-select';
 import myImage from '../../../assets/images/user-icon.png';
 import axiosInstance from '../../AxiosInstance';
 import { toast } from 'react-toastify';
+import * as Yup from 'yup';
 import { useAuth } from '../../AuthContext';
+
+const validationSchema = Yup.object().shape({
+  click_url: Yup.string()
+      .required('Ce champ est requis'),
+  start: Yup.date()
+      .required('Ce champ est requis'),
+  end: Yup.date()
+      .required('Ce champ est requis'),
+});
 
 const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
   const { reloadUser } = useAuth();
@@ -19,6 +29,7 @@ const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
   const [adSpaces, setAdSpaces] = useState([]);
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
   const [displayImage, setDisplayImage] = useState(null);
+  const [originalImage, setOriginalImage] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,6 +111,7 @@ const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
         if (data) {
             setRowData(data);
             setDisplayImage(data.file ? `${baseUrl}${data.file}` : myImage);
+            setOriginalImage(data.file ? `${baseUrl}${data.file}` : myImage);
         } else {
             setRowData({});
             setDisplayImage(myImage);
@@ -154,7 +166,6 @@ const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
             start: values.start,
             end: values.end,
             click_url: values.click_url,
-            file: displayImage,
             isDefault: values.isDefault,
         };
 
@@ -169,6 +180,10 @@ const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
           if(values.isDefault) {
             entity1Data.suggest = values.suggest;
             entity1Data.organization = organization.name;
+          }
+
+          if(originalImage !== displayImage) {
+            entity1Data.file = displayImage;
           }
 
           const data = {
@@ -214,7 +229,7 @@ const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
             updateProcess(),
             {
               pending: 'Demande de location en cours',
-              success: 'Location envoyé avec succès !',
+              success: 'Demande de Location envoyé avec succès !',
               error: (err) => {
                 if (err.message === 'EmailChanged') {
                   return 'Veuillez vous reconnecter avec votre nouvelle adresse e-mail.';
@@ -318,6 +333,7 @@ const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
                                 onSubmit={handleSubmit}
                                 validateOnBlur={true}
                                 validateOnChange={true}
+                                validationSchema={validationSchema}
                             >
                                 {({ isSubmitting }) => (
                                 <Form className='grid grid-cols-1 my-2'>
@@ -390,7 +406,7 @@ const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
                                             type="text"
                                             className="gray-select mt-1 h-[43px] w-full rounded-md bg-gray-100 pl-3"
                                             />
-                                            <ErrorMessage name="end" component="div" className='text-red-500' />
+                                            <ErrorMessage name="click_url" component="div" className='text-red-500' />
                                         </div>
                                         {!rowData.id ? 
                                         <>
