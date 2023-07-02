@@ -38,23 +38,11 @@ const ViewContest = () => {
   const [uniquePhotographers, setTotalPhotographers] = useState(0);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(9);
   const [isModalOpen, setModalOpen] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [uploadedImageName, setUploadedImageName] = useState('');
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const baseUrl = process.env.REACT_APP_IMAGE_BASE_URL;
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
 
   const handleEditClick = () => {
     setModalOpen(true);
@@ -207,17 +195,9 @@ const ViewContest = () => {
     return !content || /^\s*$/.test(content);
   };
 
-  const closeModalWhenClickedOutside = (e) => {
-    if (e.target.classList.contains('fixed')) {
-      openModal();
-    }
-  };
-
-  console.log(contest);
-
-  const formattedDate = format(new Date(contest?.resultsDate), 'dd/MM/yyyy');
+  const formattedDate = format(new Date(contest.resultsDate), 'dd/MM/yyyy');
   const daysDifference = differenceInDays(
-    new Date(contest?.resultsDate),
+    new Date(contest.resultsDate),
     new Date()
   );
 
@@ -339,16 +319,18 @@ const ViewContest = () => {
                 radius="rounded-xl object-cover h-full w-full cursor-default"
               />
               {user &&
- user.organizations &&
- contest.organization &&
- user.organizations.some((org) => org.id === contest.organization.id) && (
-  <button
-    className="absolute bottom-0 right-0 gap-2.5 rounded-[30px] bg-black px-[15px] py-[5px] text-center text-[8px] font-bold uppercase not-italic leading-[10px] text-white"
-    onClick={handleEditClick}
-  >
-    Éditer
-  </button>
-)}
+                user.organizations &&
+                contest.organization &&
+                user.organizations.some(
+                  (org) => org.id === contest.organization.id
+                ) && (
+                  <button
+                    className="absolute bottom-0 right-0 gap-2.5 rounded-[30px] bg-black px-[15px] py-[5px] text-center text-[8px] font-bold uppercase not-italic leading-[10px] text-white"
+                    onClick={handleEditClick}
+                  >
+                    Éditer
+                  </button>
+                )}
             </div>
             <Modal
               isOpen={isModalOpen}
@@ -468,7 +450,7 @@ const ViewContest = () => {
                 modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper h-full w-full"
               >
-                {contest.sponsors.map((sponsor) => (
+                {contest.sponsors?.map((sponsor) => (
                   <SwiperSlide key={sponsor.id}>
                     <a
                       href={sponsor.url}
@@ -484,17 +466,6 @@ const ViewContest = () => {
                     </a>
                   </SwiperSlide>
                 ))}
-                {contest.sponsors?.map((sponsor) => (
-                    <SwiperSlide key={sponsor.id}>
-                      <a href={sponsor.url} target="_blank" rel="noopener noreferrer" style={{ cursor: 'grab' }}>
-                        <ImageDisplay
-                          key={sponsor.id}
-                          imageName={sponsor.logo}
-                          radius="rounded-xl cursor-default"
-                        />
-                      </a>
-                    </SwiperSlide>
-                  ))}
               </Swiper>
             </div>
           </div>
