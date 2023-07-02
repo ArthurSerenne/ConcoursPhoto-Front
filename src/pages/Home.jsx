@@ -173,26 +173,17 @@ const Home = () => {
                 ))}
         </Swiper>
         </div>
-        <div className="col-span-1 flex h-full flex-row space-x-4 md:space-y-7 md:flex-col md:space-x-0">
-          {loadingAds
-            ? Array.from({ length: 2 }, (_, i) => (
-                <div
-                  key={i}
-                  className="flex max-h-[18rem] flex-grow items-center justify-center"
-                >
-                  <AdSpaceSkeleton />
-                </div>
-              ))
-            : ads.map((ad, index) => (
-                <div
-                  key={index}
-                  className="flex max-h-[18rem] flex-grow items-center justify-center"
-                >
-                  <div className="flex h-full w-full flex-col items-center justify-center bg-gray-200">
-                    <p>{ad.name}</p>
-                  </div>
-                </div>
-              ))}
+        <div className="col-span-1 flex h-full flex-row space-x-8 md:flex-col md:space-x-0">
+          <div className="flex max-h-[18rem] flex-grow items-center justify-center">
+            <div className="flex h-full w-full flex-col items-center justify-center bg-gray-200">
+              {/* <img src='https://www.photo-paysage.com/albums/userpics/10001/Cascade_-17.JPG' alt='' className="w-full h-full object-cover" /> */}
+            </div>
+          </div>
+          <div className="flex max-h-[18rem] flex-grow items-center justify-center">
+            <div className="flex h-full w-full flex-col items-center justify-center bg-gray-200 overflow-hidden">
+              <img src='https://www.photo-paysage.com/albums/userpics/10001/Cascade_-17.JPG' alt='' className="w-full h-full object-cover" />
+            </div>
+          </div>
         </div>
       </div>
       <div className="mx-auto mt-12 mb-12 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
