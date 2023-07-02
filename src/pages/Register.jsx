@@ -3,7 +3,7 @@ import RegisterForm from '../components/RegisterForm';
 
 const Register = ({ closeModal, openLoginModal }) => {
   return (
-    <div className='mx-12'>
+    <div className="mx-12">
       <div className="mb-5">
         <h1 className="mb-5 flex items-center text-text-2xl font-bold not-italic leading-[29px] text-black">
           Inscription
@@ -18,7 +18,7 @@ const Register = ({ closeModal, openLoginModal }) => {
         </p>
       </div>
       <RegisterForm closeModal={closeModal} />
-      <p className="mt-7 text-sm font-normal not-italic leading-[17px] text-black text-center">
+      <p className="mt-7 text-center text-sm font-normal not-italic leading-[17px] text-black">
         Vous avez déjà un compte ?{' '}
         <a
           href="#"
