@@ -8,56 +8,67 @@ import AdminTab from './organization/AdminTab';
 import ContestTab from './organization/ContestTab';
 import AdTab from './organization/AdTab';
 import axios from 'axios';
+import { Spinner } from 'react-spinners-css';
 
 const MyOrganizationTab = ({ organization, deselectOrganization }) => {
     const [adminData, setAdminData] = useState([]);
     const [adSpacesData, setAdSpacesData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const getAdSpacesData = async () => {
-            try {
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/rents`
-                );
-
-                const relevantRents = response.data['hydra:member'].filter(rent => 
-                    rent.organization.id === organization.id
-                );
-
-                setAdSpacesData(relevantRents);
-            } catch (error) {
-                console.error("Error fetching rents data:", error);
-            }
+        const fetchData = async () => {
+          setIsLoading(true);
+          try {
+            const [adminResponse, adSpacesResponse] = await Promise.all([
+              axios.get(`${process.env.REACT_APP_API_URL}/users`),
+              axios.get(`${process.env.REACT_APP_API_URL}/rents`),
+            ]);
+      
+            const filteredAdminData = adminResponse.data['hydra:member'].filter((user) =>
+              user.organizations.some((org) => org.id === organization.id)
+            );
+      
+            const relevantRents = adSpacesResponse.data['hydra:member'].filter(
+              (rent) => rent.organization.id === organization.id
+            );
+      
+            setAdminData(filteredAdminData);
+            setAdSpacesData(relevantRents);
+            setIsLoading(false);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            setIsLoading(false);
+          }
         };
-
-        getAdSpacesData();
-    }, [organization.id]);
-
-    useEffect(() => {
-        const getAdminData = async () => {
-            try {
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/users`
-                );
-    
-                const filteredData = response.data['hydra:member'].filter(user => {                  
-                    return user.organizations.some(org => org.id === organization.id);
-                });
-                
-                setAdminData(filteredData);
-            } catch (error) {
-                console.error("Error fetching admin data:", error);
-            }
-        };
-    
-        getAdminData();
-    }, [organization.id]);
+      
+        fetchData();
+      }, [organization.id]);      
 
       const goBack = () => {
         deselectOrganization();
       };
 
-    return (
+      const refreshAdSpacesData = async () => {
+        try {
+          const response = await axios.get(
+              `${process.env.REACT_APP_API_URL}/rents`
+          );
+      
+          const relevantRents = response.data['hydra:member'].filter(rent => 
+              rent.organization.id === organization.id
+          );
+      
+          setAdSpacesData(relevantRents);
+        } catch (error) {
+          console.error("Error refreshing rents data:", error);
+        }
+      };
+
+      return isLoading ? (
+        <div><div className="flex items-center justify-center">
+        <Spinner color="#000" />
+      </div></div>
+        ) : (
             <Tabs>
                 <div className="grid gris-cols-1 md:grid-cols-5 sm:max-w-screen-sm 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md">
                     <div className='md:col-span-1'>
@@ -89,13 +100,13 @@ const MyOrganizationTab = ({ organization, deselectOrganization }) => {
                                 <ContestTab organization={organization} />
                             </TabPanel>
                             <TabPanel>
-                                <AdTab organization={organization} adSpacesData={adSpacesData} />
+                                <AdTab organization={organization} adSpacesData={adSpacesData} refreshAdSpacesData={refreshAdSpacesData} />
                             </TabPanel>
                             </>
                         )}
                     </div>
                 </div>
-                </Tabs>
+        </Tabs>
     );
 };
 

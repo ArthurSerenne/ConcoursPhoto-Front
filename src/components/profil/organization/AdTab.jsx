@@ -4,7 +4,6 @@ import { useTable, useSortBy, usePagination } from 'react-table'
 import { format, parseISO } from "date-fns";
 import { RiCloseLine, RiSortAsc, RiSortDesc, RiUpload2Line } from "react-icons/ri";
 import AdSpaceDateStatus from '../../AdSpaceDateStatus';
-import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 import axios from 'axios';
 import Select from 'react-select';
@@ -13,7 +12,7 @@ import axiosInstance from '../../AxiosInstance';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../AuthContext';
 
-const AdTab = ({organization, adSpacesData}) => {
+const AdTab = ({organization, adSpacesData, refreshAdSpacesData}) => {
   const { reloadUser } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rowData, setRowData] = useState(null);
@@ -98,8 +97,13 @@ const AdTab = ({organization, adSpacesData}) => {
       );
 
       const openModal = (data) => {
-        setRowData(data);
-        setDisplayImage(data.file ? `${baseUrl}${data.file}` : myImage);
+        if (data) {
+            setRowData(data);
+            setDisplayImage(data.file ? `${baseUrl}${data.file}` : myImage);
+        } else {
+            setRowData({});
+            setDisplayImage(myImage);
+        }
         setIsModalOpen(true);
     };
     
@@ -108,8 +112,20 @@ const AdTab = ({organization, adSpacesData}) => {
         setRowData(null);
       }
 
+      const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              setDisplayImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
       const handleCancelClick = () => {
         setIsModalOpen(false);
+        refreshAdSpacesData();
       };
     
       const closeModalWhenClickedOutside = (e) => {
@@ -119,38 +135,27 @@ const AdTab = ({organization, adSpacesData}) => {
       };
 
       const initialValues = {
-        name: rowData ? { value: rowData.adSpace?.id, label: rowData.adSpace?.name } : { value: adSpaces[0]?.id, label: adSpaces[0]?.name },
-        start: rowData ? rowData.start_date : '',
-        end: rowData ? rowData.end_date : '',
-        clickUrl: rowData ? rowData.click_url : '',
-        photo: rowData ? displayImage : '',
-      };      
-    
-      const validationSchema = Yup.object().shape({
-        name: Yup.string().required('Ce champ est obligatoire'),
-        start: Yup.date().required('Ce champ est obligatoire'),
-        end: Yup.date().required('Ce champ est obligatoire'),
-        clickUrl: Yup.string().url().required('Ce champ est obligatoire'),
-      });      
+        name: rowData && rowData.id ? { value: rowData.adSpace?.id, label: rowData.adSpace?.name } : { value: adSpaces[0]?.id, label: adSpaces[0]?.name },
+        start: rowData && rowData.id && rowData.start_date ? format(typeof rowData.start_date === 'string' ? parseISO(rowData.start_date) : rowData.start_date, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'),
+        end: rowData && rowData.id && rowData.end_date ? format(typeof rowData.end_date === 'string' ? parseISO(rowData.end_date) : rowData.end_date, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'),
+        click_url: rowData && rowData.id ? rowData.click_url : '',
+        file: rowData && rowData.id ? displayImage : '',
+        isDefault: rowData && rowData.id ? false : true,
+    };    
 
       const defaultData = {
         click_url: '',
+        isDefault: true,
       };
-
-      const handleFileChange = (event) => {
-        if (event.target.files.length > 0) {
-            const fileUrl = URL.createObjectURL(event.target.files[0]);
-            setDisplayImage(fileUrl);
-        }
-    };
 
     const separateEntityData = (values) => {
         const entity1Data = {
-            name: values.firstname,
-            start: values.lastname,
-            end: values.gender,
-            clickUrl: values.birthdate,
-            photo: displayImage,
+            name: values.name,
+            start: values.start,
+            end: values.end,
+            click_url: values.click_url,
+            file: displayImage,
+            isDefault: values.isDefault,
         };
 
         return { entity1Data };
@@ -161,40 +166,80 @@ const AdTab = ({organization, adSpacesData}) => {
         const updateProcess = async () => {
           const { entity1Data } = separateEntityData(values);
 
+          if(values.isDefault) {
+            entity1Data.suggest = values.suggest;
+            entity1Data.organization = organization.name;
+          }
+
           const data = {
             entity1Data,
           };
 
-          const response = await axiosInstance.patch(
-            `${process.env.REACT_APP_API_URL}/user_update`,
-            data,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }
-          );
+          console.log(entity1Data);
 
-          if (response.status === 200) {
+          let response = '';
+
+          if(values.isDefault) {
+            response = await axiosInstance.post(
+                `${process.env.REACT_APP_API_URL}/rent_request`,
+                data,
+                {
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                }
+            );
+        } else {
+            response = await axiosInstance.patch(
+                `${process.env.REACT_APP_API_URL}/rent_update/${rowData.id}`,
+                data,
+                {
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                }
+            );
+        }        
+
+          if (response.status === 200 || response.status === 201) {
               console.log("Formulaire soumis avec succès");
                 await reloadUser();
+          } else {
+            console.log(response.status);
           }
         };
 
-        toast.promise(
-          updateProcess(),
-          {
-            pending: 'Mise à jour de la location',
-            success: 'Location mis à jour avec succès !',
-            error: (err) => {
-              if (err.message === 'EmailChanged') {
-                return 'Veuillez vous reconnecter avec votre nouvelle adresse e-mail.';
-              } else {
-                return 'Erreur lors de la mise à jour du profil. Veuillez réessayer.';
+        if(values.isDefault) {
+          toast.promise(
+            updateProcess(),
+            {
+              pending: 'Demande de location en cours',
+              success: 'Location envoyé avec succès !',
+              error: (err) => {
+                if (err.message === 'EmailChanged') {
+                  return 'Veuillez vous reconnecter avec votre nouvelle adresse e-mail.';
+                } else {
+                  return 'Erreur lors de la mise à jour du profil. Veuillez réessayer.';
+                }
               }
             }
-          }
-        ).finally(() => setSubmitting(false));
+          ).finally(() => setSubmitting(false));
+        } else {
+          toast.promise(
+            updateProcess(),
+            {
+              pending: 'Mise à jour de la location',
+              success: 'Location mis à jour avec succès !',
+              error: (err) => {
+                if (err.message === 'EmailChanged') {
+                  return 'Veuillez vous reconnecter avec votre nouvelle adresse e-mail.';
+                } else {
+                  return 'Erreur lors de la mise à jour du profil. Veuillez réessayer.';
+                }
+              }
+            }
+          ).finally(() => setSubmitting(false));
+        }
       };
 
     return (
@@ -270,26 +315,35 @@ const AdTab = ({organization, adSpacesData}) => {
                         <div className='grid grid-cols-1'>
                             <Formik
                                 initialValues={initialValues}
-                                validationSchema={validationSchema}
                                 onSubmit={handleSubmit}
+                                validateOnBlur={true}
+                                validateOnChange={true}
                             >
                                 {({ isSubmitting }) => (
                                 <Form className='grid grid-cols-1 my-2'>
                                     <div className='space-y-4'>
                                         <div>
                                             <label htmlFor="name" className='text-sm'>Quel emplacement souhaitez-vous louer ?</label>
-                                            <Select
-                                                className="w-full bg-gray-100 p-2 gray-select"
-                                                options={adSpaces.map((adSpace) => ({
-                                                    value: adSpace.id,
-                                                    label: adSpace.name,
-                                                }))}
-                                                name="name"
-                                                defaultValue={adSpaces.length > 0 ? {
-                                                    value: rowData.id ? rowData.adSpace.id : adSpaces[0].id,
-                                                    label: rowData.id ? rowData.adSpace.name : adSpaces[0].name,
-                                                } : undefined}
-                                            />
+                                            <Field name="name">
+                                              {({
+                                                  field,
+                                                  form: { setFieldValue },
+                                                  meta,
+                                              }) => (
+                                                  <Select
+                                                      {...field}
+                                                      className="w-full bg-gray-100 p-2 gray-select"
+                                                      options={adSpaces.map((adSpace) => ({
+                                                          value: adSpace.id,
+                                                          label: adSpace.name,
+                                                      }))}
+                                                      onChange={(option) => {
+                                                          setFieldValue(field.name, option);
+                                                      }}
+                                                      onBlur={field.onBlur}
+                                                  />
+                                              )}
+                                            </Field>
                                         </div>
                                         <div className='grid md:grid-cols-2 gap-3'>
                                             <div>
@@ -323,21 +377,23 @@ const AdTab = ({organization, adSpacesData}) => {
                                                         type="file"
                                                         id="file-upload"
                                                         className="hidden"
-                                                        name='photo'
-                                                        onChange={handleFileChange}
+                                                        name='file'
+                                                        onChange={handleImageChange}
                                                     />
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
-                                            <label htmlFor="clickUrl" className='text-sm'>URL de renvoi au clic*</label>
+                                            <label htmlFor="click_url" className='text-sm'>URL de renvoi au clic*</label>
                                             <Field
-                                            name="clickUrl"
+                                            name="click_url"
                                             type="text"
                                             className="gray-select mt-1 h-[43px] w-full rounded-md bg-gray-100 pl-3"
                                             />
                                             <ErrorMessage name="end" component="div" className='text-red-500' />
                                         </div>
+                                        {!rowData.id ? 
+                                        <>
                                         <div>
                                             <label htmlFor="suggest" className='text-sm'>Remarques</label>
                                             <Field
@@ -356,6 +412,9 @@ const AdTab = ({organization, adSpacesData}) => {
                                                 Je déclare exercer un mandat ou une fonction qui m’octroie le droit de publier des publicités au nom de l’organisation que je représente
                                             </label>
                                         </div>
+                                        </>
+                                    : ''  
+                                      }
                                     </div>
                                     <div className="flex justify-center">
                                         <button className='bg-black text-white font-semibold px-14 py-5 w-[245px] rounded-full mt-10 hover:bg-gray-500' type='submit'>Valider</button>
