@@ -176,12 +176,12 @@ const Home = () => {
         <div className="col-span-1 flex h-full flex-row space-y-8 md:flex-col md:space-x-0">
           <div className="flex max-h-[18rem] flex-grow items-center justify-center">
             <div className="flex h-full w-full flex-col items-center justify-center bg-gray-200">
-              {/* <img src='https://www.photo-paysage.com/albums/userpics/10001/Cascade_-17.JPG' alt='' className="w-full h-full object-cover" /> */}
+              <img src='https://cloudfront-eu-central-1.images.arcpublishing.com/ipmgroup/EDA47HSGDFDVHO3MU673WQDYTM.jpg' alt='' className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="flex max-h-[18rem] flex-grow items-center justify-center">
             <div className="flex h-full w-full flex-col items-center justify-center bg-gray-200 overflow-hidden">
-              <img src='https://www.photo-paysage.com/albums/userpics/10001/Cascade_-17.JPG' alt='' className="w-full h-full object-cover" />
+              <img src='https://www.usine-digitale.fr/mediatheque/4/2/3/000275324_896x598_c.jpg' alt='' className="w-full h-full object-cover" />
             </div>
           </div>
         </div>

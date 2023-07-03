@@ -6,10 +6,10 @@ const Footer = () => {
         <footer>
             <div className="mx-auto mt-10 mb-12 flex flex-wrap justify-between items-center 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
                 <div className="w-full md:w-[1010px] h-[300px] bg-[rgba(217,217,217,1)]">
-                    <img src='https://www.empara.fr/blog/wp-content/uploads/2016/07/grand-angle-optimiser-photo-paysage-4.jpg' alt='' className="w-full h-full object-cover" />
+                    <img src='https://blog.auto-selection.com/wp-content/uploads/2018/03/DS-7-CROSSBACK-Launch-Campaign-vF.png' alt='' className="w-full h-full object-cover" />
                 </div>
                 <div className="w-full md:w-[490px] h-[300px] mt-5 md:mt-0 box-border bg-[rgba(217,217,217,1)]">
-                    <img src='https://www.photo-paysage.com/albums/userpics/10001/Cascade_-17.JPG' alt='' className="w-full h-full object-cover" />
+                    <img src='https://foodgeekandlove.fr/wp-content/uploads/2015/06/choose-happiness-coca-cola.jpg' alt='' className="w-full h-full object-cover" />
                 </div>
             </div>
             <ul className='flex flex-col md:flex-row justify-center items-center gap-5 md:gap-30 mb-10'>
