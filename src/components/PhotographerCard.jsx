@@ -20,32 +20,59 @@ const PhotographerCard = (props) => {
     setImageSrc(defaultImagePath);
   };
 
-    return (
-        <div className='p-5 max-w-lg max-h-[465px] sm:max-h-[500px] rounded-b-lg shadow-xl hover:scale-105 ease-in-out duration-300 cursor-pointer' onClick={handleClick}>
-            <div className='grid grid-cols-5'>
-                <img src={imageSrc} onError={handleError} className='rounded-full w-24 h-20' />
-                <div className='h-12 ml-2 col-span-3'>
-                    <p className='text-lg font-bold not-italic leading-[160%] text-black overflow-hidden w-full' style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }}>{props.photographer.member.username}</p>
-                </div>
-            </div>
-            <div className='flex flex-row justify-between mt-6'>
-                <div className='flex flex-row gap-4'>
-                    <p className='bg-gray-100 px-2 py-1 rounded-full'>{SituationEnum[props.photographer.member.situation]}</p>
-                    <p className='bg-gray-100 px-2 py-1 rounded-full'>{CategoryEnum[props.photographer.member.category]}</p>
-                </div>
-                <div className="flex flex-wrap gap-1 justify-between float-right">
-                    <p className="bg-gray-100 rounded-full py-2 px-3 text-xs flex items-center gap-1">
-                        <RiCameraLensLine /> 
-                        {props.photographer.member.photos.filter(
-                            (photo) => photo.status === true
-                        ).length}
-                        <span>photo{props.photographer.member.photos.filter(
-                            (photo) => photo.status === true
-                        ).length > 1 ? 's' : ''}</span>
-                    </p> 
-                </div>
-            </div>
+  return (
+    <div
+      className="max-h-[465px] max-w-lg cursor-pointer rounded-b-lg p-5 shadow-xl duration-300 ease-in-out hover:scale-105 sm:max-h-[500px]"
+      onClick={handleClick}
+    >
+      <div className="grid grid-cols-5">
+        <img
+          src={imageSrc}
+          onError={handleError}
+          className="h-20 w-24 rounded-full"
+        />
+        <div className="col-span-3 ml-2 h-12">
+          <p
+            className="w-full overflow-hidden text-lg font-bold not-italic leading-[160%] text-black"
+            style={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+            }}
+          >
+            {props.photographer.member.username}
+          </p>
         </div>
+      </div>
+      <div className="mt-6 flex flex-row justify-between">
+        <div className="flex flex-row gap-4">
+          <p className="rounded-full bg-gray-100 px-2 py-1">
+            {SituationEnum[props.photographer.member.situation]}
+          </p>
+          <p className="rounded-full bg-gray-100 px-2 py-1">
+            {CategoryEnum[props.photographer.member.category]}
+          </p>
+        </div>
+        <div className="float-right flex flex-wrap justify-between gap-1">
+          <p className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-2 text-xs">
+            <RiCameraLensLine />
+            {
+              props.photographer.member.photos.filter(
+                (photo) => photo.status === true
+              ).length
+            }
+            <span>
+              photo
+              {props.photographer.member.photos.filter(
+                (photo) => photo.status === true
+              ).length > 1
+                ? 's'
+                : ''}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

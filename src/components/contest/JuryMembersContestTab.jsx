@@ -144,121 +144,125 @@ const JuryMembersContestTab = ({ user, contest, setContest, goBack }) => {
               }
             }}
           >
-            <div className='bg-white p-7 rounded-lg max-w-[1172px] max-h-[750px] overflow-auto'>
-            <div className="flex justify-between">
-              <h1 className="mb-2 text-xl font-bold">
-                Concours {'>'} onglet “Membres du jury” : édition
-              </h1>
-              <button
-                onClick={handleCancelClick}
-                className="absolute right-2.5 top-2.5"
-              >
-                <RiCloseLine />
-              </button>
-            </div>
-            <p className="flex items-center text-sm font-bold not-italic leading-[17px] text-black">
-              Vous pouvez inviter un ou plusieurs membres du jury mais ils
-              doivent être inscrits/membres de la plateforme au préalable.
-            </p>
-            <p className="flex items-center text-sm font-normal not-italic leading-[17px] text-black">
-              Chaque membre invité recevra un email de demande qu’il devra
-              valider pour intégrer la liste des membres du jury de ce concours.
-            </p>
-            <br />
-            <table {...getTableProps()} className="w-full table-auto">
-              <thead className="table-header">
-                {headerGroups.map((headerGroup) => (
-                  <tr
-                    {...headerGroup.getHeaderGroupProps()}
-                    className="gap-12 space-x-1 divide-x-2 divide-white border-t-4 border-t-gray-200"
-                  >
-                    {headerGroup.headers.map((column) => (
-                      <th
-                        {...column.getHeaderProps(
-                          column.getSortByToggleProps()
-                        )}
-                        className="min-w-[120px] max-w-[347px] bg-gray-100 py-4 pl-4 pr-12 font-normal"
-                      >
-                        {column.render('Header')}
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <span className="ml-2">
-                              <RiSortDesc />
-                            </span>
+            <div className="max-h-[750px] max-w-[1172px] overflow-auto rounded-lg bg-white p-7">
+              <div className="flex justify-between">
+                <h1 className="mb-2 text-xl font-bold">
+                  Concours {'>'} onglet “Membres du jury” : édition
+                </h1>
+                <button
+                  onClick={handleCancelClick}
+                  className="absolute right-2.5 top-2.5"
+                >
+                  <RiCloseLine />
+                </button>
+              </div>
+              <p className="flex items-center text-sm font-bold not-italic leading-[17px] text-black">
+                Vous pouvez inviter un ou plusieurs membres du jury mais ils
+                doivent être inscrits/membres de la plateforme au préalable.
+              </p>
+              <p className="flex items-center text-sm font-normal not-italic leading-[17px] text-black">
+                Chaque membre invité recevra un email de demande qu’il devra
+                valider pour intégrer la liste des membres du jury de ce
+                concours.
+              </p>
+              <br />
+              <table {...getTableProps()} className="w-full table-auto">
+                <thead className="table-header">
+                  {headerGroups.map((headerGroup) => (
+                    <tr
+                      {...headerGroup.getHeaderGroupProps()}
+                      className="gap-12 space-x-1 divide-x-2 divide-white border-t-4 border-t-gray-200"
+                    >
+                      {headerGroup.headers.map((column) => (
+                        <th
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps()
+                          )}
+                          className="min-w-[120px] max-w-[347px] bg-gray-100 py-4 pl-4 pr-12 font-normal"
+                        >
+                          {column.render('Header')}
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <span className="ml-2">
+                                <RiSortDesc />
+                              </span>
+                            ) : (
+                              <span className="ml-2">
+                                <RiSortAsc />
+                              </span>
+                            )
                           ) : (
-                            <span className="ml-2">
-                              <RiSortAsc />
-                            </span>
-                          )
-                        ) : (
-                          ''
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody {...getTableBodyProps()}>
-                {page.map((row) => {
-                  prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()} className="hover:cursor-pointer">
-                      {row.cells.map((cell) => {
-                        return (
-                          <td
-                            {...cell.getCellProps()}
-                            className={`mr-1 min-w-[120px] max-w-[347px] border-b-[1px] border-b-gray-300 py-4 pl-4 pr-12`}
-                          >
-                            {cell.render('Cell')}
-                          </td>
-                        );
-                      })}
+                            ''
+                          )}
+                        </th>
+                      ))}
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <br />
-            <p className="flex items-center text-sm font-bold not-italic leading-[17px] text-black">
-              Pour inviter un membre du jury, veuillez renseigner son email
-              ci-dessous*
-            </p>
-            <p className="flex items-center text-sm font-normal not-italic leading-[17px] text-black">
-              Vous devez saisir l’email utilisé par le membre ou saisir son
-              nom/prénom si vous ne le connaissez pas.
-            </p>
-            <div className='grid md:grid-cols-10 gap-5 mt-3'>
-              <input
-                type="email"
-                value={emailInput}
-                className="rounded-[5px] bg-[#F1F1F1] col-span-7"
-                onChange={handleEmailInputChange}
-              />
-              <button
-                className="col-span-3 rounded-[44px] bg-[#d9d9d9] px-[30px] py-3.5 text-center text-sm font-bold not-italic leading-[17px] text-[#333333]"
-                onClick={handleAddMember}
-              >
-                Ajouter un membre du jury
-              </button>
-            </div>
-            {emailList.map((email, index) => (
-              <p key={index}>{email}</p>
-            ))}
-            <br />
-            <div className="mt-4">
-              <button
-                className="mr-4 gap-5 rounded-[44px] bg-regal-grey px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                onClick={handleCancelClick}
-              >
-                Annuler
-              </button>
-              <button
-                className="gap-5 rounded-[44px] bg-black px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
-                onClick={saveAndUpdate}
-              >
-                Sauvegarder
-              </button>
-            </div>
+                  ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                  {page.map((row) => {
+                    prepareRow(row);
+                    return (
+                      <tr
+                        {...row.getRowProps()}
+                        className="hover:cursor-pointer"
+                      >
+                        {row.cells.map((cell) => {
+                          return (
+                            <td
+                              {...cell.getCellProps()}
+                              className={`mr-1 min-w-[120px] max-w-[347px] border-b-[1px] border-b-gray-300 py-4 pl-4 pr-12`}
+                            >
+                              {cell.render('Cell')}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <br />
+              <p className="flex items-center text-sm font-bold not-italic leading-[17px] text-black">
+                Pour inviter un membre du jury, veuillez renseigner son email
+                ci-dessous*
+              </p>
+              <p className="flex items-center text-sm font-normal not-italic leading-[17px] text-black">
+                Vous devez saisir l’email utilisé par le membre ou saisir son
+                nom/prénom si vous ne le connaissez pas.
+              </p>
+              <div className="mt-3 grid gap-5 md:grid-cols-10">
+                <input
+                  type="email"
+                  value={emailInput}
+                  className="col-span-7 rounded-[5px] bg-[#F1F1F1]"
+                  onChange={handleEmailInputChange}
+                />
+                <button
+                  className="col-span-3 rounded-[44px] bg-[#d9d9d9] px-[30px] py-3.5 text-center text-sm font-bold not-italic leading-[17px] text-[#333333]"
+                  onClick={handleAddMember}
+                >
+                  Ajouter un membre du jury
+                </button>
+              </div>
+              {emailList.map((email, index) => (
+                <p key={index}>{email}</p>
+              ))}
+              <br />
+              <div className="mt-4">
+                <button
+                  className="mr-4 gap-5 rounded-[44px] bg-regal-grey px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                  onClick={handleCancelClick}
+                >
+                  Annuler
+                </button>
+                <button
+                  className="gap-5 rounded-[44px] bg-black px-12 py-3.5 text-base font-bold not-italic leading-[19px] text-white"
+                  onClick={saveAndUpdate}
+                >
+                  Sauvegarder
+                </button>
+              </div>
             </div>
           </Modal>
         </>

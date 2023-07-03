@@ -3,11 +3,13 @@ import { RiUserShared2Line } from 'react-icons/ri';
 import { AiOutlineEye } from 'react-icons/ai';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useAuth } from  '../components/AuthContext';
+import { useAuth } from '../components/AuthContext';
 import LikeButton from './Like';
 
 const PhotoCard = (props) => {
-  const [viewCount, setViewCount] = useState(props.photo.view ? props.photo.view : 0);
+  const [viewCount, setViewCount] = useState(
+    props.photo.view ? props.photo.view : 0
+  );
   const [voted, setVoted] = useState(false);
   const { user } = useAuth();
 
@@ -31,11 +33,13 @@ const PhotoCard = (props) => {
       }
     );
 
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/photos/${props.photo.id}`);
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/photos/${props.photo.id}`
+    );
 
     setViewCount(res.data.view);
   };
-  
+
   return (
     <div className="mb-12 max-h-[330px] max-w-lg rounded-b-lg">
       <div className="flex max-h-[300px] cursor-pointer items-center justify-center duration-300 ease-in-out hover:scale-105">

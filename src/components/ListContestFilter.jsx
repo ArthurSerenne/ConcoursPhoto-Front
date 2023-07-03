@@ -3,7 +3,7 @@ import Select from 'react-select';
 import axios from 'axios';
 import { IoIosArrowDown } from 'react-icons/io';
 import AsyncSelect from 'react-select/async';
-import Slider from "react-slider";
+import Slider from 'react-slider';
 
 const ThemeFilter = ({ applyFilters }) => {
   const [moreCriteria, setMoreCriteria] = useState(false);
@@ -25,16 +25,18 @@ const ThemeFilter = ({ applyFilters }) => {
   };
 
   const loadDepartments = (inputValue) => {
-    return axios.get(process.env.REACT_APP_API_URL + '/departments.json', {
+    return axios
+      .get(process.env.REACT_APP_API_URL + '/departments.json', {
         params: {
-            name: inputValue
-        }
-    }).then(res => {
-        return res.data.map(department => ({
-            value: department.id,
-            label: department.name
+          name: inputValue,
+        },
+      })
+      .then((res) => {
+        return res.data.map((department) => ({
+          value: department.id,
+          label: department.name,
         }));
-    });
+      });
   };
 
   useEffect(() => {
@@ -60,36 +62,92 @@ const ThemeFilter = ({ applyFilters }) => {
 
   const handleThemeChange = (selectedThemes) => {
     setSelectedThemes(selectedThemes || []);
-    applyFilters(selectedThemes || [], selectedStatus, searchValue, selectedRegions, selectedCategory, selectedDepartment, selectedAge);
+    applyFilters(
+      selectedThemes || [],
+      selectedStatus,
+      searchValue,
+      selectedRegions,
+      selectedCategory,
+      selectedDepartment,
+      selectedAge
+    );
   };
 
   const handleRegionChange = (selectedRegions) => {
     setSelectedRegions(selectedRegions || []);
-    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions || [], selectedCategory, selectedDepartment, selectedAge);
-  }
+    applyFilters(
+      selectedThemes,
+      selectedStatus,
+      searchValue,
+      selectedRegions || [],
+      selectedCategory,
+      selectedDepartment,
+      selectedAge
+    );
+  };
 
   const handleCategoryChange = (selectedCategory) => {
     setSelectedCategory(selectedCategory || []);
-    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions, selectedCategory || [], selectedDepartment, selectedAge);
-  }
+    applyFilters(
+      selectedThemes,
+      selectedStatus,
+      searchValue,
+      selectedRegions,
+      selectedCategory || [],
+      selectedDepartment,
+      selectedAge
+    );
+  };
 
   const handleDepartmentChange = (selectedDepartment) => {
     setSelectedDepartment(selectedDepartment || []);
-    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions, selectedCategory, selectedDepartment || [], selectedAge);
-  }
+    applyFilters(
+      selectedThemes,
+      selectedStatus,
+      searchValue,
+      selectedRegions,
+      selectedCategory,
+      selectedDepartment || [],
+      selectedAge
+    );
+  };
 
   const handleStatusChange = (selectedStatus) => {
     setSelectedStatus(selectedStatus || null);
-    applyFilters(selectedThemes, selectedStatus || null, searchValue, selectedRegions, selectedCategory, selectedDepartment, selectedAge);
+    applyFilters(
+      selectedThemes,
+      selectedStatus || null,
+      searchValue,
+      selectedRegions,
+      selectedCategory,
+      selectedDepartment,
+      selectedAge
+    );
   };
 
   const handleAgeChange = (selectedAge) => {
     setSelectedAge(selectedAge);
-    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions, selectedCategory, selectedDepartment, selectedAge || [0, 100]);
+    applyFilters(
+      selectedThemes,
+      selectedStatus,
+      searchValue,
+      selectedRegions,
+      selectedCategory,
+      selectedDepartment,
+      selectedAge || [0, 100]
+    );
   };
 
   const handleSearchButtonClick = () => {
-    applyFilters(selectedThemes, selectedStatus, searchValue, selectedRegions, selectedCategory, selectedDepartment, selectedAge);
+    applyFilters(
+      selectedThemes,
+      selectedStatus,
+      searchValue,
+      selectedRegions,
+      selectedCategory,
+      selectedDepartment,
+      selectedAge
+    );
   };
 
   const handleInputChange = (event) => {
@@ -97,9 +155,9 @@ const ThemeFilter = ({ applyFilters }) => {
   };
 
   return (
-    <div className="mx-auto mt-10 mb-12 space-y-4 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm">
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-        <div className='flex h-[55px] mb-4 md:mb-0'>
+    <div className="mx-auto mb-12 mt-10 space-y-4 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="mb-4 flex h-[55px] md:mb-0">
           <input
             type="search"
             className="w-full rounded-l-lg bg-gray-100 pl-3 placeholder-black"
@@ -115,7 +173,7 @@ const ThemeFilter = ({ applyFilters }) => {
         </div>
         <div className="flex h-[55px] gap-6">
           <Select
-            className="w-full bg-gray-100 p-2 gray-select"
+            className="gray-select w-full bg-gray-100 p-2"
             options={themes.map((theme) => ({
               value: theme.id,
               label: theme.name,
@@ -125,7 +183,7 @@ const ThemeFilter = ({ applyFilters }) => {
             onChange={handleThemeChange}
           />
           <Select
-            className="w-full bg-gray-100 p-2 gray-select"
+            className="gray-select w-full bg-gray-100 p-2"
             options={[
               { value: 'active', label: 'Concours actifs' },
               { value: 'publication', label: 'En phase de publication' },
@@ -153,18 +211,22 @@ const ThemeFilter = ({ applyFilters }) => {
           </button>
         </div>
       </div>
-      <div className={`grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 bg-gray-300 px-8 py-5 ${moreCriteria ? '' : 'hidden'}`}>
-        <div className='w-full'>
+      <div
+        className={`grid grid-cols-1 gap-4 bg-gray-300 px-8 py-5 md:grid-cols-3 lg:grid-cols-6 ${
+          moreCriteria ? '' : 'hidden'
+        }`}
+      >
+        <div className="w-full">
           <p>Pays</p>
           <Select
-            className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
+            className="gray-select mt-2 h-[55px] w-full bg-gray-100 p-2"
             options={[{ value: 'FR', label: 'France' }]}
           />
         </div>
         <div className="w-full">
           <p>Région</p>
           <Select
-            className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
+            className="gray-select mt-2 h-[55px] w-full bg-gray-100 p-2"
             options={regions.map((region) => ({
               value: region.id,
               label: region.name,
@@ -177,7 +239,7 @@ const ThemeFilter = ({ applyFilters }) => {
           <p>Départements</p>
           <AsyncSelect
             loadOptions={loadDepartments}
-            className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
+            className="gray-select mt-2 h-[55px] w-full bg-gray-100 p-2"
             isClearable={true}
             isMulti={true}
             onChange={handleDepartmentChange}
@@ -190,7 +252,7 @@ const ThemeFilter = ({ applyFilters }) => {
         <div className="w-full">
           <p>Catégorie (réservé aux)</p>
           <Select
-            className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
+            className="gray-select mt-2 h-[55px] w-full bg-gray-100 p-2"
             options={categories.map((categorie) => ({
               value: categorie.id,
               label: categorie.name,
@@ -203,14 +265,19 @@ const ThemeFilter = ({ applyFilters }) => {
           <p>Âge (réservé aux)</p>
           <Slider
             value={selectedAge}
-            className="horizontal-slider mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select"
-            renderThumb={(props, state) => <div {...props} >{state.valueNow}</div>}
+            className="horizontal-slider gray-select mt-2 h-[55px] w-full bg-gray-100 p-2"
+            renderThumb={(props, state) => (
+              <div {...props}>{state.valueNow}</div>
+            )}
             pearling
             min={0}
             max={100}
             ariaValuetext={(state) => `Thumb value ${state.valueNow}`}
             renderTrack={(props) => (
-              <div {...props} className='mx-2 mt-5 h-1 bg-gray-400 rounded-full' />
+              <div
+                {...props}
+                className="mx-2 mt-5 h-1 rounded-full bg-gray-400"
+              />
             )}
             minDistance={1}
             withTracks
@@ -219,7 +286,7 @@ const ThemeFilter = ({ applyFilters }) => {
         </div>
         <div className="w-full">
           <p>Prix/dotations</p>
-          <Select className="mt-2 h-[55px] w-full bg-gray-100 p-2 gray-select" />
+          <Select className="gray-select mt-2 h-[55px] w-full bg-gray-100 p-2" />
         </div>
       </div>
     </div>
