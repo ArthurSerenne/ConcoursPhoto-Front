@@ -7,14 +7,14 @@ const Footer = () => {
       <div className="mx-auto mb-12 mt-10 flex flex-wrap items-center justify-between sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
         <div className="h-[300px] w-full bg-[rgba(217,217,217,1)] md:w-[1010px]">
           <img
-            src="https://www.empara.fr/blog/wp-content/uploads/2016/07/grand-angle-optimiser-photo-paysage-4.jpg"
+            src="https://blog.auto-selection.com/wp-content/uploads/2018/03/DS-7-CROSSBACK-Launch-Campaign-vF.png"
             alt=""
             className="h-full w-full object-cover"
           />
         </div>
         <div className="mt-5 box-border h-[300px] w-full bg-[rgba(217,217,217,1)] md:mt-0 md:w-[490px]">
           <img
-            src="https://www.photo-paysage.com/albums/userpics/10001/Cascade_-17.JPG"
+            src="https://foodgeekandlove.fr/wp-content/uploads/2015/06/choose-happiness-coca-cola.jpg"
             alt=""
             className="h-full w-full object-cover"
           />
